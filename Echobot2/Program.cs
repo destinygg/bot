@@ -30,44 +30,31 @@ namespace Echobot2 {
           new BufferBlock<string>(new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
 
       // start consumers
-      rawIRCAsync.Consumer(rawIRCBuffer);
-      modAsync.Consumer(Constants.ModBuffer);
-      logSync.Consumer(Constants.LogBuffer);
-      consoleSync.Consumer(Constants.ConsoleBuffer);
+      //rawIRCAsync.Consumer(rawIRCBuffer);
+      //modAsync.Consumer(Constants.ModBuffer);
+      //logSync.Consumer(Constants.LogBuffer);
+      //consoleSync.Consumer(Constants.ConsoleBuffer);
 
-      // infinite raw producer
-      while (true) {
-        rawIRCBuffer.Post(MyGlobals.Input.ReadLine());
-      }
-
-      while (true) { }
+      while(true) {}
     }
 
     private static void websocket_MessageReceived(object sender, MessageReceivedEventArgs e) {
-      Log(e.Message);
-      //Newtonsoft.Json.JsonConvert.DeserializeObject<Person>(output);
-      //var jsonMessage = e.Message.First(x => x == ' ');
       var spaceIndex = e.Message.IndexOf(' ');
       var actionMessage = e.Message.Substring(0, spaceIndex);
       Log(actionMessage, ConsoleColor.Yellow);
       var jsonMessage = e.Message.Substring(spaceIndex + 1, e.Message.Length - actionMessage.Length - 1);
       Log(jsonMessage, ConsoleColor.Magenta);
-      var s = JsonConvert.DeserializeObject(jsonMessage);
-
-
-      var bob = JObject.Parse(jsonMessage);
-
-      //Console.WriteLine("{0} with {1} hair", (string) bob["Name"], (string) bob["HairColor"]);
-
-      var sefs = bob["users"];
-      var ccc = bob["connectioncount"];
 
       NamesCommand names;
+      MsgCommand msg;
 
-      if (actionMessage == "NAMES")
+      if (actionMessage == "NAMES") {
         names = JsonConvert.DeserializeObject<NamesCommand>(jsonMessage);
+      }
+      if (actionMessage == "MSG") {
+        msg = JsonConvert.DeserializeObject<MsgCommand>(jsonMessage);
+      }
 
-      var ss = 34;
     }
 
     private static void websocket_Closed(object sender, EventArgs e) {
@@ -76,12 +63,6 @@ namespace Echobot2 {
 
     public static void Log(string input, ConsoleColor color = ConsoleColor.White) {
       Console.ForegroundColor = color;
-      Console.WriteLine("1");
-      Thread.Sleep(1000);
-      Console.WriteLine("2");
-      Thread.Sleep(2000);
-      Console.WriteLine("3");
-      Thread.Sleep(3000);
       Console.WriteLine(input);
       Console.ResetColor();
     }
@@ -104,5 +85,11 @@ namespace Echobot2 {
   public class User {
     public string nick { get; set; }
     public string[] features { get; set; }
+    
+  }
+
+  public class MsgCommand : User {
+    public long timestamp { get; set; }
+    public string data { get; set; }
   }
 }
