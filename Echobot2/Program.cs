@@ -15,27 +15,34 @@ using System.Threading.Tasks.Dataflow;
 
 
 namespace Echobot2 {
-  public class Program {
+  class Program {
 
     private static BufferBlock<string> _textBuffer;
     static void Main(string[] args) {
 
-      var myPropertiesChange = new MyPropertiesChange();
-      myPropertiesChange.PropertyChanged += myPropertiesChange_PropertyChanged;
+      var wsc = new WebSocketClient();
+      wsc.PropertyChanged += wsc_PropertyChanged;
+      //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
+      //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
+
       
       _textBuffer = new BufferBlock<string>(new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
 
-      ConsumerClass.Consume(_textBuffer);
+      // start consumers
+      PrimaryConsumer.Consume(_textBuffer);
+      //modAsync.Consumer(Constants.ModBuffer);
+      //logSync.Consumer(Constants.LogBuffer);
+      //consoleSync.Consumer(Constants.ConsoleBuffer);
 
       while (true) {}
     }
 
-    static void myPropertiesChange_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-      _textBuffer.Post(((MyPropertiesChange) sender).Name);
+    private static void wsc_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+      _textBuffer.Post(((WebSocketClient) sender).Name);
     }
   }
 
-  public static class ConsumerClass {
+  public static class PrimaryConsumer {
     public static void Consume(ISourceBlock<string> sourceBlock) {
       var actionBlock = new ActionBlock<string>(
         s => ParseString(s), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });

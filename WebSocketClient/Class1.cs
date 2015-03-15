@@ -14,10 +14,10 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
 namespace Echobot2 {
-  public class MyPropertiesChange : INotifyPropertyChanged {
+  public class WebSocketClient : INotifyPropertyChanged {
     public string Message { get; set; }
     public BufferBlock<string> target { get; set; }
-    public MyPropertiesChange() {
+    public WebSocketClient() {
 
       WebSocket websocket = new WebSocket("ws://www.destiny.gg:9997/ws");
       websocket.Opened += new EventHandler(websocket_Opened);
