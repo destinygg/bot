@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using DataModels;
 using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using System.Collections.Generic;
@@ -19,6 +21,7 @@ namespace Echobot2 {
 
     private static BufferBlock<string> _textBuffer;
     static void Main(string[] args) {
+
 
       var wsc = new WebSocketClient();
       wsc.PropertyChanged += wsc_PropertyChanged;
@@ -44,13 +47,18 @@ namespace Echobot2 {
 
   public static class PrimaryConsumer {
     public static void Consume(ISourceBlock<string> sourceBlock) {
-      var actionBlock = new ActionBlock<string>(
-        s => ParseString(s), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
-
+      var actionBlock = new ActionBlock<string>(s => ParseString(s), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
       sourceBlock.LinkTo(actionBlock);
     }
     private static void ParseString(string input) {
       Console.WriteLine(input);
     }
   }
+
+  public abstract class MessageModel {
+
+    public string User { get; set; }
+    
+  }
+  
 }
