@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using DataModels;
 using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using System.Collections.Generic;
@@ -23,12 +22,12 @@ namespace Echobot2 {
     static void Main(string[] args) {
 
 
-      var wsc = new WebSocketClient();
+      IClient wsc = new WebSocketClient();
       wsc.PropertyChanged += wsc_PropertyChanged;
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
 
-      
+
       _textBuffer = new BufferBlock<string>(new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
 
       // start consumers
@@ -37,7 +36,7 @@ namespace Echobot2 {
       //logSync.Consumer(Constants.LogBuffer);
       //consoleSync.Consumer(Constants.ConsoleBuffer);
 
-      while (true) {}
+      while (true) { }
     }
 
     private static void wsc_PropertyChanged(object sender, PropertyChangedEventArgs e) {
@@ -55,10 +54,7 @@ namespace Echobot2 {
     }
   }
 
-  public abstract class MessageModel {
+  public interface IClient : INotifyPropertyChanged {
 
-    public string User { get; set; }
-    
   }
-  
 }

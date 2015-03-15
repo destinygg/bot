@@ -4,21 +4,20 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks.Dataflow;
-using DataModels;
 using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
 
 namespace Echobot2 {
-  public class WebSocketClient : INotifyPropertyChanged, ITest {
+  public class WebSocketClient : IClient {
     public BufferBlock<string> target { get; set; }
 
     public WebSocketClient() {
       WebSocket websocket = new WebSocket("ws://www.destiny.gg:9997/ws");
-      websocket.Opened += new EventHandler(websocket_Opened);
-      websocket.Error += new EventHandler<ErrorEventArgs>(websocket_Error);
-      websocket.Closed += new EventHandler(websocket_Closed);
-      websocket.MessageReceived += new EventHandler<WebSocket4Net.MessageReceivedEventArgs>(websocket_MessageReceived);
+      websocket.Opened += websocket_Opened;
+      websocket.Error += websocket_Error;
+      websocket.Closed += websocket_Closed;
+      websocket.MessageReceived += websocket_MessageReceived;
       websocket.Open();
 
     }
@@ -34,10 +33,10 @@ namespace Echobot2 {
 
       if (actionMessage == "NAMES") {
         var names = JsonConvert.DeserializeObject<NamesCommand>(jsonMessage);
-        Log(names.connectioncount + " " + string.Join(",", names.users.Select(x => x.nick)));
+        Log(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
       } else if (actionMessage == "MSG") {
         var msg = JsonConvert.DeserializeObject<MsgCommand>(jsonMessage);
-        Log(msg.nick + ": " + msg.data);
+        Log(msg.Nick + ": " + msg.Data);
       } else if (actionMessage == "JOIN") {
         var join = JsonConvert.DeserializeObject<JoinCommand>(jsonMessage);
       } else if (actionMessage == "QUIT") {
@@ -77,7 +76,7 @@ namespace Echobot2 {
     // boiler-plate
     public event PropertyChangedEventHandler PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName) {
-      PropertyChangedEventHandler handler = PropertyChanged;
+      var handler = PropertyChanged;
       if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
     }
     protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
@@ -88,14 +87,10 @@ namespace Echobot2 {
     }
 
     // props
-    private string name;
+    private string _name;
     public string Name {
-      get { return name; }
-      set { SetField(ref name, value); }
-    }
-
-    public void Test() {
-      throw new NotImplementedException();
+      get { return _name; }
+      set { SetField(ref _name, value); }
     }
   }
 }

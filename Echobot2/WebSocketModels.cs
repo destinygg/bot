@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace Echobot2 {
   public class NamesCommand {
-    public User[] users { get; set; }
-    public string connectioncount { get; set; }
+    public User[] Users { get; set; }
+    public string Connectioncount { get; set; }
   }
 
   public class User {
-    public string nick { get; set; }
-    public string[] features { get; set; }
+    public string Nick { get; set; }
+    public string[] Features { get; set; }
 
   }
 
   public class MsgCommand : User {
-    public long timestamp { get; set; }
-    public string data { get; set; }
+    public long Timestamp { get; set; }
+    public string Data { get; set; }
   }
 
   public class JoinCommand : User {
-    public long timestamp { get; set; }
+    public long Timestamp { get; set; }
   }
 
   public class QuitCommand : JoinCommand {
