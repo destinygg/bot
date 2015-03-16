@@ -39,8 +39,15 @@ namespace Echobot2 {
       while (true) { }
     }
 
+    // todo: you can make this better with http://stackoverflow.com/questions/3668217/handling-propertychanged-in-a-type-safe-way
     private static void wsc_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-      _textBuffer.Post(((WebSocketClient) sender).Name);
+      var wsc = sender as WebSocketClient;
+      if (wsc != null) {
+        _textBuffer.Post(wsc.Name);
+      }
+      else {
+        
+      }
     }
   }
 

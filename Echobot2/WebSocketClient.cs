@@ -37,6 +37,7 @@ namespace Echobot2 {
       } else if (actionMessage == "MSG") {
         var msg = JsonConvert.DeserializeObject<MsgCommand>(jsonMessage);
         Log(msg.Nick + ": " + msg.Data);
+        this.Msg = msg;
       } else if (actionMessage == "JOIN") {
         var join = JsonConvert.DeserializeObject<JoinCommand>(jsonMessage);
       } else if (actionMessage == "QUIT") {
@@ -54,7 +55,7 @@ namespace Echobot2 {
       Console.ForegroundColor = color;
       Console.WriteLine(input);
       Console.ResetColor();
-      this.Name = input;
+      //this.Name = input;
       //ITargetBlock<string> target = new BufferBlock<string>();
       target = new BufferBlock<string>();
       target.Post(input);
@@ -92,5 +93,11 @@ namespace Echobot2 {
       get { return _name; }
       set { SetField(ref _name, value); }
     }
+    private MsgCommand _msg;
+    public MsgCommand Msg {
+      get { return _msg; }
+      set { SetField(ref _msg, value); }
+    }
+
   }
 }
