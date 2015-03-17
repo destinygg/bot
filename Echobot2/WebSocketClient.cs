@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks.Dataflow;
+using Echobot2.Core;
 using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
@@ -37,7 +38,7 @@ namespace Echobot2 {
       } else if (actionMessage == "MSG") {
         var msg = JsonConvert.DeserializeObject<MsgCommand>(jsonMessage);
         Log(msg.Nick + ": " + msg.Data);
-        this.Msg = msg;
+        this.CoreMsg = new Message() { Nick = msg.Nick, Text = msg.Data };
       } else if (actionMessage == "JOIN") {
         var join = JsonConvert.DeserializeObject<JoinCommand>(jsonMessage);
       } else if (actionMessage == "QUIT") {
@@ -97,6 +98,12 @@ namespace Echobot2 {
     public MsgCommand Msg {
       get { return _msg; }
       set { SetField(ref _msg, value); }
+    }
+
+    private Core.Message _coreMsg;
+    public Core.Message CoreMsg {
+      get { return _coreMsg; }
+      set { SetField(ref _coreMsg, value); }
     }
 
   }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using Echobot2.Core;
 using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using System.Collections.Generic;
@@ -18,7 +20,7 @@ using System.Threading.Tasks.Dataflow;
 namespace Echobot2 {
   class Program {
 
-    private static BufferBlock<string> _textBuffer;
+    private static BufferBlock<CoreData> _textBuffer;
     static void Main(string[] args) {
 
 
@@ -28,7 +30,7 @@ namespace Echobot2 {
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
 
 
-      _textBuffer = new BufferBlock<string>(new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
+      _textBuffer = new BufferBlock<CoreData>(new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
 
       // start consumers
       PrimaryConsumer.Consume(_textBuffer);
@@ -36,28 +38,33 @@ namespace Echobot2 {
       //logSync.Consumer(Constants.LogBuffer);
       //consoleSync.Consumer(Constants.ConsoleBuffer);
 
-      while (true) { }
+      Process.GetCurrentProcess().WaitForExit();
+      //Process.GetCurrentProcess().Kill();
+      
     }
 
     // todo: you can make this better with http://stackoverflow.com/questions/3668217/handling-propertychanged-in-a-type-safe-way
     private static void wsc_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var wsc = sender as WebSocketClient;
       if (wsc != null) {
-        _textBuffer.Post(wsc.Name);
-      }
-      else {
-        
+        _textBuffer.Post(wsc.CoreMsg);
+      } else {
+
       }
     }
   }
 
   public static class PrimaryConsumer {
-    public static void Consume(ISourceBlock<string> sourceBlock) {
-      var actionBlock = new ActionBlock<string>(s => ParseString(s), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
+    public static void Consume(ISourceBlock<CoreData> sourceBlock) {
+      var actionBlock = new ActionBlock<CoreData>(s => Parse(s), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
       sourceBlock.LinkTo(actionBlock);
     }
-    private static void ParseString(string input) {
-      Console.WriteLine(input);
+    private static void Parse(CoreData input) {
+      if (input is Core.Message) {
+        var msg = (Core.Message) input;
+        Console.WriteLine(msg.Nick + ": " + msg.Text);
+        
+      }
     }
   }
 
