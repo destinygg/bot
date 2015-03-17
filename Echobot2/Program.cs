@@ -23,8 +23,8 @@ namespace Echobot2 {
     private static BufferBlock<CoreData> _textBuffer;
     static void Main(string[] args) {
 
-
       IClient wsc = new WebSocketClient();
+      wsc.Run();
       wsc.PropertyChanged += wsc_PropertyChanged;
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
@@ -69,6 +69,6 @@ namespace Echobot2 {
   }
 
   public interface IClient : INotifyPropertyChanged {
-
+    void Run();
   }
 }

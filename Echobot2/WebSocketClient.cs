@@ -13,15 +13,20 @@ namespace Echobot2 {
   public class WebSocketClient : IClient {
     public BufferBlock<string> target { get; set; }
 
+    private WebSocket websocket;
+
     public WebSocketClient() {
-      WebSocket websocket = new WebSocket("ws://www.destiny.gg:9997/ws");
+      websocket = new WebSocket("ws://www.destiny.gg:9997/ws");
       websocket.Opened += websocket_Opened;
       websocket.Error += websocket_Error;
       websocket.Closed += websocket_Closed;
       websocket.MessageReceived += websocket_MessageReceived;
-      websocket.Open();
-
     }
+
+    public void Run() {
+      websocket.Open();
+    }
+
     private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e) {
       //Log(e.Message);
       var spaceIndex = e.Message.IndexOf(' ');
