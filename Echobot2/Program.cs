@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Net.Mime;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Echobot2.Core;
@@ -38,9 +39,12 @@ namespace Echobot2 {
       //logSync.Consumer(Constants.LogBuffer);
       //consoleSync.Consumer(Constants.ConsoleBuffer);
 
-      Process.GetCurrentProcess().WaitForExit();
-      //Process.GetCurrentProcess().Kill();
-      
+      while (true) {
+        if (Console.ReadLine() == "exit") {
+          Environment.Exit(0);
+        }
+      }
+      //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
     }
 
     // todo: you can make this better with http://stackoverflow.com/questions/3668217/handling-propertychanged-in-a-type-safe-way
@@ -63,7 +67,6 @@ namespace Echobot2 {
       if (input is Core.Message) {
         var msg = (Core.Message) input;
         Console.WriteLine(msg.Nick + ": " + msg.Text);
-        
       }
     }
   }
