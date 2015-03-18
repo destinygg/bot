@@ -1,10 +1,9 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
-namespace Echobot2 {
+namespace Dbot {
   public class NamesCommand {
     public User[] Users { get; set; }
     public string Connectioncount { get; set; }

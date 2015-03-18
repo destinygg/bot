@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks.Dataflow;
-using Echobot2.Core;
+using Dbot.Common;
+using Dbot.CommonModels;
 using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
 
-namespace Echobot2 {
+namespace Dbot.WebsocketClient {
   public class WebSocketClient : IClient {
-    public BufferBlock<string> target { get; set; }
 
     private WebSocket websocket;
 
@@ -61,11 +60,6 @@ namespace Echobot2 {
       Console.ForegroundColor = color;
       Console.WriteLine(input);
       Console.ResetColor();
-      //this.Name = input;
-      //ITargetBlock<string> target = new BufferBlock<string>();
-      target = new BufferBlock<string>();
-      target.Post(input);
-      target.Complete();
     }
 
     private void websocket_Error(object sender, ErrorEventArgs e) {
@@ -74,10 +68,6 @@ namespace Echobot2 {
 
     private void websocket_Opened(object sender, EventArgs e) {
       Log("Connected!", ConsoleColor.Green);
-    }
-
-    public BufferBlock<string> test() {
-      return target;
     }
 
     // boiler-plate
@@ -105,8 +95,8 @@ namespace Echobot2 {
       set { SetField(ref _msg, value); }
     }
 
-    private Core.Message _coreMsg;
-    public Core.Message CoreMsg {
+    private Message _coreMsg;
+    public Message CoreMsg {
       get { return _coreMsg; }
       set { SetField(ref _coreMsg, value); }
     }

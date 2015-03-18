@@ -4,21 +4,21 @@ using System.Diagnostics;
 using System.Net.Mime;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using Echobot2.Core;
+using Dbot.Common;
+using Dbot.CommonModels;
+using Dbot.WebsocketClient;
 using Newtonsoft.Json;
-using SuperSocket.ClientEngine;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Runtime.Remoting;
 using System.Threading.Tasks;
-using WebSocket4Net;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks.Dataflow;
 
 
-namespace Echobot2 {
+namespace Dbot {
   class Program {
 
     private static BufferBlock<CoreData> _textBuffer;
@@ -53,7 +53,7 @@ namespace Echobot2 {
       if (wsc != null) {
         _textBuffer.Post(wsc.CoreMsg);
       } else {
-
+        throw new Exception();
       }
     }
   }
@@ -64,14 +64,12 @@ namespace Echobot2 {
       sourceBlock.LinkTo(actionBlock);
     }
     private static void Parse(CoreData input) {
-      if (input is Core.Message) {
-        var msg = (Core.Message) input;
+      if (input is Message) {
+        var msg = (Message) input;
         Console.WriteLine(msg.Nick + ": " + msg.Text);
       }
     }
   }
 
-  public interface IClient : INotifyPropertyChanged {
-    void Run();
-  }
+  
 }
