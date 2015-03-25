@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 
-namespace Dbot {
+namespace Dbot.WebsocketClient {
   public class NamesCommand {
     public User[] Users { get; set; }
     public string Connectioncount { get; set; }

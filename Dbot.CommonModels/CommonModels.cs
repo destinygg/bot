@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Dbot.CommonModels {
 
-  public abstract class CoreData {
+  public abstract class CommonModels {
 
   }
 
-  public class User : CoreData {
+  public class User : CommonModels {
     public string Nick { get; set; }
+    public bool IsMod { get; set; }
   }
 
   public class Message : User {

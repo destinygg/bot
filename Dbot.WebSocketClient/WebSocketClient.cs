@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using Dbot.Common;
 using Dbot.CommonModels;
 using Newtonsoft.Json;
@@ -12,18 +13,18 @@ using WebSocket4Net;
 namespace Dbot.WebsocketClient {
   public class WebSocketClient : IClient {
 
-    private WebSocket websocket;
+    private readonly WebSocket _websocket;
 
     public WebSocketClient() {
-      websocket = new WebSocket("ws://www.destiny.gg:9997/ws");
-      websocket.Opened += websocket_Opened;
-      websocket.Error += websocket_Error;
-      websocket.Closed += websocket_Closed;
-      websocket.MessageReceived += websocket_MessageReceived;
+      _websocket = new WebSocket("ws://www.destiny.gg:9997/ws");
+      _websocket.Opened += websocket_Opened;
+      _websocket.Error += websocket_Error;
+      _websocket.Closed += websocket_Closed;
+      _websocket.MessageReceived += websocket_MessageReceived;
     }
 
     public void Run() {
-      websocket.Open();
+      _websocket.Open();
     }
 
     private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -34,21 +35,31 @@ namespace Dbot.WebsocketClient {
       var jsonMessage = e.Message.Substring(spaceIndex + 1, e.Message.Length - actionMessage.Length - 1);
       //Log(jsonMessage, ConsoleColor.Magenta);
 
+      switch (actionMessage) {
+        case "NAMES": {
+            var names = JsonConvert.DeserializeObject<NamesCommand>(jsonMessage);
+            Log(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
+          }
+          break;
+        case "MSG": {
 
-
-      if (actionMessage == "NAMES") {
-        var names = JsonConvert.DeserializeObject<NamesCommand>(jsonMessage);
-        Log(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
-      } else if (actionMessage == "MSG") {
-        var msg = JsonConvert.DeserializeObject<MsgCommand>(jsonMessage);
-        Log(msg.Nick + ": " + msg.Data);
-        this.CoreMsg = new Message() { Nick = msg.Nick, Text = msg.Data };
-      } else if (actionMessage == "JOIN") {
-        var join = JsonConvert.DeserializeObject<JoinCommand>(jsonMessage);
-      } else if (actionMessage == "QUIT") {
-        var quit = JsonConvert.DeserializeObject<QuitCommand>(jsonMessage);
-      } else {
-        Log(e.Message, ConsoleColor.Red);
+            var msg = JsonConvert.DeserializeObject<MsgCommand>(jsonMessage);
+            var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
+            Log(msg.Nick + ": " + msg.Data);
+            this.CoreMsg = new Message() { Nick = msg.Nick, Text = msg.Data, IsMod = isMod };
+          }
+          break;
+        case "JOIN": {
+            var join = JsonConvert.DeserializeObject<JoinCommand>(jsonMessage);
+          }
+          break;
+        case "QUIT": {
+            var quit = JsonConvert.DeserializeObject<QuitCommand>(jsonMessage);
+          }
+          break;
+        default:
+          Log(e.Message, ConsoleColor.Red);
+          break;
       }
     }
 

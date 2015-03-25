@@ -1,37 +1,30 @@
-﻿using System;
+﻿//http://www.reddit.com/r/InternetIsBeautiful/comments/2zwvpm/%EF%BD%95%EF%BD%8E%EF%BD%89%EF%BD%83%EF%BD%8F%EF%BD%84%EF%BD%85_%EF%BD%94%EF%BD%8F%EF%BD%8F%EF%BD%8C%EF%BD%93/
+
+using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Net.Mime;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
+using System.Runtime.Remoting.Messaging;
+using System.Threading.Tasks.Dataflow;
 using Dbot.Common;
 using Dbot.CommonModels;
+using Dbot.Data;
 using Dbot.WebsocketClient;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Runtime.Remoting;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using System.Threading.Tasks.Dataflow;
 
+namespace Dbot.Main {
+  static class Dbot {
 
-namespace Dbot {
-  class Program {
-
-    private static BufferBlock<CoreData> _textBuffer;
+    private static BufferBlock<CommonModels.CommonModels> _textBuffer;
+    private static bool _exit;
     static void Main(string[] args) {
 
+      Datastore.Initialize();
       IClient wsc = new WebSocketClient();
       wsc.Run();
       wsc.PropertyChanged += wsc_PropertyChanged;
+      Console.CancelKeyPress += Console_CancelKeyPress;
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
 
-
-      _textBuffer = new BufferBlock<CoreData>(new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
+      _textBuffer = new BufferBlock<CommonModels.CommonModels>(new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
 
       // start consumers
       PrimaryConsumer.Consume(_textBuffer);
@@ -39,12 +32,22 @@ namespace Dbot {
       //logSync.Consumer(Constants.LogBuffer);
       //consoleSync.Consumer(Constants.ConsoleBuffer);
 
-      while (true) {
+      _exit = false;
+      while (!_exit) { //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
         if (Console.ReadLine() == "exit") {
-          Environment.Exit(0);
+          _exit = true;
         }
       }
-      //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
+
+      Exit();
+    }
+
+    static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {
+      Exit();
+    }
+
+    static void Exit() {
+      Datastore.Terminate();
     }
 
     // todo: you can make this better with http://stackoverflow.com/questions/3668217/handling-propertychanged-in-a-type-safe-way
@@ -59,17 +62,17 @@ namespace Dbot {
   }
 
   public static class PrimaryConsumer {
-    public static void Consume(ISourceBlock<CoreData> sourceBlock) {
-      var actionBlock = new ActionBlock<CoreData>(s => Parse(s), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
+    public static void Consume(ISourceBlock<CommonModels.CommonModels> sourceBlock) {
+      var actionBlock = new ActionBlock<CommonModels.CommonModels>(s => Parse(s), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
       sourceBlock.LinkTo(actionBlock);
     }
-    private static void Parse(CoreData input) {
+    private static void Parse(CommonModels.CommonModels input) {
       if (input is Message) {
+        Console.WriteLine("logged!");
         var msg = (Message) input;
         Console.WriteLine(msg.Nick + ": " + msg.Text);
+        Datastore.InsertMessage(msg);
       }
     }
   }
-
-  
 }
