@@ -65,7 +65,7 @@
       <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dbot.Data\Dbot.Data.csproj">
-      <Project>{ccf6b7d0-98af-4e50-9524-69dabddc83fa}</Project>
+      <Project>{1e2409c3-c544-4ec2-aa93-9c0f5a4b02ec}</Project>
       <Name>Dbot.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dbot.WebSocketClient\Dbot.WebSocketClient.csproj">

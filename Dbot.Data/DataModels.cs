@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -11,10 +11,8 @@ namespace Dbot.Data {
   public class ModCommands {
     [PrimaryKey, AutoIncrement, NotNull]
     public int Id { get; set; }
-    [NotNull]
     public string Command { get; set; }
     public string CommandParameters { get; set; }
-    [NotNull]
     public string Operation { get; set; }
     public string Result { get; set; }
   }

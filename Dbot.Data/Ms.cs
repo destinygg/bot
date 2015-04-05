@@ -1,4 +1,4 @@
-﻿namespace Dbot.Data {
+namespace Dbot.Data {
   public static class Ms {
     //Magic strings!
     public const string stalk = "stalk";

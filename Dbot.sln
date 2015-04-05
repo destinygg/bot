@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Common", "Dbot.Common\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.WebSocketClient", "Dbot.WebSocketClient\Dbot.WebSocketClient.csproj", "{80CAF0DD-1886-42F8-B119-565E7C389424}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Data", "Dbot.Data\Dbot.Data.csproj", "{CCF6B7D0-98AF-4E50-9524-69DABDDC83FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Data", "Dbot.Data\Dbot.Data.csproj", "{1E2409C3-C544-4EC2-AA93-9C0F5A4B02EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{80CAF0DD-1886-42F8-B119-565E7C389424}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80CAF0DD-1886-42F8-B119-565E7C389424}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80CAF0DD-1886-42F8-B119-565E7C389424}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCF6B7D0-98AF-4E50-9524-69DABDDC83FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCF6B7D0-98AF-4E50-9524-69DABDDC83FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCF6B7D0-98AF-4E50-9524-69DABDDC83FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCF6B7D0-98AF-4E50-9524-69DABDDC83FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E2409C3-C544-4EC2-AA93-9C0F5A4B02EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E2409C3-C544-4EC2-AA93-9C0F5A4B02EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E2409C3-C544-4EC2-AA93-9C0F5A4B02EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E2409C3-C544-4EC2-AA93-9C0F5A4B02EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
