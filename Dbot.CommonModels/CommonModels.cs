@@ -15,4 +15,13 @@ namespace Dbot.CommonModels {
   public class Message : User {
     public string Text { get; set; }
   }
+
+  public abstract class Victim : User {
+    TimeSpan Duration { get; set; }
+  }
+
+  public class Ban : Victim { }
+
+  public class Mute : Victim { }
+
 }
