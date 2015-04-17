@@ -59,11 +59,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Dbot.CommonModels\Dbot.CommonModels.csproj">
       <Project>{65d520b2-5739-4908-90b0-739cb4daac4d}</Project>
-      <Name>CommonModels</Name>
+      <Name>Dbot.CommonModels</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dbot.Common\Dbot.Common.csproj">
       <Project>{e59d160d-6c94-421f-916a-8533afc15211}</Project>
-      <Name>Common</Name>
+      <Name>Dbot.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
