@@ -12,7 +12,7 @@ using Dbot.WebsocketClient;
 namespace Dbot.Main {
   static class Dbot {
 
-    private static BufferBlock<CommonModels.CommonModels> _textBuffer;
+    private static ActionBlock<Message> _textBuffer;
     private static bool _exit;
     static void Main(string[] args) {
 
@@ -24,14 +24,10 @@ namespace Dbot.Main {
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
 
-      _textBuffer = new BufferBlock<CommonModels.CommonModels>(new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
+      var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
+      _textBuffer = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
 
-      // start consumers
-      PrimaryConsumer.Consume(_textBuffer);
-      //modAsync.Consumer(Constants.ModBuffer);
-      //logSync.Consumer(Constants.LogBuffer);
       //consoleSync.Consumer(Constants.ConsoleBuffer);
-
       _exit = false;
       while (!_exit) { //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
         if (Console.ReadLine() == "exit") {
@@ -40,6 +36,13 @@ namespace Dbot.Main {
       }
 
       Exit();
+    }
+
+    private static void Log(Message input) {
+      Console.WriteLine("logged!");
+      var msg = input;
+      Console.WriteLine(msg.Nick + ": " + msg.Text);
+      Datastore.InsertMessage(msg);
     }
 
     static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {
@@ -56,22 +59,7 @@ namespace Dbot.Main {
       if (wsc != null) {
         _textBuffer.Post(wsc.CoreMsg);
       } else {
-        throw new Exception();
-      }
-    }
-  }
-
-  public static class PrimaryConsumer {
-    public static void Consume(ISourceBlock<CommonModels.CommonModels> sourceBlock) {
-      var actionBlock = new ActionBlock<CommonModels.CommonModels>(s => Parse(s), new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded });
-      sourceBlock.LinkTo(actionBlock);
-    }
-    private static void Parse(CommonModels.CommonModels input) {
-      if (input is Message) {
-        Console.WriteLine("logged!");
-        var msg = (Message) input;
-        Console.WriteLine(msg.Nick + ": " + msg.Text);
-        Datastore.InsertMessage(msg);
+        throw new NotSupportedException("How did you get here???");
       }
     }
   }
