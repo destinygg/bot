@@ -8,16 +8,21 @@ using Dbot.Common;
 using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.WebsocketClient;
+using Dbot.Banner;
 
 namespace Dbot.Main {
   static class Dbot {
 
-    private static ActionBlock<Message> _textBuffer;
+    private static ActionBlock<Message> _logger;
+    private static ActionBlock<Message> _modder;
+    private static ActionBlock<object> _sender;
+    private static ActionBlock<Message> _commander;
+    private static TransformBlock<Message, Message> _banner;
     private static bool _exit;
     static void Main(string[] args) {
 
       Datastore.Initialize();
-      IClient wsc = new WebSocketClient();
+      var wsc = new WebSocketClient();
       wsc.Run();
       wsc.PropertyChanged += wsc_PropertyChanged;
       Console.CancelKeyPress += Console_CancelKeyPress;
@@ -25,7 +30,12 @@ namespace Dbot.Main {
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
 
       var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
-      _textBuffer = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
+      _logger = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
+      _sender = new ActionBlock<object>(m => Send(m), hungryCaterpillar);
+      _banner = new TransformBlock<Message, Message>(Ban, hungryCaterpillar);
+      _commander = new ActionBlock<Message>(m => Command(m), hungryCaterpillar);
+
+      _banner.LinkTo(_commander);
 
       //consoleSync.Consumer(Constants.ConsoleBuffer);
       _exit = false;
@@ -38,11 +48,33 @@ namespace Dbot.Main {
       Exit();
     }
 
+    private static void Command(Message message) {
+
+    }
+
+    private static void Send(object input) {
+      if (input is Victim) {
+
+      } else if (input is Message) {
+
+      }
+      else throw new NotSupportedException("Unsupported type.");
+    }
+
+    private static Func<Message, Message> Ban = m => {
+      var bantest = new Banner.Banner(m).BanParser();
+      if (bantest == null)
+        return m;
+      else {
+        _sender.Post(bantest);
+        m.Text = "";
+        return m;
+      }
+    };
+
     private static void Log(Message input) {
-      Console.WriteLine("logged!");
-      var msg = input;
-      Console.WriteLine(msg.Nick + ": " + msg.Text);
-      Datastore.InsertMessage(msg);
+      Console.WriteLine(input.Nick + ": " + input.Text);
+      Datastore.InsertMessage(input);
     }
 
     static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {
@@ -55,12 +87,9 @@ namespace Dbot.Main {
 
     // todo: you can make this better with http://stackoverflow.com/questions/3668217/handling-propertychanged-in-a-type-safe-way
     private static void wsc_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-      var wsc = sender as WebSocketClient;
-      if (wsc != null) {
-        _textBuffer.Post(wsc.CoreMsg);
-      } else {
-        throw new NotSupportedException("How did you get here???");
-      }
+      var wsc = (WebSocketClient) sender;
+      _logger.Post(wsc.CoreMsg);
+      _banner.Post(wsc.CoreMsg);
     }
   }
 }

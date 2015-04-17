@@ -42,10 +42,8 @@ namespace Dbot.WebsocketClient {
           }
           break;
         case "MSG": {
-
             var msg = JsonConvert.DeserializeObject<MsgCommand>(jsonMessage);
             var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
-            Log(msg.Nick + ": " + msg.Data);
             this.CoreMsg = new Message() { Nick = msg.Nick, Text = msg.Data, IsMod = isMod };
           }
           break;
