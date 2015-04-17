@@ -10,8 +10,8 @@ namespace Dbot.Data {
     public const string tempadd = "tempadd";
     public const string del = "del";
     public const string tempdel = "tempdel";
-    public const string banlist = "AutoBanList";
-    public const string tempbanlist = "AutoTempBanList";
+    public const string banlist = "BannedWords";
+    public const string tempbanlist = "TempBannedWords";
     public const string modabuse = "modabuse";
     public const string ninja = "ninja";
     public const string message = "message";
