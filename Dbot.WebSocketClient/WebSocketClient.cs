@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography.X509Certificates;
 using Dbot.Common;
 using Dbot.CommonModels;
+using Dbot.Utility;
 using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
@@ -16,7 +18,10 @@ namespace Dbot.WebsocketClient {
     private readonly WebSocket _websocket;
 
     public WebSocketClient() {
-      _websocket = new WebSocket("ws://www.destiny.gg:9997/ws");
+      var header = new List<KeyValuePair<string, string>> {
+        new KeyValuePair<string, string>("Cookie", PrivateConstants.botWebsocketAuth)
+      };
+      _websocket = new WebSocket("ws://www.destiny.gg:9997/ws", customHeaderItems: header);
       _websocket.Opened += websocket_Opened;
       _websocket.Error += websocket_Error;
       _websocket.Closed += websocket_Closed;
@@ -25,6 +30,7 @@ namespace Dbot.WebsocketClient {
 
     public void Run() {
       _websocket.Open();
+      
     }
 
     private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -37,22 +43,26 @@ namespace Dbot.WebsocketClient {
 
       switch (actionMessage) {
         case "NAMES": {
-            var names = JsonConvert.DeserializeObject<NamesCommand>(jsonMessage);
+            var names = JsonConvert.DeserializeObject<NamesReceiver>(jsonMessage);
             Log(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
           }
           break;
         case "MSG": {
-            var msg = JsonConvert.DeserializeObject<MsgCommand>(jsonMessage);
+            var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
             var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
             this.CoreMsg = new Message() { Nick = msg.Nick, Text = msg.Data, IsMod = isMod };
           }
           break;
         case "JOIN": {
-            var join = JsonConvert.DeserializeObject<JoinCommand>(jsonMessage);
+            var join = JsonConvert.DeserializeObject<JoinReceiver>(jsonMessage);
           }
           break;
         case "QUIT": {
-            var quit = JsonConvert.DeserializeObject<QuitCommand>(jsonMessage);
+            var quit = JsonConvert.DeserializeObject<QuitReceiver>(jsonMessage);
+          }
+          break;
+        case "MUTE": {
+            var mute = JsonConvert.DeserializeObject<MuteReceiver>(jsonMessage);
           }
           break;
         default:
@@ -79,6 +89,13 @@ namespace Dbot.WebsocketClient {
       Log("Connected!", ConsoleColor.Green);
     }
 
+    public void Send(string input) {
+      var msg = new MessageSender {data = input};
+      var jsonMsg = JsonConvert.SerializeObject(msg);
+      Log("MSG " + jsonMsg, ConsoleColor.Red);
+      _websocket.Send("MSG " + jsonMsg);
+    }
+
     // boiler-plate
     public event PropertyChangedEventHandler PropertyChanged;
     protected virtual void OnPropertyChanged(string propertyName) {
@@ -98,8 +115,8 @@ namespace Dbot.WebsocketClient {
       get { return _name; }
       set { SetField(ref _name, value); }
     }
-    private MsgCommand _msg;
-    public MsgCommand Msg {
+    private MessageReceiver _msg;
+    public MessageReceiver Msg {
       get { return _msg; }
       set { SetField(ref _msg, value); }
     }

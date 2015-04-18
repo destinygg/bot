@@ -40,8 +40,12 @@ namespace Dbot.Main {
       //consoleSync.Consumer(Constants.ConsoleBuffer);
       _exit = false;
       while (!_exit) { //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
-        if (Console.ReadLine() == "exit") {
+        var input = Console.ReadLine();
+        if (input == "exit") {
           _exit = true;
+        }
+        else if (input[0] == '~') {
+          wsc.Send(input.Substring(1));
         }
       }
 

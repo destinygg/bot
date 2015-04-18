@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace Dbot.WebsocketClient {
-  public class NamesCommand {
+  public class NamesReceiver {
     public User[] Users { get; set; }
     public string Connectioncount { get; set; }
   }
@@ -14,17 +14,25 @@ namespace Dbot.WebsocketClient {
 
   }
 
-  public class MsgCommand : User {
+  public class MessageReceiver : User {
     public long Timestamp { get; set; }
     public string Data { get; set; }
   }
 
-  public class JoinCommand : User {
+  public class JoinReceiver : User {
     public long Timestamp { get; set; }
   }
 
-  public class QuitCommand : JoinCommand {
+  public class QuitReceiver : JoinReceiver {
 
+  }
+
+  public class MuteReceiver : MessageReceiver {
+    //MUTE {"nick":"Bot","features":["protected","bot"],"timestamp":1429322359451,"data ":"venat"}
+  }
+
+  public class MessageSender {
+    public string data { get; set; }
   }
   /*
 BROADCAST {"timestamp":1426360863360,"data":"test"}

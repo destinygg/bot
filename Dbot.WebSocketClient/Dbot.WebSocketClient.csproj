@@ -65,6 +65,10 @@
       <Project>{e59d160d-6c94-421f-916a-8533afc15211}</Project>
       <Name>Dbot.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
+      <Project>{e27fab2d-880d-4137-b32a-23e7db585bf3}</Project>
+      <Name>Dbot.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

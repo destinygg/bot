@@ -8,5 +8,6 @@ using System.Threading.Tasks;
 namespace Dbot.Common {
   public interface IClient : INotifyPropertyChanged {
     void Run();
+    void Send(string input);
   }
 }
