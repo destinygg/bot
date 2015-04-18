@@ -10,8 +10,11 @@ namespace Dbot.Data {
 
     public static void Initialize() {
       _db = new SQLiteAsyncConnection("DbotDB.sqlite");
-      Construct();
+      Load();
     }
+
+    private static List<ModCommands> _getModCommands;
+    public static List<ModCommands> GetModCommands { get { return _getModCommands ?? (_getModCommands = _db.Table<ModCommands>().ToListAsync().Result); } }
 
     public static void InsertMessage(Message msg) {
       _db.InsertAsync(new Stalk {
@@ -25,7 +28,7 @@ namespace Dbot.Data {
       //_db.Dispose();
     }
 
-    public static void Construct() {
+    public static void Load() {
       _db.CreateTableAsync<Stalk>();
       _db.CreateTableAsync<TempBannedWords>();
       _db.CreateTableAsync<BannedWords>();
