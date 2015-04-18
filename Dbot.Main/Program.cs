@@ -17,7 +17,8 @@ namespace Dbot.Main {
     private static ActionBlock<Message> _modder;
     private static ActionBlock<object> _sender;
     private static ActionBlock<Message> _commander;
-    private static TransformBlock<Message, Message> _banner;
+    private static ActionBlock<Message> _modCommander;
+    private static ActionBlock<Message> _banner;
     private static bool _exit;
     static void Main(string[] args) {
 
@@ -32,10 +33,11 @@ namespace Dbot.Main {
       var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
       _logger = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
       _sender = new ActionBlock<object>(m => Send(m), hungryCaterpillar);
-      _banner = new TransformBlock<Message, Message>(Ban, hungryCaterpillar);
+      _banner = new ActionBlock<Message>(m => Ban(m), hungryCaterpillar);
       _commander = new ActionBlock<Message>(m => Command(m), hungryCaterpillar);
+      _modCommander = new ActionBlock<Message>(m => ModCommand(m), hungryCaterpillar);
 
-      _banner.LinkTo(_commander);
+      //_banner.LinkTo(_commander);
 
       //consoleSync.Consumer(Constants.ConsoleBuffer);
       _exit = false;
@@ -43,9 +45,10 @@ namespace Dbot.Main {
         var input = Console.ReadLine();
         if (input == "exit") {
           _exit = true;
-        }
-        else if (input[0] == '~') {
+        } else if (input[0] == '~') {
           wsc.Send(input.Substring(1));
+        } else if (input[0] == '<') {
+          _modCommander.Post(new Message { Text = input });
         }
       }
 
@@ -56,13 +59,16 @@ namespace Dbot.Main {
 
     }
 
+    private static void ModCommand(Message message) {
+      var s = new ModCommander.ModCommander(message.Text);
+    }
+
     private static void Send(object input) {
       if (input is Victim) {
 
       } else if (input is Message) {
 
-      }
-      else throw new NotSupportedException("Unsupported type.");
+      } else throw new NotSupportedException("Unsupported type.");
     }
 
     private static Func<Message, Message> Ban = m => {
