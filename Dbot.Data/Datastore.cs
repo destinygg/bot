@@ -23,8 +23,24 @@ namespace Dbot.Data {
       _db.UpdateAsync(new StateVariables { Key = key, Value = value }).ContinueWith(x => {
         _getStateVariables = _db.Table<StateVariables>().ToListAsync().Result;
       });
-
     }
+
+#warning this could be better
+    public static void AddDb(string table, string bannedPhrase) {
+      object safet;
+      if (table == "BannedWords") {
+        if (_db.Table<BannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
+          _db.InsertAsync(new BannedWords {Word = bannedPhrase});
+        }
+      } else if (table == "TempBannedWords") {
+        if (_db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
+          _db.InsertAsync(new TempBannedWords() {Word = bannedPhrase});
+        }
+      }
+      else throw new Exception();
+    }
+
+
 
     public static void InsertMessage(Message msg) {
       _db.InsertAsync(new Stalk {

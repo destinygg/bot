@@ -43,7 +43,7 @@ namespace Dbot.Main {
       _exit = false;
       while (!_exit) { //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
         var input = Console.ReadLine();
-        if (!string.IsNullOrEmpty(input)) {
+        if (!String.IsNullOrEmpty(input)) {
           if (input == "exit") {
             _exit = true;
           } else if (input[0] == '~') {
