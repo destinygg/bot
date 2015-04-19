@@ -26,8 +26,7 @@ namespace Dbot.Data {
     }
 
 #warning this could be better
-    public static void AddDb(string table, string bannedPhrase) {
-      object safet;
+    public static void AddBanWord(string table, string bannedPhrase) {
       if (table == "BannedWords") {
         if (_db.Table<BannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
           _db.InsertAsync(new BannedWords {Word = bannedPhrase});
@@ -40,7 +39,20 @@ namespace Dbot.Data {
       else throw new Exception();
     }
 
-
+#warning this could be better
+    public static void RemoveBanWord(string table, string bannedPhrase) {
+      if (table == "BannedWords") {
+        var bannedObject = _db.Table<BannedWords>().Where(x => x.Word == bannedPhrase);
+        if (bannedObject.CountAsync().Result > 0) {
+          _db.DeleteAsync(bannedObject.FirstAsync().Result);
+        }
+      } else if (table == "TempBannedWords") {
+        var bannedObject = _db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase);
+        if (bannedObject.CountAsync().Result > 0) {
+          _db.DeleteAsync(bannedObject.FirstAsync().Result);
+        }
+      } else throw new Exception();
+    }
 
     public static void InsertMessage(Message msg) {
       _db.InsertAsync(new Stalk {

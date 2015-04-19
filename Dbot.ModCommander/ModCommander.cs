@@ -21,7 +21,8 @@ namespace Dbot.ModCommander {
           Console.ResetColor();
         }},
         {"set", x => Datastore.UpdateStateValue(x.Command, int.Parse(x.Result))},
-        {"db.add", x => Datastore.AddDb(x.Result, splitInput[1])}
+        {"db.add", x => Datastore.AddBanWord(x.Result, splitInput[1])},
+        {"db.remove", x => Datastore.RemoveBanWord(x.Result, splitInput[1])},
       };
 
       foreach (var c in commandMatches) {
