@@ -43,12 +43,14 @@ namespace Dbot.Main {
       _exit = false;
       while (!_exit) { //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
         var input = Console.ReadLine();
-        if (input == "exit") {
-          _exit = true;
-        } else if (input[0] == '~') {
-          wsc.Send(input.Substring(1));
-        } else if (input[0] == '<') {
-          _modCommander.Post(new Message { Text = input });
+        if (!string.IsNullOrEmpty(input)) {
+          if (input == "exit") {
+            _exit = true;
+          } else if (input[0] == '~') {
+            wsc.Send(input.Substring(1));
+          } else if (input[0] == '<') {
+            _modCommander.Post(new Message { Text = input });
+          }
         }
       }
 
