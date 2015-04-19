@@ -10,7 +10,7 @@ namespace Dbot.Data {
 
     public static void Initialize() {
       _db = new SQLiteAsyncConnection("DbotDB.sqlite");
-      Load();
+      //Load();
     }
 
     private static List<ModCommands> _getModCommands;
