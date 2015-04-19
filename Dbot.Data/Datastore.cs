@@ -16,6 +16,16 @@ namespace Dbot.Data {
     private static List<ModCommands> _getModCommands;
     public static List<ModCommands> GetModCommands { get { return _getModCommands ?? (_getModCommands = _db.Table<ModCommands>().ToListAsync().Result); } }
 
+    private static List<StateVariables> _getStateVariables;
+    public static List<StateVariables> GetStateVariables { get { return _getStateVariables ?? (_getStateVariables = _db.Table<StateVariables>().ToListAsync().Result); } }
+
+    public static void UpdateStateValue(string key, int value) {
+      _db.UpdateAsync(new StateVariables { Key = key, Value = value }).ContinueWith(x => {
+        _getStateVariables = _db.Table<StateVariables>().ToListAsync().Result;
+      });
+
+    }
+
     public static void InsertMessage(Message msg) {
       _db.InsertAsync(new Stalk {
         Nick = msg.Nick,
