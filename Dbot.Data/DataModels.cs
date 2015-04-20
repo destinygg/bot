@@ -28,14 +28,14 @@ namespace Dbot.Data {
   public class TempBannedWords {
     [PrimaryKey, AutoIncrement, NotNull]
     public int Id { get; set; }
-    [NotNull]
+    [Unique, NotNull]
     public string Word { get; set; }
   }
 
   public class BannedWords {
     [PrimaryKey, AutoIncrement, NotNull]
     public int Id { get; set; }
-    [NotNull]
+    [Unique, NotNull]
     public string Word { get; set; }
   }
 

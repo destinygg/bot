@@ -17,7 +17,7 @@ namespace Dbot.ModCommander {
       Dictionary<string, Action<ModCommands>> operationDictionary = new Dictionary<string, Action<ModCommands>> {
         {"message", x => {
           Console.ForegroundColor = ConsoleColor.Red;
-          Console.WriteLine(x.Result);
+          Console.WriteLine(1 < splitInput.Count() ? x.Result.Replace("*", splitInput[1]) : x.Result);
           Console.ResetColor();
         }},
         {"set", x => Datastore.UpdateStateValue(x.Command, int.Parse(x.Result))},

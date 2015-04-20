@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Dbot.CommonModels;
 using SQLite;
 
@@ -10,7 +11,10 @@ namespace Dbot.Data {
 
     public static void Initialize() {
       _db = new SQLiteAsyncConnection("DbotDB.sqlite");
-      //Load();
+
+      if (0 == _db.ExecuteScalarAsync<int>("Select Count(*) FROM sqlite_master where type='table';").Result) {
+        LoadData();
+      }
     }
 
     private static List<ModCommands> _getModCommands;
@@ -29,14 +33,13 @@ namespace Dbot.Data {
     public static void AddBanWord(string table, string bannedPhrase) {
       if (table == "BannedWords") {
         if (_db.Table<BannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
-          _db.InsertAsync(new BannedWords {Word = bannedPhrase});
+          _db.InsertAsync(new BannedWords { Word = bannedPhrase });
         }
       } else if (table == "TempBannedWords") {
         if (_db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
-          _db.InsertAsync(new TempBannedWords() {Word = bannedPhrase});
+          _db.InsertAsync(new TempBannedWords() { Word = bannedPhrase });
         }
-      }
-      else throw new Exception();
+      } else throw new Exception();
     }
 
 #warning this could be better
@@ -66,7 +69,7 @@ namespace Dbot.Data {
       //_db.Dispose();
     }
 
-    public static void Load() {
+    public static void LoadData() {
       _db.CreateTableAsync<Stalk>();
       _db.CreateTableAsync<TempBannedWords>();
       _db.CreateTableAsync<BannedWords>();
@@ -153,10 +156,22 @@ namespace Dbot.Data {
           Result = Ms.banlist
         },
         new ModCommands {
+          Command = Ms.add,
+          CommandParameter = Ms.star,
+          Operation = Ms.message,
+          Result = "'*' added to banlist"
+        },
+        new ModCommands {
           Command = Ms.del,
           CommandParameter = Ms.star,
           Operation = Ms.dbremove,
           Result = Ms.banlist
+        },
+        new ModCommands {
+          Command = Ms.del,
+          CommandParameter = Ms.star,
+          Operation = Ms.message,
+          Result = "'*' removed from banlist"
         },
         new ModCommands {
           Command = Ms.tempadd,
@@ -165,10 +180,22 @@ namespace Dbot.Data {
           Result = Ms.tempbanlist,
         },
         new ModCommands {
+          Command = Ms.tempadd,
+          CommandParameter = Ms.star,
+          Operation = Ms.message,
+          Result = "'*' added to temp banlist"
+        },
+        new ModCommands {
           Command = Ms.tempdel,
           CommandParameter = Ms.star,
           Operation = Ms.dbremove,
           Result = Ms.tempbanlist,
+        },
+        new ModCommands {
+          Command = Ms.tempdel,
+          CommandParameter = Ms.star,
+          Operation = Ms.message,
+          Result = "'*' removed from temp banlist"
         },
         new ModCommands {
           Command = Ms.stalk,
