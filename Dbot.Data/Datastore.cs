@@ -58,7 +58,7 @@ namespace Dbot.Data {
     }
 
     public static string Stalk(string user) {
-      var msg = _db.Table<Stalk>().Where().OrderByDescending(x => x.Id).FirstOrDefaultAsync().Result;
+      var msg = _db.Table<Stalk>().Where(x => x.Nick == user).OrderByDescending(x => x.Id).FirstOrDefaultAsync().Result;
       if (msg != null) {
         return msg.Text;
       }
