@@ -8,7 +8,9 @@ using Dbot.Utility;
 
 namespace UnitTest {
   [TestClass]
-  public class UtilityTests { // Do not remove "Tests" because then it won't reference the static class
+
+#warning Keep Utility in the name to give us easy access to Tools
+  public class UtilityTools { 
 
     [TestMethod]
     public void PrettyDeltaTime_HasPrettyOutput() {
@@ -55,9 +57,9 @@ namespace UnitTest {
         "6 days 1h",
         "6 days",
         
-        "a day 23h",
-        "a day 1h",
-        "a day",
+        "1 day 23h",
+        "1 day 1h",
+        "1 day",
         
         "23h 59m",
         "23h 1m",
@@ -80,8 +82,9 @@ namespace UnitTest {
         "0m",
       };
 
-      foreach (var timeSpan in testList) {
-        actualAnswer.Add(Utility.PrettyDeltaTime(timeSpan));
+      foreach (var x in testList.OfType<TimeSpan>().Select((ts, i) => new { ts, i })) {
+        actualAnswer.Add(Tools.PrettyDeltaTime(x.ts));
+        Assert.AreEqual(expectedAnswer[x.i], actualAnswer[x.i]);
       }
 
       CollectionAssert.AreEqual(expectedAnswer, actualAnswer);

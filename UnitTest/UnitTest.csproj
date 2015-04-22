@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="ModCommander.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UtilityTests.cs" />
+    <Compile Include="UtilityTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">

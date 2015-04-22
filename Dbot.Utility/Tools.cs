@@ -6,7 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Dbot.Utility {
-  public static class Utility {
+  public static class Tools {
+    public static void Log(string text, ConsoleColor color = ConsoleColor.White) {
+      Console.ForegroundColor = ConsoleColor.Cyan;
+      Console.Write(Process.GetCurrentProcess().Threads.Count + " ");
+      Console.ForegroundColor = ConsoleColor.DarkCyan;
+      Console.Write(DateTime.Now.ToString("t"));
+      Console.ForegroundColor = color;
+      Console.WriteLine(" " + text);
+      Console.ResetColor();
+    }
+
     public static string PrettyDeltaTime(TimeSpan span, string rough = "") {
       int day = Convert.ToInt16(span.ToString("%d")),
         hour = Convert.ToInt16(span.ToString("%h")),
@@ -23,8 +33,8 @@ namespace Dbot.Utility {
       }
 
       if (day == 1) {
-        if (hour == 0) return "a day";
-        return "a day " + hour + "h";
+        if (hour == 0) return "1 day";
+        return "1 day " + hour + "h";
       }
 
       if (hour == 0) return rough + minute + "m";
