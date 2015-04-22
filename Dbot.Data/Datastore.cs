@@ -57,6 +57,14 @@ namespace Dbot.Data {
       } else throw new Exception();
     }
 
+    public static string Stalk(string user) {
+      var msg = _db.Table<Stalk>().Where().OrderByDescending(x => x.Id).FirstOrDefaultAsync().Result;
+      if (msg != null) {
+        return msg.Text;
+      }
+      return user + " not found";
+    }
+
     public static void InsertMessage(Message msg) {
       _db.InsertAsync(new Stalk {
         Nick = msg.Nick,

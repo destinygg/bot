@@ -20,10 +20,12 @@ namespace Dbot.Main {
     private static ActionBlock<Message> _modCommander;
     private static ActionBlock<Message> _banner;
     private static bool _exit;
+    private static WebSocketClient wsc;
+
     static void Main(string[] args) {
 
       Datastore.Initialize();
-      var wsc = new WebSocketClient();
+      wsc = new WebSocketClient();
       wsc.Run();
       wsc.PropertyChanged += wsc_PropertyChanged;
       Console.CancelKeyPress += Console_CancelKeyPress;
