@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Dbot.CommonModels;
+using Dbot.Utility;
 using SQLite;
 
 namespace Dbot.Data {
@@ -60,7 +61,8 @@ namespace Dbot.Data {
     public static string Stalk(string user) {
       var msg = _db.Table<Stalk>().Where(x => x.Nick == user).OrderByDescending(x => x.Id).FirstOrDefaultAsync().Result;
       if (msg != null) {
-        return msg.Text;
+        var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(msg.Time);
+        return Tools.PrettyDeltaTime(DateTime.UtcNow - epoch) + " ago: " + msg.Text;
       }
       return user + " not found";
     }

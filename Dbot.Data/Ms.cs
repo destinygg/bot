@@ -16,6 +16,7 @@ namespace Dbot.Data {
     public const string ninja = "ninja";
     public const string message = "message";
     public const string lastlive = "lastlive";
+#warning why does <sing have utterly borked up System.Console.WriteLine();
     public const string sing = "sing";
     public const string dance = "dance";
     public const string set = "set";

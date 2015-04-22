@@ -56,6 +56,10 @@
       <Project>{65d520b2-5739-4908-90b0-739cb4daac4d}</Project>
       <Name>Dbot.CommonModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
+      <Project>{e27fab2d-880d-4137-b32a-23e7db585bf3}</Project>
+      <Name>Dbot.Utility</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
