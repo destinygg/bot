@@ -64,14 +64,19 @@ namespace Dbot.Main {
     }
 
     private static void ModCommand(Message message) {
-      var s = new ModCommander.ModCommander(message.Text);
+      var mc = new ModCommander.ModCommander(message.Text);
+      if (mc.Message != null) {
+        Send(mc.Message);
+      }
     }
 
     private static void Send(object input) {
       if (input is Victim) {
 
       } else if (input is Message) {
-
+        wsc.Send(((Message) input).Text);
+      } else if (input is String) {
+        wsc.Send((string) input);
       } else throw new NotSupportedException("Unsupported type.");
     }
 
@@ -88,6 +93,7 @@ namespace Dbot.Main {
 
     private static void Log(Message input) {
       Console.WriteLine(input.Nick + ": " + input.Text);
+      input.Nick = input.Nick.ToLower();
       Datastore.InsertMessage(input);
     }
 
