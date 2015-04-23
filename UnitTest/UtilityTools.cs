@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dbot.Utility;
+using Newtonsoft.Json;
 
 namespace UnitTest {
   [TestClass]
 
 #warning Keep Utility in the name to give us easy access to Tools
-  public class UtilityTools { 
+  public class UtilityTools {
 
     [TestMethod]
     public void PrettyDeltaTime_HasPrettyOutput() {
@@ -89,5 +91,31 @@ namespace UnitTest {
 
       CollectionAssert.AreEqual(expectedAnswer, actualAnswer);
     }
+
+    [TestMethod]
+    public void DownloadData_Imgur() {
+
+      var testList = new List<string>() {
+        "https://api.imgur.com/3/image/6HQv5Rz",
+        "https://api.imgur.com/3/image/2IiGqlu",
+        "https://api.imgur.com/3/album/VVcZ2",
+      };
+
+      foreach (var x in testList) {
+        var answer1 = Tools.DownloadData(x, PrivateConstants.imgurAuthHeader).Result;
+        dynamic dyn = JsonConvert.DeserializeObject(answer1);
+        var actualAnswer = (bool) dyn.data.nsfw;
+        var expectedAnswer = true;
+        Assert.AreEqual(expectedAnswer, actualAnswer);
+      }
+    }
+
+
+
+
+
+
+
+
   }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,6 +42,20 @@ namespace Dbot.Utility {
       if (minute == 0) return rough + hour + "h";
 
       return rough + hour + "h " + minute + "m";
+    }
+
+    // http://stackoverflow.com/questions/13240915/converting-a-webclient-method-to-async-await
+    public static async Task<string> DownloadData(string url, string header = "") {
+      try {
+        var client = new WebClient { Headers = new WebHeaderCollection { header } };
+        return await client.DownloadStringTaskAsync(url);
+      } catch (Exception e) {
+        Log("An error in DownloadData!", ConsoleColor.Red);
+        Log(e.Message, ConsoleColor.Red);
+        Log(e.Source, ConsoleColor.Red);
+        Log(e.StackTrace, ConsoleColor.Red);
+        return "Error! " + e;
+      }
     }
   }
 }
