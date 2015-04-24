@@ -91,7 +91,7 @@ namespace Dbot.Main {
       else {
         //d o other thing
       }
-      }
+    }
 
     private static void Log(Message input) {
       Console.WriteLine(input.Nick + ": " + input.Text);

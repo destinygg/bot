@@ -14,7 +14,7 @@ namespace Dbot.ModCommander {
       Debug.Assert(input[0] == '!' || input[0] == '<');
       var inputWithoutTriggerChar = input.Substring(1);
       var splitInput = inputWithoutTriggerChar.Split(new[] { ' ' }, 2);
-      var commandMatches = Datastore.GetModCommands.Where(x => x.Command == splitInput[0]);
+      var commandMatches = Datastore.ModCommands.Where(x => x.Command == splitInput[0]);
 
       var operationDictionary = new Dictionary<string, Action<ModCommands>> {
         {"message", x =>  this.Message = 1 < splitInput.Count() ? x.Result.Replace("*", splitInput[1]) : x.Result },

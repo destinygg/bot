@@ -50,6 +50,10 @@
       <Project>{65d520b2-5739-4908-90b0-739cb4daac4d}</Project>
       <Name>Dbot.CommonModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dbot.Data\Dbot.Data.csproj">
+      <Project>{1E2409C3-C544-4EC2-AA93-9C0F5A4B02EC}</Project>
+      <Name>Dbot.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
       <Project>{E27FAB2D-880D-4137-B32A-23E7DB585BF3}</Project>
       <Name>Dbot.Utility</Name>

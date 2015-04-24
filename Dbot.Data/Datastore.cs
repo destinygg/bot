@@ -18,15 +18,21 @@ namespace Dbot.Data {
       }
     }
 
-    private static List<ModCommands> _getModCommands;
-    public static List<ModCommands> GetModCommands { get { return _getModCommands ?? (_getModCommands = _db.Table<ModCommands>().ToListAsync().Result); } }
+    private static List<ModCommands> _modCommands;
+    public static List<ModCommands> ModCommands { get { return _modCommands ?? (_modCommands = _db.Table<ModCommands>().ToListAsync().Result); } }
 
-    private static List<StateVariables> _getStateVariables;
-    public static List<StateVariables> GetStateVariables { get { return _getStateVariables ?? (_getStateVariables = _db.Table<StateVariables>().ToListAsync().Result); } }
+    private static List<StateVariables> _stateVariables;
+    public static List<StateVariables> StateVariables { get { return _stateVariables ?? (_stateVariables = _db.Table<StateVariables>().ToListAsync().Result); } }
+
+    private static List<string> _bannedWords;
+    public static List<string> BannedWords { get { return _bannedWords ?? (_bannedWords = _db.Table<BannedWords>().ToListAsync().Result.Select(x => x.Word).ToList()); } }
+
+    private static List<string> _tempBannedWords;
+    public static List<string> TempBannedWords { get { return _tempBannedWords ?? (_tempBannedWords = _db.Table<TempBannedWords>().ToListAsync().Result.Select(x => x.Word).ToList()); } }
 
     public static void UpdateStateValue(string key, int value) {
       _db.UpdateAsync(new StateVariables { Key = key, Value = value }).ContinueWith(x => {
-        _getStateVariables = _db.Table<StateVariables>().ToListAsync().Result;
+        _stateVariables = _db.Table<StateVariables>().ToListAsync().Result;
       });
     }
 
@@ -35,12 +41,14 @@ namespace Dbot.Data {
       if (table == "BannedWords") {
         if (_db.Table<BannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
           _db.InsertAsync(new BannedWords { Word = bannedPhrase });
+          _bannedWords.Add(bannedPhrase);
         }
       } else if (table == "TempBannedWords") {
         if (_db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
           _db.InsertAsync(new TempBannedWords() { Word = bannedPhrase });
+          _tempBannedWords.Add(bannedPhrase);
         }
-      } else throw new Exception();
+      } else Tools.Log("Unsupported Table: " + table, ConsoleColor.Red);
     }
 
 #warning this could be better
@@ -49,13 +57,15 @@ namespace Dbot.Data {
         var bannedObject = _db.Table<BannedWords>().Where(x => x.Word == bannedPhrase);
         if (bannedObject.CountAsync().Result > 0) {
           _db.DeleteAsync(bannedObject.FirstAsync().Result);
+          _bannedWords.Remove(bannedPhrase);
         }
       } else if (table == "TempBannedWords") {
         var bannedObject = _db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase);
         if (bannedObject.CountAsync().Result > 0) {
           _db.DeleteAsync(bannedObject.FirstAsync().Result);
+          _tempBannedWords.Remove(bannedPhrase);
         }
-      } else throw new Exception();
+      } else Tools.Log("Unsupported Table: " + table, ConsoleColor.Red);
     }
 
     public static string Stalk(string user) {
@@ -70,7 +80,7 @@ namespace Dbot.Data {
     public static void InsertMessage(Message msg) {
       _db.InsertAsync(new Stalk {
         Nick = msg.Nick,
-        Time = (Int32) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds,
+        Time = (Int32) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
         Text = msg.Text
       });
     }
