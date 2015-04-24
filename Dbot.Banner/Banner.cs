@@ -28,26 +28,28 @@ namespace Dbot.Banner {
       return null;
     }
 
-    public int General() {
+    public Victim General() {
       if (Datastore.BannedWords.Any(x => text.Contains(x)))
-        return 8640;
+        return new Mute { Duration = new TimeSpan(6, 0, 0, 0, 0), Nick = message.Nick, Reason = "6day, forbidden text. Probably screamer or spam." };
       if (Datastore.TempBannedWords.Any(x => text.Contains(x)))
-        return 10;
-      return 0;
+        return new Mute { Duration = new TimeSpan(0, 10, 0), Nick = message.Nick, Reason = "10m for prohibited word. Manner up." };
+
+      return null;
     }
 
     #region ImgurNsfw
-    public int ImgurNsfw() {
+    //todo this could be improved; check on an individual image link basis (more accurate regex); save safe/nsfw imgurIDs to DB
+    public Victim ImgurNsfw() {
       if ((text.Contains("nsfw") || text.Contains("nsfl")) && (!text.Contains("not nsfw")))
-        return 0;
+        return null;
 
       var match = Regex.Match(text, @".*imgur\.com/(\w+).*");
       if (match.Success) {
         var imgurId = match.Groups[1].Value;
         if (IsNsfw(imgurId))
-          return 5;
+          return new Mute { Duration = new TimeSpan(0, 5, 0), Nick = message.Nick, Reason = "5m, please label nsfw, ambiguous links as such" };
       }
-      return 0;
+      return null;
     }
 
     private bool IsNsfw(string imgurId) {
@@ -74,8 +76,7 @@ namespace Dbot.Banner {
     private bool IsNsfwApi(string x) {
       var answer = Tools.DownloadData(x, PrivateConstants.imgurAuthHeader).Result;
       dynamic dyn = JsonConvert.DeserializeObject(answer);
-      var actualAnswer = (bool) dyn.data.nsfw;
-      return actualAnswer;
+      return (bool) dyn.data.nsfw;
     }
     #endregion
 

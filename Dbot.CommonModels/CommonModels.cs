@@ -17,7 +17,8 @@ namespace Dbot.CommonModels {
   }
 
   public abstract class Victim : User {
-    TimeSpan Duration { get; set; }
+    public TimeSpan Duration { get; set; }
+    public String Reason { get; set; }
   }
 
   public class Ban : Victim { }
