@@ -8,6 +8,7 @@ using System.Threading.Tasks.Dataflow;
 using Dbot.Common;
 using Dbot.CommonModels;
 using Dbot.Data;
+using Dbot.Utility;
 using Dbot.WebsocketClient;
 using Dbot.Banner;
 
@@ -79,7 +80,7 @@ namespace Dbot.Main {
         wsc.Send(((Message) input).Text);
       } else if (input is String) {
         wsc.Send((string) input);
-      } else throw new NotSupportedException("Unsupported type.");
+      } else Tools.ErrorLog("Unsupported type.");
     }
 
     private static void Ban(Message input) {

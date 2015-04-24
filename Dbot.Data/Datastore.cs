@@ -48,7 +48,7 @@ namespace Dbot.Data {
           _db.InsertAsync(new TempBannedWords() { Word = bannedPhrase });
           _tempBannedWords.Add(bannedPhrase);
         }
-      } else Tools.Log("Unsupported Table: " + table, ConsoleColor.Red);
+      } else Tools.ErrorLog("Unsupported Table: " + table);
     }
 
 #warning this could be better
@@ -65,7 +65,7 @@ namespace Dbot.Data {
           _db.DeleteAsync(bannedObject.FirstAsync().Result);
           _tempBannedWords.Remove(bannedPhrase);
         }
-      } else Tools.Log("Unsupported Table: " + table, ConsoleColor.Red);
+      } else Tools.ErrorLog("Unsupported Table: " + table);
     }
 
     public static string Stalk(string user) {

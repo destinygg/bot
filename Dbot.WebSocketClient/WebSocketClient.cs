@@ -30,7 +30,6 @@ namespace Dbot.WebsocketClient {
 
     public void Run() {
       _websocket.Open();
-      
     }
 
     private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -44,7 +43,7 @@ namespace Dbot.WebsocketClient {
       switch (actionMessage) {
         case "NAMES": {
             var names = JsonConvert.DeserializeObject<NamesReceiver>(jsonMessage);
-            Log(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
+            Tools.Log(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
           }
           break;
         case "MSG": {
@@ -72,27 +71,21 @@ namespace Dbot.WebsocketClient {
     }
 
     private void websocket_Closed(object sender, EventArgs e) {
-      Log("Connection lost!", ConsoleColor.Red);
-    }
-
-    public void Log(string input, ConsoleColor color = ConsoleColor.White) {
-      Console.ForegroundColor = color;
-      Console.WriteLine(input);
-      Console.ResetColor();
+      Tools.Log("Connection lost!", ConsoleColor.Red);
     }
 
     private void websocket_Error(object sender, ErrorEventArgs e) {
-      Log("Error occured!", ConsoleColor.Red);
+      Tools.ErrorLog(e.Exception);
     }
 
     private void websocket_Opened(object sender, EventArgs e) {
-      Log("Connected!", ConsoleColor.Green);
+      Tools.Log("Connected!", ConsoleColor.Green);
     }
 
     public void Send(string input) {
       var msg = new MessageSender {data = input};
       var jsonMsg = JsonConvert.SerializeObject(msg);
-      Log("MSG " + jsonMsg, ConsoleColor.Red);
+      Tools.Log("MSG " + jsonMsg, ConsoleColor.Red);
       _websocket.Send("MSG " + jsonMsg);
     }
 

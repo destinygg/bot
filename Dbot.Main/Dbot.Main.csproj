@@ -76,6 +76,10 @@
       <Project>{b9c623b7-1aa0-4803-843a-81fde1660fcb}</Project>
       <Name>Dbot.ModCommander</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
+      <Project>{E27FAB2D-880D-4137-B32A-23E7DB585BF3}</Project>
+      <Name>Dbot.Utility</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dbot.WebSocketClient\Dbot.WebSocketClient.csproj">
       <Project>{80caf0dd-1886-42f8-b119-565e7c389424}</Project>
       <Name>Dbot.WebSocketClient</Name>

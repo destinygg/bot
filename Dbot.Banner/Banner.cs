@@ -67,7 +67,7 @@ namespace Dbot.Banner {
       var match = Regex.Match(text, regex);
       if (match.Success) return match.Groups[1].Value;
       Debug.Assert(match.Success);
-      Tools.Log("Imgur " + imgurId + " error on " + message.Nick + " saying " + text, ConsoleColor.Red);
+      Tools.ErrorLog("Imgur " + imgurId + " error on " + message.Nick + " saying " + text);
       return "";
     }
 
