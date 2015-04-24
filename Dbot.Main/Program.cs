@@ -1,6 +1,7 @@
 ﻿//http://www.reddit.com/r/InternetIsBeautiful/comments/2zwvpm/%EF%BD%95%EF%BD%8E%EF%BD%89%EF%BD%83%EF%BD%8F%EF%BD%84%EF%BD%85_%EF%BD%94%EF%BD%8F%EF%BD%8F%EF%BD%8C%EF%BD%93/
 
 using System;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks.Dataflow;
@@ -21,6 +22,7 @@ namespace Dbot.Main {
     private static ActionBlock<Message> _banner;
     private static bool _exit;
     private static WebSocketClient wsc;
+    private static ConcurrentQueue<Message> recentMessages = new ConcurrentQueue<Message>();
 
     static void Main(string[] args) {
 
@@ -80,16 +82,16 @@ namespace Dbot.Main {
       } else throw new NotSupportedException("Unsupported type.");
     }
 
-    private static Func<Message, Message> Ban = m => {
-      var bantest = new Banner.Banner(m).BanParser();
-      if (bantest == null)
-        return m;
-      else {
-        _sender.Post(bantest);
-        m.Text = "";
-        return m;
+    private static void Ban(Message input) {
+      recentMessages.Enqueue(input);
+      var bantest = new Banner.Banner(input, recentMessages).BanParser();
+      if (bantest == null) {
+        //do thing
       }
-    };
+      else {
+        //d o other thing
+      }
+      }
 
     private static void Log(Message input) {
       Console.WriteLine(input.Nick + ": " + input.Text);
