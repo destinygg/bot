@@ -93,29 +93,10 @@ namespace UnitTest {
     }
 
     [TestMethod]
-    public void DownloadData_Imgur() {
-
-      var testList = new List<string>() {
-        "https://api.imgur.com/3/image/6HQv5Rz",
-        "https://api.imgur.com/3/image/2IiGqlu",
-        "https://api.imgur.com/3/album/VVcZ2",
-      };
-
-      foreach (var x in testList) {
-        var answer1 = Tools.DownloadData(x, PrivateConstants.imgurAuthHeader).Result;
-        dynamic dyn = JsonConvert.DeserializeObject(answer1);
-        var actualAnswer = (bool) dyn.data.nsfw;
-        var expectedAnswer = true;
-        Assert.AreEqual(expectedAnswer, actualAnswer);
-      }
+    public void DownloadData_API() {
+      var actualAnswer = Tools.DownloadData("http://www.thomas-bayer.com/sqlrest/CUSTOMER/0/").Result;
+      var expectedAnswer = "<?xml version=\"1.0\"?><CUSTOMER xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <ID>0</ID>\n    <FIRSTNAME>Laura</FIRSTNAME>\n    <LASTNAME>Steel</LASTNAME>\n    <STREET>429 Seventh Av.</STREET>\n    <CITY>Dallas</CITY>\n</CUSTOMER>";
+      Assert.AreEqual(actualAnswer, expectedAnswer);
     }
-
-
-
-
-
-
-
-
   }
 }
