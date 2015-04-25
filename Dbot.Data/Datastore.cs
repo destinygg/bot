@@ -32,7 +32,7 @@ namespace Dbot.Data {
     private static List<string> _tempBannedWords;
     public static List<string> TempBannedWords { get { return _tempBannedWords ?? (_tempBannedWords = _db.Table<TempBannedWords>().ToListAsync().Result.Select(x => x.Word).ToList()); } }
 
-    public static void UpdateStateValue(string key, int value) {
+    public static void UpdateStateVariable(string key, int value) {
       _db.UpdateAsync(new StateVariables { Key = key, Value = value }).ContinueWith(x => {
         _stateVariables = _db.Table<StateVariables>().ToListAsync().Result;
       });
