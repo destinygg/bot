@@ -18,6 +18,8 @@ namespace Dbot.Data {
       }
     }
 
+    public static List<string> EmoticonsList { get; set; }
+
     private static List<ModCommands> _modCommands;
     public static List<ModCommands> ModCommands { get { return _modCommands ?? (_modCommands = _db.Table<ModCommands>().ToListAsync().Result); } }
 

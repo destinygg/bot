@@ -35,6 +35,13 @@ namespace Dbot.Main {
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
 
+      var UpdateEmoticons = new Action(() => {
+        Datastore.EmoticonsList = Tools.GetEmoticons();
+        Console.WriteLine("testpost " + DateTime.Now.ToShortTimeString());
+      });
+      UpdateEmoticons.Invoke();
+      PeriodicTask.Run(UpdateEmoticons, new TimeSpan(1, 0, 0));
+
       var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
       _logger = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
       _sender = new ActionBlock<object>(m => Send(m), hungryCaterpillar);

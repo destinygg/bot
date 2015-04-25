@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Dbot.Utility {
   public static class Tools {
@@ -108,6 +110,12 @@ namespace Dbot.Utility {
         Log(e.StackTrace, ConsoleColor.Red);
         return "Error! " + e;
       }
+    }
+
+    public static List<string> GetEmoticons() {
+      var answer = DownloadData("http://www.destiny.gg/chat/emotes.json").Result;
+      var deserializeObject = (JArray) JsonConvert.DeserializeObject(answer);
+      return deserializeObject.ToObject<List<string>>();
     }
   }
 }

@@ -98,5 +98,12 @@ namespace UnitTest {
       var expectedAnswer = "<?xml version=\"1.0\"?><CUSTOMER xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <ID>0</ID>\n    <FIRSTNAME>Laura</FIRSTNAME>\n    <LASTNAME>Steel</LASTNAME>\n    <STREET>429 Seventh Av.</STREET>\n    <CITY>Dallas</CITY>\n</CUSTOMER>";
       Assert.AreEqual(actualAnswer, expectedAnswer);
     }
+
+    [TestMethod]
+    public void DownloadData_Faces() {
+      var rawJson = Tools.GetEmoticons();
+      var actualAnswer = rawJson.Contains("Kappa");
+      Assert.IsTrue(actualAnswer);
+    }
   }
 }

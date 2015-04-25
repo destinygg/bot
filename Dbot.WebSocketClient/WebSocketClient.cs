@@ -65,12 +65,12 @@ namespace Dbot.WebsocketClient {
           }
           break;
         default:
-          Log(e.Message, ConsoleColor.Red);
+          Tools.Log(e.Message, ConsoleColor.Red);
           break;
       }
     }
 
-    private void websocket_Closed(object sender, EventArgs e) {
+    private void websocket_Closed(object sender, EventArgs e) { 
       Tools.Log("Connection lost!", ConsoleColor.Red);
     }
 
