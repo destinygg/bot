@@ -49,4 +49,25 @@ namespace Dbot.Data {
     [NotNull]
     public string Text { get; set; }
   }
+
+  public class UserBanHistory {
+    [PrimaryKey, AutoIncrement, NotNull]
+    public int Id { get; set; }
+    [NotNull, Unique]
+    public string Nick { get; set; }
+    public string TempBan { get; set; }
+    public int FullWidth { get; set; }
+    public int Unicode { get; set; }
+    public int FaceSpam { get; set; }
+    public int NodeSeqFk { get; set; }
+  }
+
+  public class WordHistory {
+    [PrimaryKey, AutoIncrement, NotNull]
+    public int Id { get; set; }
+    [NotNull, Unique]
+    public string Word { get; set; }
+    [NotNull]
+    public int Count { get; set; }
+  }
 }

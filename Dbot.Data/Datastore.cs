@@ -32,6 +32,14 @@ namespace Dbot.Data {
     private static List<string> _tempBannedWords;
     public static List<string> TempBannedWords { get { return _tempBannedWords ?? (_tempBannedWords = _db.Table<TempBannedWords>().ToListAsync().Result.Select(x => x.Word).ToList()); } }
 
+    public static UserBanHistory GetUserBanHistory(string nick) {
+      return _db.Table<UserBanHistory>().Where(x => x.Nick == nick).FirstOrDefaultAsync().Result;
+    }
+
+    public static void UpdateOrInsertUserBanHistory(UserBanHistory history) {
+      _db.UpdateAsync(history);
+    }
+
     public static void UpdateStateVariable(string key, int value) {
       _db.UpdateAsync(new StateVariables { Key = key, Value = value }).ContinueWith(x => {
         _stateVariables = _db.Table<StateVariables>().ToListAsync().Result;
@@ -95,6 +103,7 @@ namespace Dbot.Data {
       _db.CreateTableAsync<Stalk>();
       _db.CreateTableAsync<TempBannedWords>();
       _db.CreateTableAsync<BannedWords>();
+      _db.CreateTableAsync<UserBanHistory>();
       _db.CreateTableAsync<ModCommands>().ContinueWith(x => PopulateModCommands());
       _db.CreateTableAsync<StateVariables>().ContinueWith(x => PopulateStateVariables());
     }
