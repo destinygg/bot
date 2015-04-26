@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SQLite;
 
 
@@ -50,24 +52,47 @@ namespace Dbot.Data {
     public string Text { get; set; }
   }
 
-  public class UserBanHistory {
+  public class RawUserHistory {
     [PrimaryKey, AutoIncrement, NotNull]
     public int Id { get; set; }
     [NotNull, Unique]
     public string Nick { get; set; }
-    public string TempBan { get; set; }
     public int FullWidth { get; set; }
     public int Unicode { get; set; }
     public int FaceSpam { get; set; }
-    public int NodeSeqFk { get; set; }
+    public string RawTempWordCount { get; set; }
   }
 
-  public class WordHistory {
-    [PrimaryKey, AutoIncrement, NotNull]
-    public int Id { get; set; }
-    [NotNull, Unique]
+  public class TempBanWordCount {
     public string Word { get; set; }
-    [NotNull]
     public int Count { get; set; }
+  }
+
+  public class UserHistory : RawUserHistory {
+    public UserHistory(RawUserHistory raw) {
+      this.Load(raw);
+    }
+
+    private void Load(RawUserHistory raw) {
+      this.Id = raw.Id;
+      this.Nick = raw.Nick;
+      this.FullWidth = raw.FullWidth;
+      this.Unicode = raw.Unicode;
+      this.FaceSpam = raw.FaceSpam;
+      this.TempWordCount = JsonConvert.DeserializeObject<TempBanWordCount>(raw.RawTempWordCount);
+    }
+
+    public RawUserHistory CopyTo() {
+      return new RawUserHistory() {
+        Id = this.Id,
+        Nick = this.Nick,
+        FullWidth = this.FullWidth,
+        Unicode = this.Unicode,
+        FaceSpam = this.FaceSpam,
+        RawTempWordCount = JsonConvert.SerializeObject(this.TempWordCount),
+      };
+    }
+
+    public TempBanWordCount TempWordCount { get; set; }
   }
 }
