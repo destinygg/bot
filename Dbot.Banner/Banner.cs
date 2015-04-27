@@ -30,9 +30,9 @@ namespace Dbot.Banner {
 
     public Victim General() {
       if (Datastore.BannedWords.Any(x => text.Contains(x)))
-        return new Mute { Duration = new TimeSpan(6, 0, 0, 0, 0), Nick = message.Nick, Reason = "6day, forbidden text. Probably screamer or spam." };
+        return new Mute { Duration = TimeSpan.FromDays(6), Nick = message.Nick, Reason = "6day, forbidden text. Probably screamer or spam." };
       if (Datastore.TempBannedWords.Any(x => text.Contains(x)))
-        return new Mute { Duration = new TimeSpan(0, 10, 0), Nick = message.Nick, Reason = "10m for prohibited word. Manner up." };
+        return new Mute { Duration = TimeSpan.FromMinutes(10), Nick = message.Nick, Reason = "10m for prohibited word. Manner up." };
 
       return null;
     }
@@ -47,7 +47,7 @@ namespace Dbot.Banner {
       if (match.Success) {
         var imgurId = match.Groups[1].Value;
         if (IsNsfw(imgurId))
-          return new Mute { Duration = new TimeSpan(0, 5, 0), Nick = message.Nick, Reason = "5m, please label nsfw, ambiguous links as such" };
+          return new Mute { Duration = TimeSpan.FromMinutes(5), Nick = message.Nick, Reason = "5m, please label nsfw, ambiguous links as such" };
       }
       return null;
     }

@@ -69,6 +69,9 @@ namespace Dbot.Data {
   }
 
   public class UserHistory : RawUserHistory {
+    public UserHistory() {
+      
+    }
     public UserHistory(RawUserHistory raw) {
       this.Load(raw);
     }

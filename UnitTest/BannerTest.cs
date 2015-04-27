@@ -23,7 +23,7 @@ namespace UnitTest {
 
       foreach (var x in testList) {
         var actualAnswer = new Banner(new Message { Nick = "tempuser", Text = x }).ImgurNsfw().Duration;
-        var expectedAnswer = new TimeSpan(0, 5, 0);
+        var expectedAnswer = TimeSpan.FromMinutes(5);
         Assert.AreEqual(expectedAnswer, actualAnswer);
       }
     }

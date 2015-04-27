@@ -37,10 +37,9 @@ namespace Dbot.Main {
 
       var UpdateEmoticons = new Action(() => {
         Datastore.EmoticonsList = Tools.GetEmoticons();
-        Console.WriteLine("testpost " + DateTime.Now.ToShortTimeString());
       });
       UpdateEmoticons.Invoke();
-      PeriodicTask.Run(UpdateEmoticons, new TimeSpan(1, 0, 0));
+      PeriodicTask.Run(UpdateEmoticons, TimeSpan.FromHours(1));
 
       var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
       _logger = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);

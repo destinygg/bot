@@ -27,13 +27,13 @@ namespace UnitTest {
         RawTempWordCount = JsonConvert.SerializeObject(new TempBanWordCount { Count = 1, Word = "bork" })
       });
       Datastore.UpdateOrInsertUserHistory(expectedAnswer);
-      var actualAnswer = Datastore.GetUserHistory("destiny");
+      var actualAnswer = Datastore.UserHistory("destiny");
 
       var expectedAnswerJson = JsonConvert.SerializeObject(expectedAnswer);
       var actualAnswerJson = JsonConvert.SerializeObject(actualAnswer);
 
       Assert.IsTrue(actualAnswerJson == expectedAnswerJson);
-      var fail = Datastore.GetUserHistory("destiny2");
+      var fail = Datastore.UserHistory("destiny2");
 
     }
   }

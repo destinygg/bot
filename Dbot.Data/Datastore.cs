@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Dbot.CommonModels;
-using Dbot.Utility;
 using SQLite;
 
 namespace Dbot.Data {
@@ -32,7 +31,7 @@ namespace Dbot.Data {
     private static List<string> _tempBannedWords;
     public static List<string> TempBannedWords { get { return _tempBannedWords ?? (_tempBannedWords = _db.Table<TempBannedWords>().ToListAsync().Result.Select(x => x.Word).ToList()); } }
 
-    public static UserHistory GetUserHistory(string nick) {
+    public static UserHistory UserHistory(string nick) {
       var raw = _db.Table<RawUserHistory>().Where(x => x.Nick == nick).FirstOrDefaultAsync().Result;
       if (raw == null) return null;
       return new UserHistory(raw);
@@ -48,45 +47,38 @@ namespace Dbot.Data {
       });
     }
 
-#warning this could be better
-    public static void AddBanWord(string table, string bannedPhrase) {
-      if (table == "BannedWords") {
-        if (_db.Table<BannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
-          _db.InsertAsync(new BannedWords { Word = bannedPhrase });
-          _bannedWords.Add(bannedPhrase);
-        }
-      } else if (table == "TempBannedWords") {
-        if (_db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
-          _db.InsertAsync(new TempBannedWords() { Word = bannedPhrase });
-          _tempBannedWords.Add(bannedPhrase);
-        }
-      } else Tools.ErrorLog("Unsupported Table: " + table);
-    }
-
-#warning this could be better
-    public static void RemoveBanWord(string table, string bannedPhrase) {
-      if (table == "BannedWords") {
-        var bannedObject = _db.Table<BannedWords>().Where(x => x.Word == bannedPhrase);
-        if (bannedObject.CountAsync().Result > 0) {
-          _db.DeleteAsync(bannedObject.FirstAsync().Result);
-          _bannedWords.Remove(bannedPhrase);
-        }
-      } else if (table == "TempBannedWords") {
-        var bannedObject = _db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase);
-        if (bannedObject.CountAsync().Result > 0) {
-          _db.DeleteAsync(bannedObject.FirstAsync().Result);
-          _tempBannedWords.Remove(bannedPhrase);
-        }
-      } else Tools.ErrorLog("Unsupported Table: " + table);
-    }
-
-    public static string Stalk(string user) {
-      var msg = _db.Table<Stalk>().Where(x => x.Nick == user).OrderByDescending(x => x.Id).FirstOrDefaultAsync().Result;
-      if (msg != null) {
-        var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(msg.Time);
-        return Tools.PrettyDeltaTime(DateTime.UtcNow - epoch) + " ago: " + msg.Text;
+    public static void AddBanWord(string bannedPhrase) {
+      if (_db.Table<BannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
+        _db.InsertAsync(new BannedWords { Word = bannedPhrase });
+        _bannedWords.Add(bannedPhrase);
       }
-      return user + " not found";
+    }
+
+    public static void AddTempBanWord(string bannedPhrase) {
+      if (_db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
+        _db.InsertAsync(new TempBannedWords() { Word = bannedPhrase });
+        _tempBannedWords.Add(bannedPhrase);
+      }
+    }
+
+    public static void RemoveBanWord(string bannedPhrase) {
+      var bannedObject = _db.Table<BannedWords>().Where(x => x.Word == bannedPhrase);
+      if (bannedObject.CountAsync().Result > 0) {
+        _db.DeleteAsync(bannedObject.FirstAsync().Result);
+        _bannedWords.Remove(bannedPhrase);
+      }
+    }
+
+    public static void RemoveTempBanWord(string bannedPhrase) {
+      var bannedObject = _db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase);
+      if (bannedObject.CountAsync().Result > 0) {
+        _db.DeleteAsync(bannedObject.FirstAsync().Result);
+        _tempBannedWords.Remove(bannedPhrase);
+      }
+    }
+
+    public static Stalk Stalk(string user) {
+      return _db.Table<Stalk>().Where(x => x.Nick == user).OrderByDescending(x => x.Id).FirstOrDefaultAsync().Result;
     }
 
     public static void InsertMessage(Message msg) {

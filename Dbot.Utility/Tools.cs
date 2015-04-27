@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Dbot.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -93,6 +94,31 @@ namespace Dbot.Utility {
       if (minute == 0) return rough + hour + "h";
 
       return rough + hour + "h " + minute + "m";
+    }
+
+    public static void AddBanWord(string table, string bannedPhrase) {
+      if (table == "BannedWords") {
+        Datastore.AddBanWord(bannedPhrase);
+      } else if (table == "TempBannedWords") {
+        Datastore.AddTempBanWord(bannedPhrase);
+      } else Tools.ErrorLog("Unsupported Table: " + table);
+    }
+
+    public static void RemoveBanWord(string table, string bannedPhrase) {
+      if (table == "BannedWords") {
+        Datastore.RemoveBanWord(bannedPhrase);
+      } else if (table == "TempBannedWords") {
+        Datastore.RemoveTempBanWord(bannedPhrase);
+      } else Tools.ErrorLog("Unsupported Table: " + table);
+    }
+
+    public static string Stalk(string user) {
+      var msg = Datastore.Stalk(user);
+      if (msg != null) {
+        var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(msg.Time);
+        return Tools.PrettyDeltaTime(DateTime.UtcNow - epoch) + " ago: " + msg.Text;
+      }
+      return user + " not found";
     }
 
     // http://stackoverflow.com/questions/13240915/converting-a-webclient-method-to-async-await
