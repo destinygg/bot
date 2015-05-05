@@ -64,13 +64,14 @@ namespace UnitTest {
 
       //test insert
       var expectedAnswer = 1;
-      Datastore.UpdateStateVariable("a", expectedAnswer, true);
-      Assert.AreEqual(Datastore.GetStateVariable("a"), expectedAnswer);
+      var key = "a";
+      Datastore.UpdateStateVariable(key, expectedAnswer, true);
+      Assert.AreEqual(Datastore.GetStateVariable(key), expectedAnswer);
 
       //test update
       expectedAnswer = 1 + expectedAnswer;
-      Datastore.UpdateStateVariable("a", expectedAnswer, true);
-      Assert.AreEqual(Datastore.GetStateVariable("a"), expectedAnswer);
+      Datastore.UpdateStateVariable(key, expectedAnswer, true);
+      Assert.AreEqual(Datastore.GetStateVariable(key), expectedAnswer);
 
     }
   }

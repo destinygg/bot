@@ -96,6 +96,79 @@ namespace Dbot.Utility {
       return rough + hour + "h " + minute + "m";
     }
 
+    public static DateTime Epoch() {
+      return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    }
+
+    public static DateTime Epoch(TimeSpan timeSpan) {
+      return Tools.Epoch() + timeSpan;
+    }
+
+    public static bool GetLiveApi() {
+      var answer = DownloadData("https://api.twitch.tv/kraken/streams/riotgames").Result;
+      dynamic dyn = JsonConvert.DeserializeObject(answer);
+      var streamState = (JObject) dyn.stream;
+      if (streamState != null) {
+        var delayJvalue = (JValue) dyn.stream.channel.delay;
+        var viewersJvalue = (JValue) dyn.stream.viewers;
+        int delay;
+        int viewers;
+        var parseDelay = Int32.TryParse(delayJvalue.Value.ToString(), out delay);
+        if (parseDelay) {
+          Datastore.Delay = delay;
+        } else {
+          Datastore.Delay = -1;
+          ErrorLog("Tryparse on Delay failed");
+        }
+        var parseViewers = Int32.TryParse(viewersJvalue.Value.ToString(), out viewers);
+        if (parseViewers) {
+          Datastore.Viewers = viewers;
+        } else {
+          Datastore.Viewers = -1;
+          ErrorLog("Tryparse on Viewers failed");
+        }
+        return true;
+      }
+      return false;
+    }
+
+    public static string LiveStatus(bool liveStatus, bool wait = false) {
+      return Tools.LiveStatus(liveStatus, DateTime.UtcNow, wait);
+    }
+
+    public static string LiveStatus(bool liveStatus, DateTime compareTime, bool wait = false) {
+      var onTime = Tools.Epoch().AddSeconds(Datastore.onTime());
+      var offTime = Tools.Epoch().AddSeconds(Datastore.offTime());
+
+      var onTimeDelta = compareTime - onTime;
+      var offTimeDelta = compareTime - offTime;
+
+      var time = (Int32) (compareTime - Tools.Epoch()).TotalSeconds;
+
+      if (liveStatus && Datastore.onTime() != 0) { //we've been live for some time
+        Datastore.UpdateStateVariable(Ms.offTime, 0, wait);
+        return "Live with " + Datastore.Viewers + " viewers for " + PrettyDeltaTime(onTimeDelta, "~");
+      }
+      if (liveStatus && Datastore.onTime() == 0) { // we just went live
+        Datastore.UpdateStateVariable(Ms.onTime, time, wait);
+        Datastore.UpdateStateVariable(Ms.offTime, 0, wait);
+        return "Destiny is live! With " + Datastore.Viewers + " viewers for ~0m";
+      }
+      if (!liveStatus && Datastore.onTime() != 0 && Datastore.offTime() == 0) { //we've just gone offline
+        Datastore.UpdateStateVariable(Ms.offTime, time, wait);
+        return "Stream went offline in the past ~10m";
+      }
+      if (!liveStatus && offTimeDelta < TimeSpan.FromMinutes(10)) {
+        return "Stream went offline in the past ~10m";
+      }
+      if (!liveStatus && Datastore.offTime() != 0) { //we've been not live for a while
+        Datastore.UpdateStateVariable(Ms.onTime, 0, wait);
+        return "Stream offline for " + PrettyDeltaTime(offTimeDelta, "~");
+      }
+      ErrorLog(String.Format("LiveStatus()'s ifs failed. LiveStatus: {0}. In minutes: OnTimeΔ {1}. OffTimeΔ {2}", liveStatus, onTimeDelta.TotalMinutes, offTimeDelta.TotalMinutes));
+      return "Bot borked";
+    }
+
     public static void AddBanWord(string table, string bannedPhrase) {
       if (table == "BannedWords") {
         Datastore.AddBanWord(bannedPhrase);
@@ -115,8 +188,7 @@ namespace Dbot.Utility {
     public static string Stalk(string user) {
       var msg = Datastore.Stalk(user);
       if (msg != null) {
-        var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(msg.Time);
-        return Tools.PrettyDeltaTime(DateTime.UtcNow - epoch) + " ago: " + msg.Text;
+        return Tools.PrettyDeltaTime(DateTime.UtcNow - Tools.Epoch()) + " ago: " + msg.Text;
       }
       return user + " not found";
     }

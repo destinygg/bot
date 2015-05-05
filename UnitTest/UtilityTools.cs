@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Dbot.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dbot.Utility;
 using Newtonsoft.Json;
@@ -104,6 +105,56 @@ namespace UnitTest {
       var rawJson = Tools.GetEmoticons();
       var actualAnswer = rawJson.Contains("Kappa");
       Assert.IsTrue(actualAnswer);
+    }
+
+    [TestMethod]
+    public void CalculateLiveStatus() {
+      Datastore.Initialize();
+      Datastore.Viewers = 0;
+
+      Datastore.UpdateStateVariable(Ms.onTime, 0, true);
+      Datastore.UpdateStateVariable(Ms.offTime, 300, true);
+
+      Assert.AreEqual(Datastore.onTime(), 0);
+      Assert.AreEqual(Datastore.offTime(), 300);
+
+      var testList = new List<Tuple<int, int, int, bool, string>> {
+        //minutes, asserted onTime, asserted offTime, livestatus, livestring
+        Tuple.Create(10,10,0, true,"Destiny is live! With 0 viewers for ~0m"),
+        Tuple.Create(20,10,0, true,"Live with 0 viewers for ~10m"),
+        Tuple.Create(30,10,0, true,"Live with 0 viewers for ~20m"),
+        Tuple.Create(40,10,40, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(42,10,40, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(44,10,40, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(46,10,40, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(48,10,40, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(49,10,40, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(50,0,40, false,"Stream offline for ~10m"),
+        Tuple.Create(51,0,40, false,"Stream offline for ~11m"),
+        Tuple.Create(52,0,40, false,"Stream offline for ~12m"),
+        Tuple.Create(55,0,40, false,"Stream offline for ~15m"),
+        Tuple.Create(60,60,0, true,"Destiny is live! With 0 viewers for ~0m"),
+        Tuple.Create(61,60,0, true,"Live with 0 viewers for ~1m"),
+        Tuple.Create(65,60,0, true,"Live with 0 viewers for ~5m"),
+        Tuple.Create(70,60,0, true,"Live with 0 viewers for ~10m"),
+        Tuple.Create(75,60,0, true,"Live with 0 viewers for ~15m"),
+        Tuple.Create(80,60,80, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(85,60,80, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(86,60,0, true,"Live with 0 viewers for ~26m"),
+        Tuple.Create(89,60,0, true,"Live with 0 viewers for ~29m"),
+        Tuple.Create(90,60,90, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(95,60,90, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(99,60,90, false,"Stream went offline in the past ~10m"),
+        Tuple.Create(100,0,90, false,"Stream offline for ~10m"),
+        Tuple.Create(105,0,90, false,"Stream offline for ~15m"),
+      };
+
+      foreach (var x in testList) {
+        var temp = Tools.LiveStatus(x.Item4, Tools.Epoch(TimeSpan.FromMinutes(x.Item1)), true);
+        Assert.AreEqual(Datastore.onTime(), x.Item2 * 60);
+        Assert.AreEqual(Datastore.offTime(), x.Item3 * 60);
+        Assert.AreEqual(temp, x.Item5);
+      }
     }
   }
 }
