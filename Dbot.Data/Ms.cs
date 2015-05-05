@@ -15,7 +15,8 @@ namespace Dbot.Data {
     public const string modabuse = "modabuse";
     public const string ninja = "ninja";
     public const string message = "message";
-    public const string lastlive = "lastlive";
+    public const string onTime = "OnTime";
+    public const string offTime = "OffTime";
 #warning why does <sing have utterly borked up System.Console.WriteLine();
     public const string sing = "sing";
     public const string dance = "dance";

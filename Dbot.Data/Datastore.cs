@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Dbot.CommonModels;
@@ -19,11 +20,15 @@ namespace Dbot.Data {
 
     public static List<string> EmoticonsList { get; set; }
 
+    public static int Delay { get; set; }
+    public static int Viewers { get; set; }
+
     private static List<ModCommands> _modCommands;
     public static List<ModCommands> ModCommands { get { return _modCommands ?? (_modCommands = _db.Table<ModCommands>().ToListAsync().Result); } }
 
-    private static List<StateVariables> _stateVariables;
-    public static List<StateVariables> StateVariables { get { return _stateVariables ?? (_stateVariables = _db.Table<StateVariables>().ToListAsync().Result); } }
+    //these are never used?
+    //private static List<StateVariables> _stateVariables;
+    //public static List<StateVariables> StateVariables { get { return _stateVariables ?? (_stateVariables = _db.Table<StateVariables>().ToListAsync().Result); } }
 
     private static List<string> _bannedWords;
     public static List<string> BannedWords { get { return _bannedWords ?? (_bannedWords = _db.Table<BannedWords>().ToListAsync().Result.Select(x => x.Word).ToList()); } }
@@ -31,14 +36,34 @@ namespace Dbot.Data {
     private static List<string> _tempBannedWords;
     public static List<string> TempBannedWords { get { return _tempBannedWords ?? (_tempBannedWords = _db.Table<TempBannedWords>().ToListAsync().Result.Select(x => x.Word).ToList()); } }
 
+    public static int offTime() {
+      return _db.Table<StateVariables>().Where(x => x.Key == Ms.offTime).FirstAsync().Result.Value;
+    }
+
+    public static int onTime() {
+      return _db.Table<StateVariables>().Where(x => x.Key == Ms.onTime).FirstAsync().Result.Value;
+    }
+
     public static UserHistory UserHistory(string nick) {
       var raw = _db.Table<RawUserHistory>().Where(x => x.Nick == nick).FirstOrDefaultAsync().Result;
       if (raw == null) return null;
       return new UserHistory(raw);
     }
 
-    public static void UpdateOrInsertUserHistory(UserHistory history) {
+    public static void UpdateOrInsertUserHistory(UserHistory history, bool wait = false) {
+      var result = _db.Table<RawUserHistory>().Where(x => x.Nick == history.Nick).FirstOrDefaultAsync().Result;
+      if (result == null) {
+        if (wait)
+          _db.InsertAsync(history.CopyTo()).Wait();
+        else
+          _db.InsertAsync(history.CopyTo());
+      } else {
+        if (wait)
+          _db.UpdateAsync(history.CopyTo()).Wait();
+        else
       _db.UpdateAsync(history.CopyTo());
+    }
+      Debug.Assert(_db.Table<RawUserHistory>().Where(x => x.Nick == history.Nick).CountAsync().Result == 1);
     }
 
     public static void UpdateStateVariable(string key, int value) {
@@ -84,7 +109,7 @@ namespace Dbot.Data {
     public static void InsertMessage(Message msg) {
       _db.InsertAsync(new Stalk {
         Nick = msg.Nick,
-        Time = (Int32) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds,
+        Time = (Int32) DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds,
         Text = msg.Text
       });
     }
@@ -245,8 +270,12 @@ namespace Dbot.Data {
           Value = 0
         },
         new StateVariables {
-          Key = Ms.lastlive,
-          Value = (Int32) (DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds
+          Key = Ms.offTime,
+          Value = 0
+        },
+        new StateVariables {
+          Key = Ms.onTime,
+          Value = 0
         }
       });
     }

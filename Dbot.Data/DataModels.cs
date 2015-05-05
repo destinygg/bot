@@ -82,7 +82,7 @@ namespace Dbot.Data {
       this.FullWidth = raw.FullWidth;
       this.Unicode = raw.Unicode;
       this.FaceSpam = raw.FaceSpam;
-      this.TempWordCount = JsonConvert.DeserializeObject<TempBanWordCount>(raw.RawTempWordCount);
+      this.TempWordCount = JsonConvert.DeserializeObject<List<TempBanWordCount>>(raw.RawTempWordCount);
     }
 
     public RawUserHistory CopyTo() {
@@ -96,6 +96,6 @@ namespace Dbot.Data {
       };
     }
 
-    public TempBanWordCount TempWordCount { get; set; }
+    public List<TempBanWordCount> TempWordCount { get; set; }
   }
 }
