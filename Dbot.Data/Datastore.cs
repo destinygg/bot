@@ -61,15 +61,30 @@ namespace Dbot.Data {
         if (wait)
           _db.UpdateAsync(history.CopyTo()).Wait();
         else
-      _db.UpdateAsync(history.CopyTo());
-    }
+          _db.UpdateAsync(history.CopyTo());
+      }
       Debug.Assert(_db.Table<RawUserHistory>().Where(x => x.Nick == history.Nick).CountAsync().Result == 1);
     }
 
-    public static void UpdateStateVariable(string key, int value) {
-      _db.UpdateAsync(new StateVariables { Key = key, Value = value }).ContinueWith(x => {
-        _stateVariables = _db.Table<StateVariables>().ToListAsync().Result;
-      });
+    public static void UpdateStateVariable(string key, int value, bool wait = false) {
+      var result = _db.Table<StateVariables>().Where(x => x.Key == key).FirstOrDefaultAsync().Result;
+      if (result == null) {
+        if (wait)
+          _db.InsertAsync(new StateVariables { Key = key, Value = value }).Wait();
+        else
+          _db.InsertAsync(new StateVariables { Key = key, Value = value });
+      } else {
+        if (wait)
+          _db.UpdateAsync(new StateVariables { Key = key, Value = value }).Wait();
+        else
+          _db.UpdateAsync(new StateVariables { Key = key, Value = value });
+      }
+    }
+
+    public static int GetStateVariable(string key) {
+      var temp = _db.Table<StateVariables>().Where(x => x.Key == key);
+      Debug.Assert(temp.CountAsync().Result == 1);
+      return temp.FirstAsync().Result.Value;
     }
 
     public static void AddBanWord(string bannedPhrase) {

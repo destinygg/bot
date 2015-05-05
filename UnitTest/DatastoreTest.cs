@@ -7,9 +7,7 @@ using Newtonsoft.Json;
 namespace UnitTest {
   /// <summary>
   /// This REQUIRES sqlite.testsettings to be selected in Test>Test Settings.
-  /// Also, this file needs to exist: "\Dbot.Main\bin\Debug\DbotDB.sqlite"
-  /// Even so, it seems to fail nondeterministically. Rebuilding helps sometimes.
-  /// Be careful about changing data, since it persists to /bin/'s sqlite DB.
+  /// Also, rebuild, or it won't find the method/class to test.
   /// </summary>
   [TestClass]
   public class DatastoreTest {
@@ -46,7 +44,8 @@ namespace UnitTest {
         JsonConvert.SerializeObject(new List<TempBanWordCount> {
           new TempBanWordCount {Count = 11, Word = "wrankle"},
           new TempBanWordCount {Count = 21, Word = "lacrimosa"}
-      })});
+      })
+      });
       Datastore.UpdateOrInsertUserHistory(expectedAnswer, true);
       actualAnswer = Datastore.UserHistory("destiny");
 
@@ -56,6 +55,22 @@ namespace UnitTest {
 
       var assertNull = Datastore.UserHistory("destiny2");
       Assert.IsNull(assertNull);
+
+    }
+
+    [TestMethod]
+    public void UpdateOrInsertStateVariable_Success() {
+      Datastore.Initialize();
+
+      //test insert
+      var expectedAnswer = 1;
+      Datastore.UpdateStateVariable("a", expectedAnswer, true);
+      Assert.AreEqual(Datastore.GetStateVariable("a"), expectedAnswer);
+
+      //test update
+      expectedAnswer = 1 + expectedAnswer;
+      Datastore.UpdateStateVariable("a", expectedAnswer, true);
+      Assert.AreEqual(Datastore.GetStateVariable("a"), expectedAnswer);
 
     }
   }
