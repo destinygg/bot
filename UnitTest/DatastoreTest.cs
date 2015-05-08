@@ -26,7 +26,7 @@ namespace UnitTest {
         new TempBanWordCount {Count = 1, Word = "bork"},
       })
       });
-      Datastore.UpdateOrInsertUserHistory(expectedAnswer, true);
+      Datastore.SaveUserHistory(expectedAnswer, true);
       var actualAnswer = Datastore.UserHistory("destiny");
 
       var expectedAnswerJson = JsonConvert.SerializeObject(expectedAnswer);
@@ -46,7 +46,7 @@ namespace UnitTest {
           new TempBanWordCount {Count = 21, Word = "lacrimosa"}
       })
       });
-      Datastore.UpdateOrInsertUserHistory(expectedAnswer, true);
+      Datastore.SaveUserHistory(expectedAnswer, true);
       actualAnswer = Datastore.UserHistory("destiny");
 
       expectedAnswerJson = JsonConvert.SerializeObject(expectedAnswer);

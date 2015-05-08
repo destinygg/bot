@@ -50,7 +50,7 @@ namespace Dbot.Data {
       return new UserHistory(raw);
     }
 
-    public static void UpdateOrInsertUserHistory(UserHistory history, bool wait = false) {
+    public static void SaveUserHistory(UserHistory history, bool wait = false) {
       var result = _db.Table<RawUserHistory>().Where(x => x.Nick == history.Nick).FirstOrDefaultAsync().Result;
       if (result == null) {
         if (wait)
