@@ -12,16 +12,19 @@ using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;
 using Newtonsoft.Json;
+using UnidecodeSharpFork;
 
 namespace Dbot.Banner {
   public class Banner {
-    private readonly Message message;
-    private readonly string text;
+    private readonly Message _message;
+    private readonly string _text;
+    private readonly string _unnormalized;
     private ConcurrentQueue<Message> _queue;
     
     public Banner(Message input, ConcurrentQueue<Message> queue = null) {
-      this.message = input;
-      this.text = input.Text;
+      this._message = input;
+      this._text = Tools.RemoveDiacritics(input.Text).Unidecode();
+      this._unnormalized = input.Text;
       this._queue = queue;
     }
 
@@ -31,13 +34,13 @@ namespace Dbot.Banner {
     }
 
     public Victim General(bool wait = false) {
-      if (Datastore.BannedWords.Any(x => text.Contains(x)))
-        return new Mute { Duration = TimeSpan.FromDays(6), Nick = message.Nick, Reason = "6day, forbidden text. Probably screamer or spam." };
+      if (Datastore.BannedWords.Any(x => _unnormalized.Contains(x) || _text.Contains(x)))
+        return new Mute { Duration = TimeSpan.FromDays(6), Nick = _message.Nick, Reason = "6day, forbidden text. Probably screamer or spam." };
       
-      var userHistory = Datastore.UserHistory(message.Nick) ?? new UserHistory { Nick = message.Nick };
+      var userHistory = Datastore.UserHistory(_message.Nick) ?? new UserHistory { Nick = _message.Nick };
 
       var fullWidthCharacters = new[] { 'ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｑ', 'ｘ', 'ｙ', 'ｚ', 'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ', 'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｑ', 'Ｘ', 'Ｙ', 'Ｚ' };
-      if (fullWidthCharacters.Count(x => text.Contains(x)) > 5) {
+      if (fullWidthCharacters.Count(x => _unnormalized.Contains(x)) > 5) {
         var r = this.BanIncreaser(userHistory.FullWidth, "fullwidth text");
         userHistory.FullWidth = (int) r.Duration.TotalMinutes;
         Datastore.SaveUserHistory(userHistory, wait);
@@ -45,24 +48,24 @@ namespace Dbot.Banner {
       }
 
       var unicode = new[] { '็', 'е', '' };
-      if (unicode.Count(x => text.Contains(x)) > 1) {
+      if (unicode.Count(x => _unnormalized.Contains(x)) > 1) {
         var r = this.BanIncreaser(userHistory.Unicode, "unicode idiocy");
         userHistory.Unicode = (int) r.Duration.TotalMinutes;
         Datastore.SaveUserHistory(userHistory, wait);
         return r;
       }
 
-      if (Datastore.EmoticonRegex.Matches(text).Count > 7) {
+      if (Datastore.EmoticonRegex.Matches(_text).Count > 7) {
         var r = this.BanIncreaser(userHistory.FaceSpam, "face spam");
         userHistory.FaceSpam = (int) r.Duration.TotalMinutes;
         Datastore.SaveUserHistory(userHistory, wait);
         return r;
       }
 
-      if (Datastore.TempBannedWords.Any(text.Contains)) {
-        var tempBannedWord = Datastore.TempBannedWords.First(text.Contains);
+      if (Datastore.TempBannedWords.Any(x => _unnormalized.Contains(x) || _text.Contains(x))) {
+        var tempBannedWord = Datastore.TempBannedWords.First(x => _unnormalized.Contains(x) || _text.Contains(x));
         var tempBanWordCount = userHistory.TempWordCount.FirstOrDefault(x => x.Word == tempBannedWord) ?? new TempBanWordCount { Count = 0, Word = tempBannedWord };
-        var tempBanWordCountList = Datastore.UserHistory(message.Nick).TempWordCount;
+        var tempBanWordCountList = Datastore.UserHistory(_message.Nick).TempWordCount;
         tempBanWordCountList.Remove(tempBanWordCountList.FirstOrDefault(x => x.Word == tempBannedWord));
         var r = BanIncreaser(tempBanWordCount.Count, "prohibited phrase");
         tempBanWordCount.Count = (int) r.Duration.TotalMinutes;
@@ -86,20 +89,24 @@ namespace Dbot.Banner {
       } else {
         r.Duration = TimeSpan.FromMinutes(original * 2);
       }
-      r.Nick = message.Nick;
+      r.Nick = _message.Nick;
       return r;
     }
+
+    public string Normalized {get { return _text; }}
+    public string Unnormalized {get { return _unnormalized; }}
+
     #region ImgurNsfw
     //todo this could be improved; check on an individual image link basis (more accurate regex); save safe/nsfw imgurIDs to DB
     public Victim ImgurNsfw() {
-      if ((text.Contains("nsfw") || text.Contains("nsfl")) && (!text.Contains("not nsfw")))
+      if ((_unnormalized.Contains("nsfw") || _unnormalized.Contains("nsfl")) && (!_unnormalized.Contains("not nsfw")))
         return null;
 
-      var match = Regex.Match(text, @".*imgur\.com/(\w+).*");
+      var match = Regex.Match(_text, @".*imgur\.com/(\w+).*");
       if (match.Success) {
         var imgurId = match.Groups[1].Value;
         if (IsNsfw(imgurId))
-          return new Mute { Duration = TimeSpan.FromMinutes(5), Nick = message.Nick, Reason = "5m, please label nsfw, ambiguous links as such" };
+          return new Mute { Duration = TimeSpan.FromMinutes(5), Nick = _message.Nick, Reason = "5m, please label nsfw, ambiguous links as such" };
       }
       return null;
     }
@@ -118,10 +125,10 @@ namespace Dbot.Banner {
 
 
     private string getImgurId(string imgurId, string regex) {
-      var match = Regex.Match(text, regex);
+      var match = Regex.Match(_text, regex);
       if (match.Success) return match.Groups[1].Value;
       Debug.Assert(match.Success);
-      Tools.ErrorLog("Imgur " + imgurId + " error on " + message.Nick + " saying " + text);
+      Tools.ErrorLog("Imgur " + imgurId + " error on " + _message.Nick + " saying " + _text);
       return "";
     }
 

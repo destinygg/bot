@@ -52,5 +52,15 @@ namespace UnitTest {
         Assert.AreEqual(Datastore.UserHistory(nick).TempWordCount.FirstOrDefault(x => x.Word == bannedWord).Count, i);
       }
     }
+
+    [TestMethod]
+    public void StringNormalize() {
+      var message = new Message() {
+        Nick = "nick",
+        Text = "NeoDéstiny е ё ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｑｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＱＸＹＺАнастасияäöüÄÖÜОльгаТатьяна",
+      };
+      var banner = new Banner(message);
+      Assert.AreEqual(banner.Normalized, "NeoDestiny e e abcdefghijklmnopqrstuvqxyzABCDEFGHIJKLMNOPQRSTUVQXYZAnastasiyaaouAOUOl'gaTat'yana");
+    }
   }
 }
