@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Dbot.CommonModels;
 using SQLite;
@@ -9,6 +10,12 @@ using SQLite;
 namespace Dbot.Data {
   public static class Datastore {
     private static SQLiteAsyncConnection _db;
+
+    public static void Initialize(List<string> emoticons) {
+      Initialize();
+      if (emoticons != null)
+        Datastore.EmoticonsList = emoticons;
+    }
 
     public static void Initialize() {
       _db = new SQLiteAsyncConnection("DbotDB.sqlite");
@@ -22,7 +29,17 @@ namespace Dbot.Data {
       _modCommands = _db.Table<ModCommands>().ToListAsync().Result;
     }
 
-    public static List<string> EmoticonsList { get; set; }
+    private static List<string> _emoticonsList;
+
+    public static List<string> EmoticonsList {
+      get { return _emoticonsList; }
+      set {
+        _emoticonsList = value;
+        EmoticonRegex = new Regex(@"(?:^|[\s,\.\?!])(" + String.Join("|", _emoticonsList) + @")(?=$|[\s,\.\?!])", RegexOptions.Compiled & RegexOptions.IgnoreCase);
+      }
+    }
+
+    public static Regex EmoticonRegex { get; set; }
 
     public static int Delay { get; set; }
     public static int Viewers { get; set; }
