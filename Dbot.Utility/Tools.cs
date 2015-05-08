@@ -77,7 +77,7 @@ namespace Dbot.Utility {
 
       if (span.CompareTo(TimeSpan.Zero) == -1) {
         Log("Time to sync the clock?" + span, ConsoleColor.Red);
-        return "A few seconds";
+        return "a few seconds";
       }
 
       if (day > 1) {

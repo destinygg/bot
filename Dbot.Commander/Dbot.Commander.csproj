@@ -42,6 +42,12 @@
     <Compile Include="Commander.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
+      <Project>{E27FAB2D-880D-4137-B32A-23E7DB585BF3}</Project>
+      <Name>Dbot.Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
