@@ -105,7 +105,7 @@ namespace Dbot.Utility {
     }
 
     public static bool GetLiveApi() {
-      var answer = DownloadData("https://api.twitch.tv/kraken/streams/riotgames").Result;
+      var answer = DownloadData("https://api.twitch.tv/kraken/streams/destiny").Result;
       dynamic dyn = JsonConvert.DeserializeObject(answer);
       var streamState = (JObject) dyn.stream;
       if (streamState != null) {
@@ -132,8 +132,8 @@ namespace Dbot.Utility {
       return false;
     }
 
-    public static string LiveStatus(bool liveStatus, bool wait = false) {
-      return Tools.LiveStatus(liveStatus, DateTime.UtcNow, wait);
+    public static string LiveStatus(bool wait = false) {
+      return Tools.LiveStatus(Tools.GetLiveApi(), DateTime.UtcNow, wait);
     }
 
     public static string LiveStatus(bool liveStatus, DateTime compareTime, bool wait = false) {

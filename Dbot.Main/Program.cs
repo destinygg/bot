@@ -42,7 +42,7 @@ namespace Dbot.Main {
       PeriodicTask.Run(UpdateEmoticons, TimeSpan.FromHours(1));
 
       //todo, make sure this dosn't run more often than once a minute
-      //PeriodicTask.Run(Tools.LiveStatus, TimeSpan.FromMinutes(2));
+      PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
 
       var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
       _logger = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
