@@ -41,6 +41,9 @@ namespace Dbot.Main {
       UpdateEmoticons.Invoke();
       PeriodicTask.Run(UpdateEmoticons, TimeSpan.FromHours(1));
 
+      //todo, make sure this dosn't run more often than once a minute
+      //PeriodicTask.Run(Tools.LiveStatus, TimeSpan.FromMinutes(2));
+
       var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
       _logger = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
       _sender = new ActionBlock<object>(m => Send(m), hungryCaterpillar);
@@ -94,9 +97,8 @@ namespace Dbot.Main {
       var bantest = new Banner.Banner(input, recentMessages).BanParser();
       if (bantest == null) {
         //do thing
-      }
-      else {
-        //d o other thing
+      } else {
+        //do other thing
       }
     }
 

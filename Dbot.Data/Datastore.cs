@@ -16,6 +16,10 @@ namespace Dbot.Data {
       if (0 == _db.ExecuteScalarAsync<int>("Select Count(*) FROM sqlite_master where type='table';").Result) {
         LoadData();
       }
+
+      _tempBannedWords = _db.Table<TempBannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
+      _bannedWords = _db.Table<BannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
+      _modCommands = _db.Table<ModCommands>().ToListAsync().Result;
     }
 
     public static List<string> EmoticonsList { get; set; }
@@ -24,17 +28,17 @@ namespace Dbot.Data {
     public static int Viewers { get; set; }
 
     private static List<ModCommands> _modCommands;
-    public static List<ModCommands> ModCommands { get { return _modCommands ?? (_modCommands = _db.Table<ModCommands>().ToListAsync().Result); } }
+    public static List<ModCommands> ModCommands { get { return _modCommands; } }
 
     //these are never used?
     //private static List<StateVariables> _stateVariables;
     //public static List<StateVariables> StateVariables { get { return _stateVariables ?? (_stateVariables = _db.Table<StateVariables>().ToListAsync().Result); } }
 
     private static List<string> _bannedWords;
-    public static List<string> BannedWords { get { return _bannedWords ?? (_bannedWords = _db.Table<BannedWords>().ToListAsync().Result.Select(x => x.Word).ToList()); } }
+    public static List<string> BannedWords { get { return _bannedWords; } }
 
     private static List<string> _tempBannedWords;
-    public static List<string> TempBannedWords { get { return _tempBannedWords ?? (_tempBannedWords = _db.Table<TempBannedWords>().ToListAsync().Result.Select(x => x.Word).ToList()); } }
+    public static List<string> TempBannedWords { get { return _tempBannedWords; } }
 
     public static int offTime() {
       return _db.Table<StateVariables>().Where(x => x.Key == Ms.offTime).FirstAsync().Result.Value;
@@ -46,7 +50,7 @@ namespace Dbot.Data {
 
     public static UserHistory UserHistory(string nick) {
       var raw = _db.Table<RawUserHistory>().Where(x => x.Nick == nick).FirstOrDefaultAsync().Result;
-      if (raw == null) return null;
+      if (raw == null) return new UserHistory() { Nick = nick };
       return new UserHistory(raw);
     }
 

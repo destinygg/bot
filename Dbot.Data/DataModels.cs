@@ -96,6 +96,14 @@ namespace Dbot.Data {
       };
     }
 
-    public List<TempBanWordCount> TempWordCount { get; set; }
+    private List<TempBanWordCount> _tempWordCount;
+
+    public List<TempBanWordCount> TempWordCount {
+      get {
+        return _tempWordCount ?? new List<TempBanWordCount>();
+      }
+      set { _tempWordCount = value; }
+    }
+
   }
 }
