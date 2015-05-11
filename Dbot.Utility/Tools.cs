@@ -216,18 +216,5 @@ namespace Dbot.Utility {
       var deserializeObject = (JArray) JsonConvert.DeserializeObject(answer);
       return deserializeObject.ToObject<List<string>>();
     }
-
-    public static string RemoveDiacritics(string text) {
-      var normalizedString = text.Normalize(NormalizationForm.FormD);
-      var stringBuilder = new StringBuilder();
-
-      foreach (var c in normalizedString) {
-        var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-        if (unicodeCategory != UnicodeCategory.NonSpacingMark) {
-          stringBuilder.Append(c);
-        }
-      }
-      return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
-    }
   }
 }
