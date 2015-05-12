@@ -21,11 +21,10 @@ namespace Dbot.Banner {
     private readonly string _unnormalized;
     private ConcurrentQueue<Message> _queue;
     
-    public Banner(Message input, ConcurrentQueue<Message> queue = null) {
+    public Banner(Message input) {
       this._message = input;
       this._text = StringTools.RemoveDiacritics(input.Text).Unidecode();
       this._unnormalized = input.Text;
-      this._queue = queue;
     }
 
     public Victim BanParser() {

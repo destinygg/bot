@@ -24,7 +24,6 @@ namespace Dbot.Main {
     private static ActionBlock<Message> _banner;
     private static bool _exit;
     private static WebSocketClient wsc;
-    private static ConcurrentQueue<Message> recentMessages = new ConcurrentQueue<Message>();
 
     static void Main(string[] args) {
 
@@ -94,8 +93,7 @@ namespace Dbot.Main {
     }
 
     private static void Ban(Message input) {
-      recentMessages.Enqueue(input);
-      var bantest = new Banner.Banner(input, recentMessages).BanParser();
+      var bantest = new Banner.Banner(input).BanParser();
       if (bantest == null) {
         //do thing
       } else {
@@ -103,10 +101,11 @@ namespace Dbot.Main {
       }
     }
 
-    private static void Log(Message input) {
-      Console.WriteLine(input.Nick + ": " + input.Text);
-      input.Nick = input.Nick.ToLower();
-      Datastore.InsertMessage(input);
+    private static void Log(Message message) {
+      Datastore.MessageQueue.Enqueue(message);
+      Console.WriteLine(message.Nick + ": " + message.Text);
+      message.Nick = message.Nick.ToLower();
+      Datastore.InsertMessage(message);
     }
 
     static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {
