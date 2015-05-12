@@ -28,8 +28,8 @@ namespace UnitTest {
         "test http://imgur.com/a/VVcZ2 test",
       };
 
-      foreach (var x in testList) {
-        var actualAnswer = new Banner(new Message { Nick = "tempuser", Text = x }).ImgurNsfw().Duration;
+      foreach (var text in testList) {
+        var actualAnswer = new Banner(Make.Message(text)).ImgurNsfw().Duration;
         var expectedAnswer = TimeSpan.FromMinutes(5);
         Assert.AreEqual(expectedAnswer, actualAnswer);
       }
@@ -44,9 +44,9 @@ namespace UnitTest {
       Datastore.Initialize(Tools.GetEmoticons());
       Datastore.AddTempBanWord(bannedWord);
 
-      var banner = new Banner(new Message { Nick = nick, Text = "banphrase" });
+      var banner = new Banner(Make.Message(nick, "banphrase"));
 
-      var testList = new List<int>() { 10, 20, 40, 80, 160, 320, 640, 1280 };
+      var testList = new List<int> { 10, 20, 40, 80, 160, 320, 640, 1280 };
       foreach (var i in testList) {
         banner.General(true);
         Assert.AreEqual(Datastore.UserHistory(nick).TempWordCount.FirstOrDefault(x => x.Word == bannedWord).Count, i);
@@ -55,10 +55,7 @@ namespace UnitTest {
 
     [TestMethod]
     public void StringNormalize() {
-      var message = new Message() {
-        Nick = "nick",
-        Text = "NeoDéstiny е ё ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｑｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＱＸＹＺАнастасияäöüÄÖÜОльгаТатьяна",
-      };
+      var message = Make.Message("nick", "NeoDéstiny е ё ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｑｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＱＸＹＺАнастасияäöüÄÖÜОльгаТатьяна");
       var banner = new Banner(message);
       Assert.AreEqual(banner.Normalized, "NeoDestiny e e abcdefghijklmnopqrstuvqxyzABCDEFGHIJKLMNOPQRSTUVQXYZAnastasiyaaouAOUOl'gaTat'yana");
     }

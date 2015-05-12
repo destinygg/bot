@@ -23,7 +23,7 @@ namespace Dbot.Banner {
     
     public Banner(Message input, ConcurrentQueue<Message> queue = null) {
       this._message = input;
-      this._text = Tools.RemoveDiacritics(input.Text).Unidecode();
+      this._text = StringTools.RemoveDiacritics(input.Text).Unidecode();
       this._unnormalized = input.Text;
       this._queue = queue;
     }
