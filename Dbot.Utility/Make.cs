@@ -13,5 +13,9 @@ namespace Dbot.Utility {
     public static Message Message(string nick, string text) {
       return new Message { Text = text, Nick = nick };
     }
+
+    public static Mute Mute(string nick, TimeSpan duration, string reason = null) {
+      return new Mute { Nick = nick, Duration = duration, Reason = reason };
+    }
   }
 }

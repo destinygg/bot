@@ -35,7 +35,7 @@ namespace Dbot.Banner {
 
     public Victim General(bool wait = false) {
       if (Datastore.BannedWords.Any(x => _unnormalized.Contains(x) || _text.Contains(x)))
-        return new Mute { Duration = TimeSpan.FromDays(6), Nick = _message.Nick, Reason = "6day, forbidden text. Probably screamer or spam." };
+        return Make.Mute(_message.Nick, TimeSpan.FromDays(6), "6day, forbidden text. Probably screamer or spam.");
 
       var userHistory = Datastore.UserHistory(_message.Nick) ?? new UserHistory { Nick = _message.Nick };
 
@@ -106,7 +106,7 @@ namespace Dbot.Banner {
       if (match.Success) {
         var imgurId = match.Groups[1].Value;
         if (IsNsfw(imgurId))
-          return new Mute { Duration = TimeSpan.FromMinutes(5), Nick = _message.Nick, Reason = "5m, please label nsfw, ambiguous links as such" };
+          return Make.Mute(_message.Nick, TimeSpan.FromMinutes(5), "5m, please label nsfw, ambiguous links as such");
       }
       return null;
     }
@@ -147,9 +147,9 @@ namespace Dbot.Banner {
         var delta = StringTools.Delta(_unnormalized, longMessage.Text);
         if (delta > 0.7) {
           if (_message.Text.Length > LongSpamMinimumLength + 100) {
-            return new Mute { Duration = TimeSpan.FromMinutes(10), Nick = _message.Nick, Reason = "10m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text" };
+            return Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text");
           }
-          return new Mute { Duration = TimeSpan.FromMinutes(1), Nick = _message.Nick, Reason = "1m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text" };
+          return Make.Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text");
         }
       }
       return null;
