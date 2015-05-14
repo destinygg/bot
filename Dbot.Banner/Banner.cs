@@ -16,11 +16,12 @@ using UnidecodeSharpFork;
 
 namespace Dbot.Banner {
   public class Banner {
+    private const int LongSpamMinimumLength = 200;
     private readonly Message _message;
     private readonly string _text;
     private readonly string _unnormalized;
     private ConcurrentQueue<Message> _queue;
-    
+
     public Banner(Message input) {
       this._message = input;
       this._text = StringTools.RemoveDiacritics(input.Text).Unidecode();
@@ -35,7 +36,7 @@ namespace Dbot.Banner {
     public Victim General(bool wait = false) {
       if (Datastore.BannedWords.Any(x => _unnormalized.Contains(x) || _text.Contains(x)))
         return new Mute { Duration = TimeSpan.FromDays(6), Nick = _message.Nick, Reason = "6day, forbidden text. Probably screamer or spam." };
-      
+
       var userHistory = Datastore.UserHistory(_message.Nick) ?? new UserHistory { Nick = _message.Nick };
 
       var fullWidthCharacters = new[] { 'ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｑ', 'ｘ', 'ｙ', 'ｚ', 'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ', 'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｑ', 'Ｘ', 'Ｙ', 'Ｚ' };
@@ -92,8 +93,8 @@ namespace Dbot.Banner {
       return r;
     }
 
-    public string Normalized {get { return _text; }}
-    public string Unnormalized {get { return _unnormalized; }}
+    public string Normalized { get { return _text; } }
+    public string Unnormalized { get { return _unnormalized; } }
 
     #region ImgurNsfw
     //todo this could be improved; check on an individual image link basis (more accurate regex); save safe/nsfw imgurIDs to DB
@@ -111,7 +112,7 @@ namespace Dbot.Banner {
     }
 
     private bool IsNsfw(string imgurId) {
-      if (imgurId == "gallery") 
+      if (imgurId == "gallery")
         imgurId = getImgurId(imgurId, @".*imgur\.com/gallery/(\w+).*");
       if (imgurId == "r")
         imgurId = getImgurId(imgurId, @".*imgur\.com/r/\w+/(\w+).*");
@@ -138,6 +139,20 @@ namespace Dbot.Banner {
     }
     #endregion
 
+    //todo: make the graduation more encompassing; it should start banning when people say 100 characters 50x for example
+    public Mute LongSpam() {
+      var longMessages = Datastore.RecentMessages.Skip(1).Take(25).Where(x => x.Text.Length > LongSpamMinimumLength).ToList(); // skip(1) to skip the user's own message that we added in Main
 
+      foreach (var longMessage in longMessages) {
+        var delta = StringTools.Delta(_unnormalized, longMessage.Text);
+        if (delta > 0.7) {
+          if (_message.Text.Length > LongSpamMinimumLength + 100) {
+            return new Mute { Duration = TimeSpan.FromMinutes(10), Nick = _message.Nick, Reason = "10m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text" };
+          }
+          return new Mute { Duration = TimeSpan.FromMinutes(1), Nick = _message.Nick, Reason = "1m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text" };
+        }
+      }
+      return null;
+    }
   }
 }
