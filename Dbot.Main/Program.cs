@@ -102,7 +102,7 @@ namespace Dbot.Main {
     }
 
     private static void Log(Message message) {
-      Datastore.MessageQueue.Enqueue(message);
+      Datastore.RecentMessages.Add(message);
       Console.WriteLine(message.Nick + ": " + message.Text);
       message.Nick = message.Nick.ToLower();
       Datastore.InsertMessage(message);
