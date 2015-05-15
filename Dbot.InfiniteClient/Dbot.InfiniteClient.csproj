@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2D7C9BBC-6FE8-4734-B045-A7E4A6C1F2A9}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{7377AC35-F3B7-4734-84BC-8865F72749B9}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dbot.Main</RootNamespace>
-    <AssemblyName>Dbot.Main</AssemblyName>
+    <RootNamespace>Dbot.InfiniteClient</RootNamespace>
+    <AssemblyName>Dbot.InfiniteClient</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,16 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Threading.Tasks.Dataflow, Version=4.5.24.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Tpl.Dataflow.4.5.24\lib\portable-net45+win8+wpa81\System.Threading.Tasks.Dataflow.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,18 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="InfiniteClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Dbot.Banner\Dbot.Banner.csproj">
-      <Project>{52c8958f-bb47-4598-9308-6739139fe903}</Project>
-      <Name>Dbot.Banner</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Dbot.CommonModels\Dbot.CommonModels.csproj">
       <Project>{65d520b2-5739-4908-90b0-739cb4daac4d}</Project>
       <Name>Dbot.CommonModels</Name>
@@ -69,25 +51,9 @@
       <Project>{e59d160d-6c94-421f-916a-8533afc15211}</Project>
       <Name>Dbot.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dbot.Data\Dbot.Data.csproj">
-      <Project>{1e2409c3-c544-4ec2-aa93-9c0f5a4b02ec}</Project>
-      <Name>Dbot.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dbot.InfiniteClient\Dbot.InfiniteClient.csproj">
-      <Project>{7377ac35-f3b7-4734-84bc-8865f72749b9}</Project>
-      <Name>Dbot.InfiniteClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dbot.ModCommander\Dbot.ModCommander.csproj">
-      <Project>{b9c623b7-1aa0-4803-843a-81fde1660fcb}</Project>
-      <Name>Dbot.ModCommander</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
-      <Project>{E27FAB2D-880D-4137-B32A-23E7DB585BF3}</Project>
+      <Project>{e27fab2d-880d-4137-b32a-23e7db585bf3}</Project>
       <Name>Dbot.Utility</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dbot.WebSocketClient\Dbot.WebSocketClient.csproj">
-      <Project>{80caf0dd-1886-42f8-b119-565e7c389424}</Project>
-      <Name>Dbot.WebSocketClient</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

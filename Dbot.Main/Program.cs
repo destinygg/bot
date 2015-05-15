@@ -11,6 +11,7 @@ using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;
 using Dbot.WebsocketClient;
+using Dbot.InfiniteClient;
 using Dbot.Banner;
 
 namespace Dbot.Main {
@@ -23,17 +24,11 @@ namespace Dbot.Main {
     private static ActionBlock<Message> _modCommander;
     private static ActionBlock<Message> _banner;
     private static bool _exit;
-    private static WebSocketClient wsc;
+    private static IClient client;
 
     static void Main(string[] args) {
 
       Datastore.Initialize();
-      wsc = new WebSocketClient();
-      wsc.Run();
-      wsc.PropertyChanged += wsc_PropertyChanged;
-      Console.CancelKeyPress += Console_CancelKeyPress;
-      //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
-      //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
 
       var UpdateEmoticons = new Action(() => {
         Datastore.EmoticonsList = Tools.GetEmoticons();
@@ -52,8 +47,15 @@ namespace Dbot.Main {
       _modCommander = new ActionBlock<Message>(m => ModCommand(m), hungryCaterpillar);
 
       //_banner.LinkTo(_commander);
-
       //consoleSync.Consumer(Constants.ConsoleBuffer);
+      
+      client = new InfiniteClient.InfiniteClient();
+      client.Run();
+      client.PropertyChanged += client_PropertyChanged;
+      Console.CancelKeyPress += Console_CancelKeyPress;
+      //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
+      //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
+
       _exit = false;
       while (!_exit) { //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
         var input = Console.ReadLine();
@@ -61,7 +63,7 @@ namespace Dbot.Main {
           if (input == "exit") {
             _exit = true;
           } else if (input[0] == '~') {
-            wsc.Send(input.Substring(1));
+            client.Send(input.Substring(1));
           } else if (input[0] == '<') {
             _modCommander.Post(Make.Message(input));
           }
@@ -86,9 +88,9 @@ namespace Dbot.Main {
       if (input is Victim) {
 
       } else if (input is Message) {
-        wsc.Send(((Message) input).Text);
+        client.Send(((Message) input).Text);
       } else if (input is String) {
-        wsc.Send((string) input);
+        client.Send((string) input);
       } else Tools.ErrorLog("Unsupported type.");
     }
 
@@ -117,10 +119,10 @@ namespace Dbot.Main {
     }
 
     // todo: you can make this better with http://stackoverflow.com/questions/3668217/handling-propertychanged-in-a-type-safe-way
-    private static void wsc_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-      var wsc = (WebSocketClient) sender;
-      _logger.Post(wsc.CoreMsg);
-      _banner.Post(wsc.CoreMsg);
+    private static void client_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+      var client = (IClient) sender;
+      _logger.Post(client.CoreMsg);
+      _banner.Post(client.CoreMsg);
     }
   }
 }
