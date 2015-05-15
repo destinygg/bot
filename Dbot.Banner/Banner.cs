@@ -141,7 +141,7 @@ namespace Dbot.Banner {
 
     //todo: make the graduation more encompassing; it should start banning when people say 100 characters 50x for example
     public Mute LongSpam() {
-      var longMessages = Datastore.RecentMessages.Skip(1).Take(25).Where(x => x.Text.Length > LongSpamMinimumLength).ToList(); // skip(1) to skip the user's own message that we added in Main
+      var longMessages = Datastore.RecentMessages.Skip(1).Take(25).Where(x => x.Text.Length > LongSpamMinimumLength); // skip(1) to skip the user's own message that we added in Main
 
       foreach (var longMessage in longMessages) {
         var delta = StringTools.Delta(_unnormalized, longMessage.Text);
@@ -150,6 +150,20 @@ namespace Dbot.Banner {
             return Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text");
           }
           return Make.Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text");
+        }
+      }
+      return null;
+    }
+
+    public Mute SelfSpam() {
+      var shortMessages = Datastore.RecentMessages.Skip(1).Take(10).Where(x => x.Nick == _message.Nick).ToList(); // skip(1) to skip the user's own message that we added in Main
+      if (shortMessages.Count() > 3) {
+        
+        var percentList = shortMessages.Select(sm => StringTools.Delta(sm.Text, _text)).Select(delta => Convert.ToInt32(delta * 100)).Where(x => x >= 70).ToList();
+
+        if (percentList.Count() >= 2) {
+          Debug.Assert(percentList.Count() == 2);
+          return Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "1m " + _message.Nick + ": " + percentList.Average() + "% = your past text");
         }
       }
       return null;
