@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Dbot.CommonModels;
 using Dbot.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dbot.Utility;
@@ -155,6 +156,30 @@ namespace UnitTest {
         Assert.AreEqual(Datastore.offTime(), x.Item3 * 60);
         Assert.AreEqual(temp, x.Item5);
       }
+    }
+
+    [TestMethod]
+    public void IgnoreFirstOccuranceOf_Test() {
+
+      var testList = new List<Message> {
+        Make.Message("1"),
+        Make.Message("bork"),
+        Make.Message("longer message"),
+        Make.Message("bork"),
+        Make.Message("1"),
+        Make.Message("bork"),
+      };
+
+      var expectedAnswer = new List<Message> {
+        Make.Message("1"),
+        Make.Message("longer message"),
+        Make.Message("bork"),
+        Make.Message("1"),
+        Make.Message("bork"),
+      };
+
+      var actualAnswer = testList.IgnoreFirstOccuranceOf(Make.Message("bork")).ToList();
+      Assert.IsTrue(actualAnswer.SequenceEqual(expectedAnswer));
     }
   }
 }

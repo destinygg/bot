@@ -141,7 +141,7 @@ namespace Dbot.Banner {
 
     //todo: make the graduation more encompassing; it should start banning when people say 100 characters 50x for example
     public Mute LongSpam() {
-      var longMessages = Datastore.RecentMessages.Skip(1).Take(25).Where(x => x.Text.Length > LongSpamMinimumLength); // skip(1) to skip the user's own message that we added in Main
+      var longMessages = Datastore.RecentMessages.Take(26).Where(x => x.Text.Length > LongSpamMinimumLength).IgnoreFirstOccuranceOf(_message);
 
       foreach (var longMessage in longMessages) {
         var delta = StringTools.Delta(_unnormalized, longMessage.Text);
@@ -156,7 +156,7 @@ namespace Dbot.Banner {
     }
 
     public Mute SelfSpam() {
-      var shortMessages = Datastore.RecentMessages.Skip(1).Take(10).Where(x => x.Nick == _message.Nick).ToList(); // skip(1) to skip the user's own message that we added in Main
+      var shortMessages = Datastore.RecentMessages.Take(11).Where(x => x.Nick == _message.Nick).IgnoreFirstOccuranceOf(_message).ToList();
       if (shortMessages.Count() > 3) {
         
         var percentList = shortMessages.Select(sm => StringTools.Delta(sm.Text, _text)).Select(delta => Convert.ToInt32(delta * 100)).Where(x => x >= 70).ToList();

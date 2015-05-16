@@ -12,8 +12,14 @@ namespace Dbot.CommonModels {
     public bool IsMod { get; set; }
   }
 
-  public class Message : User {
+  public class Message : User, IEquatable<Message> {
     public string Text { get; set; }
+    public bool Equals(Message other) {
+      return 
+        this.Nick == other.Nick && 
+        this.Text == other.Text && 
+        this.IsMod == other.IsMod;
+    }
   }
 
   public abstract class Victim : User {
