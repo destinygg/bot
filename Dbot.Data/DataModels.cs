@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -63,15 +64,18 @@ namespace Dbot.Data {
     public string RawTempWordCount { get; set; }
   }
 
-  public class TempBanWordCount {
+  public class TempBanWordCount : IEquatable<TempBanWordCount> {
     public string Word { get; set; }
     public int Count { get; set; }
+    public bool Equals(TempBanWordCount other) {
+      return
+        this.Word == other.Word &&
+        this.Count == other.Count;
+    }
   }
 
-  public class UserHistory : RawUserHistory {
-    public UserHistory() {
-      
-    }
+  public class UserHistory : RawUserHistory, IEquatable<UserHistory> {
+    public UserHistory() { }
     public UserHistory(RawUserHistory raw) {
       this.Load(raw);
     }
@@ -99,11 +103,19 @@ namespace Dbot.Data {
     private List<TempBanWordCount> _tempWordCount;
 
     public List<TempBanWordCount> TempWordCount {
-      get {
-        return _tempWordCount ?? new List<TempBanWordCount>();
-      }
+      get { return _tempWordCount ?? new List<TempBanWordCount>(); }
       set { _tempWordCount = value; }
     }
 
+    public bool Equals(UserHistory other) {
+      var asdf = this.TempWordCount.SequenceEqual(other.TempWordCount);
+      var adsf = Unicode;
+      return
+        this.Nick == other.Nick &&
+        this.FullWidth == other.FullWidth &&
+        this.Unicode == other.Unicode &&
+        this.FaceSpam == other.FaceSpam &&
+        this.TempWordCount.SequenceEqual(other.TempWordCount);
+    }
   }
 }

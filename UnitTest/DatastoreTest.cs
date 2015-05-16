@@ -29,9 +29,7 @@ namespace UnitTest {
       Datastore.SaveUserHistory(expectedAnswer, true);
       var actualAnswer = Datastore.UserHistory("destiny");
 
-      var expectedAnswerJson = JsonConvert.SerializeObject(expectedAnswer);
-      var actualAnswerJson = JsonConvert.SerializeObject(actualAnswer);
-      Assert.IsTrue(actualAnswerJson == expectedAnswerJson);
+      Assert.IsTrue(actualAnswer.Equals(expectedAnswer));
 
       // testing update
       expectedAnswer = new UserHistory(new RawUserHistory {
@@ -40,21 +38,18 @@ namespace UnitTest {
         FaceSpam = 13,
         FullWidth = 14,
         Nick = "destiny",
-        RawTempWordCount =
-        JsonConvert.SerializeObject(new List<TempBanWordCount> {
+        RawTempWordCount = JsonConvert.SerializeObject(new List<TempBanWordCount> {
           new TempBanWordCount {Count = 11, Word = "wrankle"},
           new TempBanWordCount {Count = 21, Word = "lacrimosa"}
-      })
+        })
       });
       Datastore.SaveUserHistory(expectedAnswer, true);
       actualAnswer = Datastore.UserHistory("destiny");
 
-      expectedAnswerJson = JsonConvert.SerializeObject(expectedAnswer);
-      actualAnswerJson = JsonConvert.SerializeObject(actualAnswer);
-      Assert.IsTrue(actualAnswerJson == expectedAnswerJson);
+      Assert.IsTrue(actualAnswer.Equals(expectedAnswer));
 
       var assertNull = Datastore.UserHistory("destiny2");
-      Assert.IsNull(assertNull);
+      Assert.IsTrue(assertNull.Equals(new UserHistory { FaceSpam = 0, FullWidth = 0, Nick = "destiny2", TempWordCount = null, Unicode = 0 }));
 
     }
 
