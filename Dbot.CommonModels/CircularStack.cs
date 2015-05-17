@@ -24,6 +24,7 @@ namespace Dbot.CommonModels {
     }
 
     public IEnumerator<T> GetEnumerator() {
+      return _backingArray.Skip(_index).Concat(_backingArray.Take(_index)).Reverse().GetEnumerator();
       var listIndexes = new List<int>();
       for (var i = _backingArray.Length - 1; i >= 0; i--) {
         var temp = i + _index;

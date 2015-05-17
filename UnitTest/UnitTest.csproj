@@ -60,6 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BannerTest.cs" />
     <Compile Include="CommanderTest.cs" />
+    <Compile Include="CommonModels.cs" />
     <Compile Include="UtilityTools.cs" />
   </ItemGroup>
   <ItemGroup>
