@@ -108,18 +108,19 @@ namespace UnitTest {
       var originatingMessageLong = Make.Message(om + a200 + a200);
       var originatingMessageShort = Make.Message(om + a200.ToCharArray().Skip(om.Length + 1)); // todo, this isn't 199 chars long, but it'll do for now.
 
-      Datastore.RecentMessages.Add(Make.Message(a200 + " 1"));
+      var context = new List<Message>();
+      context.Add(Make.Message(a200 + " 1"));
       //Datastore.RecentMessages.Add(Make.Message(a200 + " 2"));
       //Datastore.RecentMessages.Add(Make.Message(a200 + " 3"));
-      Datastore.RecentMessages.Add(originatingMessageLong);
+      context.Add(originatingMessageLong);
 
-      var ban10 = new Banner(originatingMessageLong).LongSpam();
+      var ban10 = new Banner(originatingMessageLong, context).LongSpam();
       Assert.AreEqual(ban10.Duration, TimeSpan.FromMinutes(10));
 
-      var ban1 = new Banner(originatingMessage).LongSpam();
+      var ban1 = new Banner(originatingMessage, context).LongSpam();
       Assert.AreEqual(ban1.Duration, TimeSpan.FromMinutes(1));
 
-      var ban0 = new Banner(originatingMessageShort).LongSpam();
+      var ban0 = new Banner(originatingMessageShort, context).LongSpam();
       Assert.IsTrue(originatingMessageShort.Text.Length < 200);
       Assert.IsNull(ban0);
     }
@@ -136,14 +137,15 @@ namespace UnitTest {
         new Tuple<string, bool> ("a somewhat short message3", true),
       };
 
+      var context = new List<Message>();
+
       foreach (var tuple in testList) {
         var message = Make.Message(tuple.Item1);
-        Datastore.RecentMessages.Add(message);
-        var testCase = new Banner(message).SelfSpam();
+        context.Add(message);
+        var testCase = new Banner(message, context).SelfSpam();
         if (tuple.Item2) {
           Assert.IsNotNull(testCase);
-        }
-        else {
+        } else {
           Assert.IsNull(testCase);
         }
       }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks.Dataflow;
 using Dbot.Common;
@@ -24,12 +25,21 @@ namespace Dbot.Main {
     private static ActionBlock<Message> _modCommander;
     private static ActionBlock<Message> _banner;
     private static bool _exit;
-    private static IClient client;
+    private static IClient _client;
+    private static CircularStack<Message> _recentMessages;
 
     static void Main(string[] args) {
 
       Datastore.Initialize();
+      _recentMessages = new CircularStack<Message>(200);
 
+      var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
+      _logger = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
+      _sender = new ActionBlock<object>(m => Send(m), hungryCaterpillar);
+      _banner = new ActionBlock<Message>(m => Ban(m), hungryCaterpillar);
+      _commander = new ActionBlock<Message>(m => Command(m), hungryCaterpillar);
+      _modCommander = new ActionBlock<Message>(m => ModCommand(m), hungryCaterpillar);
+      
       var UpdateEmoticons = new Action(() => {
         Datastore.EmoticonsList = Tools.GetEmoticons();
       });
@@ -39,19 +49,12 @@ namespace Dbot.Main {
       //todo, make sure this dosn't run more often than once a minute
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
 
-      var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
-      _logger = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
-      _sender = new ActionBlock<object>(m => Send(m), hungryCaterpillar);
-      _banner = new ActionBlock<Message>(m => Ban(m), hungryCaterpillar);
-      _commander = new ActionBlock<Message>(m => Command(m), hungryCaterpillar);
-      _modCommander = new ActionBlock<Message>(m => ModCommand(m), hungryCaterpillar);
-
       //_banner.LinkTo(_commander);
       //consoleSync.Consumer(Constants.ConsoleBuffer);
       
-      client = new InfiniteClient.InfiniteClient();
-      client.Run();
-      client.PropertyChanged += client_PropertyChanged;
+      _client = new InfiniteClient.InfiniteClient();
+      _client.Run();
+      _client.PropertyChanged += client_PropertyChanged;
       Console.CancelKeyPress += Console_CancelKeyPress;
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
@@ -63,7 +66,7 @@ namespace Dbot.Main {
           if (input == "exit") {
             _exit = true;
           } else if (input[0] == '~') {
-            client.Send(input.Substring(1));
+            _client.Send(input.Substring(1));
           } else if (input[0] == '<') {
             _modCommander.Post(Make.Message(input));
           }
@@ -88,14 +91,14 @@ namespace Dbot.Main {
       if (input is Victim) {
 
       } else if (input is Message) {
-        client.Send(((Message) input).Text);
+        _client.Send(((Message) input).Text);
       } else if (input is String) {
-        client.Send((string) input);
+        _client.Send((string) input);
       } else Tools.ErrorLog("Unsupported type.");
     }
 
     private static void Ban(Message input) {
-      var bantest = new Banner.Banner(input).BanParser();
+      var bantest = new Banner.Banner(input, _recentMessages.ToList()).BanParser();
       if (bantest == null) {
         //do thing
       } else {
@@ -104,7 +107,6 @@ namespace Dbot.Main {
     }
 
     private static void Log(Message message) {
-      Datastore.RecentMessages.Add(message);
       Console.WriteLine(message.Nick + ": " + message.Text);
       message.Nick = message.Nick.ToLower();
       Datastore.InsertMessage(message);
@@ -121,6 +123,7 @@ namespace Dbot.Main {
     // todo: you can make this better with http://stackoverflow.com/questions/3668217/handling-propertychanged-in-a-type-safe-way
     private static void client_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var client = (IClient) sender;
+      _recentMessages.Add(client.CoreMsg);
       _logger.Post(client.CoreMsg);
       _banner.Post(client.CoreMsg);
     }

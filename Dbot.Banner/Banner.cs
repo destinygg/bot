@@ -20,12 +20,13 @@ namespace Dbot.Banner {
     private readonly Message _message;
     private readonly string _text;
     private readonly string _unnormalized;
-    private ConcurrentQueue<Message> _queue;
+    private List<Message> _context;
 
-    public Banner(Message input) {
+    public Banner(Message input, List<Message> context = null) {
       this._message = input;
       this._text = StringTools.RemoveDiacritics(input.Text).Unidecode();
       this._unnormalized = input.Text;
+      this._context = context;
     }
 
     public Victim BanParser() {
@@ -141,7 +142,7 @@ namespace Dbot.Banner {
 
     //todo: make the graduation more encompassing; it should start banning when people say 100 characters 50x for example
     public Mute LongSpam() {
-      var longMessages = Datastore.RecentMessages.Take(26).Where(x => x.Text.Length > LongSpamMinimumLength).IgnoreFirstOccuranceOf(_message);
+      var longMessages = _context.Take(26).Where(x => x.Text.Length > LongSpamMinimumLength).IgnoreFirstOccuranceOf(_message);
 
       foreach (var longMessage in longMessages) {
         var delta = StringTools.Delta(_unnormalized, longMessage.Text);
@@ -156,7 +157,7 @@ namespace Dbot.Banner {
     }
 
     public Mute SelfSpam() {
-      var shortMessages = Datastore.RecentMessages.Take(11).Where(x => x.Nick == _message.Nick).IgnoreFirstOccuranceOf(_message).ToList();
+      var shortMessages = _context.Take(11).Where(x => x.Nick == _message.Nick).IgnoreFirstOccuranceOf(_message).ToList();
       if (shortMessages.Count() > 3) {
         
         var percentList = shortMessages.Select(sm => StringTools.Delta(sm.Text, _text)).Select(delta => Convert.ToInt32(delta * 100)).Where(x => x >= 70).ToList();

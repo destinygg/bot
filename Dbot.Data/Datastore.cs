@@ -27,11 +27,6 @@ namespace Dbot.Data {
       _tempBannedWords = _db.Table<TempBannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
       _bannedWords = _db.Table<BannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
       _modCommands = _db.Table<ModCommands>().ToListAsync().Result;
-
-      RecentMessages = new CircularStack<Message>(1000);
-      foreach (var x in Enumerable.Range(1, 1000)) {
-        RecentMessages.Add(new Message { Text = "" });
-      }
     }
 
     private static List<string> _emoticonsList;
@@ -45,8 +40,6 @@ namespace Dbot.Data {
     }
 
     public static Regex EmoticonRegex { get; set; }
-
-    public static CircularStack<Message> RecentMessages { get; set; }
 
     public static int Delay { get; set; }
     public static int Viewers { get; set; }
