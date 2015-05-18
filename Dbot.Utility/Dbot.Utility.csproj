@@ -48,6 +48,7 @@
     <Compile Include="PeriodicTask.cs" />
     <Compile Include="PrivateConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="StringTools.cs" />
     <Compile Include="Tools.cs" />
   </ItemGroup>

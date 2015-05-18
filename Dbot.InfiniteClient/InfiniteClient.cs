@@ -13,11 +13,13 @@ using Dbot.Utility;
 namespace Dbot.InfiniteClient {
   public class InfiniteClient : IClient {
     public async void Run() {
-      long i = 0;
+      long i = -1;
       while (true) {
-        this.CoreMsg = new Message { Text = (DateTime.Now.Ticks - i).ToString(), Nick = "Bot", IsMod = true };
-        i = DateTime.Now.Ticks;
+        //this.CoreMsg = new Message { Text = (DateTime.Now.Ticks - i).ToString(), Nick = "Bot", IsMod = true };
+        //i = DateTime.Now.Ticks;
+        CoreMsg = new Message { Text = i.ToString(), Nick = "Bot", IsMod = true };
         await Task.Run(() => Thread.Sleep(0));
+        i++;
       }
     }
 

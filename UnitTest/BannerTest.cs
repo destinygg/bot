@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -108,11 +109,11 @@ namespace UnitTest {
       var originatingMessageLong = Make.Message(om + a200 + a200);
       var originatingMessageShort = Make.Message(om + a200.ToCharArray().Skip(om.Length + 1)); // todo, this isn't 199 chars long, but it'll do for now.
 
-      var context = new List<Message>();
-      context.Add(Make.Message(a200 + " 1"));
+      var context = new ConcurrentQueue<Message>();
+      context.Enqueue(Make.Message(a200 + " 1"));
       //Datastore.RecentMessages.Add(Make.Message(a200 + " 2"));
       //Datastore.RecentMessages.Add(Make.Message(a200 + " 3"));
-      context.Add(originatingMessageLong);
+      context.Enqueue(originatingMessageLong);
 
       var ban10 = new Banner(originatingMessageLong, context).LongSpam();
       Assert.AreEqual(ban10.Duration, TimeSpan.FromMinutes(10));
@@ -137,11 +138,11 @@ namespace UnitTest {
         new Tuple<string, bool> ("a somewhat short message3", true),
       };
 
-      var context = new List<Message>();
+      var context = new ConcurrentQueue<Message>();
 
       foreach (var tuple in testList) {
         var message = Make.Message(tuple.Item1);
-        context.Add(message);
+        context.Enqueue(message);
         var testCase = new Banner(message, context).SelfSpam();
         if (tuple.Item2) {
           Assert.IsNotNull(testCase);

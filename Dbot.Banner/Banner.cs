@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Dbot.CommonModels;
 using Dbot.Data;
@@ -20,16 +21,26 @@ namespace Dbot.Banner {
     private readonly Message _message;
     private readonly string _text;
     private readonly string _unnormalized;
-    private List<Message> _context;
+    private readonly List<Message> _context;
 
-    public Banner(Message input, List<Message> context = null) {
+    public Banner(Message input, ConcurrentQueue<Message> context = null) {
       this._message = input;
       this._text = StringTools.RemoveDiacritics(input.Text).Unidecode();
       this._unnormalized = input.Text;
-      this._context = context;
+      if (context != null)
+        this._context = context.TakeWhile(x => x.Ordinal <= _message.Ordinal).Reverse().Take(Settings.MessageLogSize).ToList();
     }
 
     public Victim BanParser() {
+      Thread.Sleep(1000);
+
+      var testList = new List<int>();
+      for (var i = _message.Ordinal; i > _message.Ordinal - 10; i--) {
+        if (i >= 0)
+          testList.Add(i);
+      }
+      Debug.Assert(testList.SequenceEqual(_context.Select(x => x.Ordinal)));
+      Debug.Assert(_context.Count<=Settings.MessageLogSize);
 
       return null;
     }

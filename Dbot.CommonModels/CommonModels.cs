@@ -14,11 +14,13 @@ namespace Dbot.CommonModels {
 
   public class Message : User, IEquatable<Message> {
     public string Text { get; set; }
+    public int Ordinal { get; set; }
     public bool Equals(Message other) {
       return 
         this.Nick == other.Nick && 
         this.Text == other.Text && 
-        this.IsMod == other.IsMod;
+        this.IsMod == other.IsMod &&
+        this.Ordinal == other.Ordinal;
     }
   }
 

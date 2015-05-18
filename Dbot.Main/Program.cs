@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks.Dataflow;
@@ -26,12 +27,15 @@ namespace Dbot.Main {
     private static ActionBlock<Message> _banner;
     private static bool _exit;
     private static IClient _client;
-    private static CircularStack<Message> _recentMessages;
+    private static ConcurrentQueue<Message> _recentMessages;
+    private static ConcurrentDictionary<int, Message> _dequeueDictionary = new ConcurrentDictionary<int, Message>();
+    private static int _index;
+    private static int _dequeueIndex;
 
     static void Main(string[] args) {
 
       Datastore.Initialize();
-      _recentMessages = new CircularStack<Message>(200);
+      _recentMessages = new ConcurrentQueue<Message>();
 
       var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
       _logger = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
@@ -98,12 +102,14 @@ namespace Dbot.Main {
     }
 
     private static void Ban(Message input) {
-      var bantest = new Banner.Banner(input, _recentMessages.ToList()).BanParser();
+      var bantest = new Banner.Banner(input, _recentMessages).BanParser();
       if (bantest == null) {
         //do thing
       } else {
         //do other thing
       }
+      var success = _dequeueDictionary.TryAdd(input.Ordinal, input);
+      Debug.Assert(success);
     }
 
     private static void Log(Message message) {
@@ -123,7 +129,30 @@ namespace Dbot.Main {
     // todo: you can make this better with http://stackoverflow.com/questions/3668217/handling-propertychanged-in-a-type-safe-way
     private static void client_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var client = (IClient) sender;
-      _recentMessages.Add(client.CoreMsg);
+      client.CoreMsg.Ordinal = _index;
+      _recentMessages.Enqueue(client.CoreMsg);
+      _index++;
+
+      var dequeue = true;
+      for (var i = _dequeueIndex; i < _dequeueIndex + Settings.MessageLogSize; i++) {
+        if (_dequeueDictionary.ContainsKey(i)) {
+          continue;
+        }
+        dequeue = false;
+      }
+
+      var success = true;
+      while (dequeue && success && _dequeueDictionary.Count > 0) {
+        var asdf = new Message();
+        success = _recentMessages.TryDequeue(out asdf);
+        if (success) {
+          _dequeueDictionary.TryRemove(_dequeueIndex, out asdf);
+          Console.WriteLine("dequeued " + _dequeueIndex);
+        }
+        _dequeueIndex++;
+      }
+      if (dequeue) { }
+
       _logger.Post(client.CoreMsg);
       _banner.Post(client.CoreMsg);
     }
