@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Dbot.Data;
+using Dbot.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
@@ -13,7 +14,7 @@ namespace UnitTest {
   public class DatastoreTest {
     [TestMethod]
     public void SaveAndLoad_Success() {
-      Datastore.Initialize();
+      InitializeDatastore.Run();
 
       //test insert
       var expectedAnswer = new UserHistory(new RawUserHistory {
@@ -55,7 +56,7 @@ namespace UnitTest {
 
     [TestMethod]
     public void UpdateOrInsertStateVariable_Success() {
-      Datastore.Initialize();
+      InitializeDatastore.Run();
 
       //test insert
       var expectedAnswer = 1;

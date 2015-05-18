@@ -34,7 +34,7 @@ namespace Dbot.Main {
 
     static void Main(string[] args) {
 
-      Datastore.Initialize();
+      InitializeDatastore.Run();
       _recentMessages = new ConcurrentQueue<Message>();
 
       var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
@@ -44,14 +44,9 @@ namespace Dbot.Main {
       _commander = new ActionBlock<Message>(m => Command(m), hungryCaterpillar);
       _modCommander = new ActionBlock<Message>(m => ModCommand(m), hungryCaterpillar);
       
-      var UpdateEmoticons = new Action(() => {
-        Datastore.EmoticonsList = Tools.GetEmoticons();
-      });
-      UpdateEmoticons.Invoke();
-      PeriodicTask.Run(UpdateEmoticons, TimeSpan.FromHours(1));
-
       //todo, make sure this dosn't run more often than once a minute
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
+      PeriodicTask.Run(InitializeDatastore.UpdateEmoticons, TimeSpan.FromHours(1));
 
       //_banner.LinkTo(_commander);
       //consoleSync.Consumer(Constants.ConsoleBuffer);

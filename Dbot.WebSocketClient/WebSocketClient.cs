@@ -21,7 +21,7 @@ namespace Dbot.WebsocketClient {
       var header = new List<KeyValuePair<string, string>> {
         new KeyValuePair<string, string>("Cookie", PrivateConstants.botWebsocketAuth)
       };
-      _websocket = new WebSocket("ws://www.destiny.gg:9997/ws", customHeaderItems: header);
+      _websocket = new WebSocket("ws://www.destiny.gg:9998/ws", customHeaderItems: header);
       _websocket.Opened += websocket_Opened;
       _websocket.Error += websocket_Error;
       _websocket.Closed += websocket_Closed;

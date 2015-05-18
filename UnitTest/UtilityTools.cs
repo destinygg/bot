@@ -110,7 +110,7 @@ namespace UnitTest {
 
     [TestMethod]
     public void CalculateLiveStatus() {
-      Datastore.Initialize();
+      InitializeDatastore.Run();
       Datastore.Viewers = 0;
 
       Datastore.UpdateStateVariable(Ms.onTime, 0, true);

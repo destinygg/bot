@@ -11,12 +11,6 @@ namespace Dbot.Data {
   public static class Datastore {
     private static SQLiteAsyncConnection _db;
 
-    public static void Initialize(List<string> emoticons) {
-      Initialize();
-      if (emoticons != null)
-        Datastore.EmoticonsList = emoticons;
-    }
-
     public static void Initialize() {
       _db = new SQLiteAsyncConnection("DbotDB.sqlite");
 

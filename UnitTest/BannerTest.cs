@@ -43,7 +43,7 @@ namespace UnitTest {
       var nick = "simpleuser";
       var bannedWord = "ban";
 
-      Datastore.Initialize(Tools.GetEmoticons());
+      InitializeDatastore.Run();
       Datastore.AddTempBanWord(bannedWord);
 
       var banner = new Banner(Make.Message(nick, "banphrase"));
@@ -64,7 +64,7 @@ namespace UnitTest {
 
     [TestMethod]
     public void LongSpam() {
-      Datastore.Initialize();
+      InitializeDatastore.Run();
 
       var sb = new StringBuilder();
       foreach (var x in Enumerable.Range(0, 200)) {
@@ -128,7 +128,7 @@ namespace UnitTest {
 
     [TestMethod]
     public void ShortSpam() {
-      Datastore.Initialize();
+      InitializeDatastore.Run();
 
       var testList = new List<Tuple<string, bool>> {
         new Tuple<string, bool> ("a somewhat short message1", false),
