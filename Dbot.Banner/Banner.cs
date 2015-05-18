@@ -53,7 +53,7 @@ namespace Dbot.Banner {
 
       var fullWidthCharacters = new[] { 'ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｑ', 'ｘ', 'ｙ', 'ｚ', 'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ', 'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｑ', 'Ｘ', 'Ｙ', 'Ｚ' };
       if (fullWidthCharacters.Count(x => _unnormalized.Contains(x)) > 5) {
-        var r = this.BanIncreaser(userHistory.FullWidth, "fullwidth text");
+        var r = this.MuteIncreaser(userHistory.FullWidth, "fullwidth text");
         userHistory.FullWidth = (int) r.Duration.TotalMinutes;
         Datastore.SaveUserHistory(userHistory, wait);
         return r;
@@ -61,14 +61,14 @@ namespace Dbot.Banner {
 
       var unicode = new[] { '็', 'е', '' };
       if (unicode.Count(x => _unnormalized.Contains(x)) > 1) {
-        var r = this.BanIncreaser(userHistory.Unicode, "unicode idiocy");
+        var r = this.MuteIncreaser(userHistory.Unicode, "unicode idiocy");
         userHistory.Unicode = (int) r.Duration.TotalMinutes;
         Datastore.SaveUserHistory(userHistory, wait);
         return r;
       }
 
       if (Datastore.EmoticonRegex.Matches(_text).Count > 7) {
-        var r = this.BanIncreaser(userHistory.FaceSpam, "face spam");
+        var r = this.MuteIncreaser(userHistory.FaceSpam, "face spam");
         userHistory.FaceSpam = (int) r.Duration.TotalMinutes;
         Datastore.SaveUserHistory(userHistory, wait);
         return r;
@@ -79,7 +79,7 @@ namespace Dbot.Banner {
         var tempBanWordCount = userHistory.TempWordCount.FirstOrDefault(x => x.Word == tempBannedWord) ?? new TempBanWordCount { Count = 0, Word = tempBannedWord };
         var tempBanWordCountList = Datastore.UserHistory(_message.Nick).TempWordCount;
         tempBanWordCountList.Remove(tempBanWordCountList.FirstOrDefault(x => x.Word == tempBannedWord));
-        var r = BanIncreaser(tempBanWordCount.Count, "prohibited phrase");
+        var r = MuteIncreaser(tempBanWordCount.Count, "prohibited phrase");
         tempBanWordCount.Count = (int) r.Duration.TotalMinutes;
         tempBanWordCountList.Add(tempBanWordCount);
         userHistory.TempWordCount = tempBanWordCountList;
@@ -90,7 +90,7 @@ namespace Dbot.Banner {
       return null;
     }
 
-    public Mute BanIncreaser(int original, string custom) {
+    public Mute MuteIncreaser(int original, string custom) {
       var r = new Mute();
       if (original == 0) {
         r.Reason = "10m for " + custom + ".";
@@ -100,6 +100,8 @@ namespace Dbot.Banner {
         r.Duration = TimeSpan.FromMinutes(20);
       } else {
         r.Duration = TimeSpan.FromMinutes(original * 2);
+        if (r.Duration >= TimeSpan.FromMinutes(10240))
+          r.Duration = TimeSpan.FromDays(7); // max of 1 week for mutes
       }
       r.Nick = _message.Nick;
       return r;

@@ -48,11 +48,15 @@ namespace UnitTest {
 
       var banner = new Banner(Make.Message(nick, "banphrase"));
 
-      var testList = new List<int> { 10, 20, 40, 80, 160, 320, 640, 1280 };
+      var testList = new List<int> { 10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10080, 10080, 10080, 10080, };
       foreach (var i in testList) {
         banner.General(true);
         Assert.AreEqual(Datastore.UserHistory(nick).TempWordCount.FirstOrDefault(x => x.Word == bannedWord).Count, i);
       }
+
+      var testMute = new Mute() { Duration = TimeSpan.FromDays(8) };
+      Assert.AreEqual(testMute.Duration, TimeSpan.FromDays(7));
+
     }
 
     [TestMethod]
