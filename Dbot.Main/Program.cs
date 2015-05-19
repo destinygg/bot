@@ -16,65 +16,56 @@ using Dbot.WebsocketClient;
 using Dbot.InfiniteClient;
 using Dbot.Banner;
 using Tweetinvi;
+using Tweetinvi.Core.Interfaces.Streaminvi;
 using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Main {
   static class Dbot {
 
-    private static ActionBlock<Message> _logger;
-    private static ActionBlock<Message> _modder;
-    private static ActionBlock<object> _sender;
-    private static ActionBlock<Message> _commander;
-    private static ActionBlock<Message> _modCommander;
-    private static ActionBlock<Message> _banner;
-    private static bool _exit;
-    private static IClient _client;
-    private static ConcurrentQueue<Message> _recentMessages;
-    private static ConcurrentDictionary<int, Message> _dequeueDictionary = new ConcurrentDictionary<int, Message>();
+    private static readonly ExecutionDataflowBlockOptions HungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
+    private static readonly ActionBlock<Message> Logger = new ActionBlock<Message>(m => Log(m), HungryCaterpillar);
+    private static readonly ActionBlock<object> Sender = new ActionBlock<object>(m => Send(m), HungryCaterpillar);
+    private static readonly ActionBlock<Message> Commander = new ActionBlock<Message>(m => Command(m), HungryCaterpillar);
+    private static readonly ActionBlock<Message> ModCommander = new ActionBlock<Message>(m => ModCommand(m), HungryCaterpillar);
+    private static readonly ActionBlock<Message> Banner = new ActionBlock<Message>(m => Ban(m), HungryCaterpillar);
+    private static readonly IUserStream UserStream = Stream.CreateUserStream();
+    private static readonly ConcurrentQueue<Message> RecentMessages = new ConcurrentQueue<Message>();
+    private static readonly ConcurrentDictionary<int, Message> DequeueDictionary = new ConcurrentDictionary<int, Message>();
+    private static readonly IClient Client = new InfiniteClient.InfiniteClient();
     private static int _index;
     private static int _dequeueIndex;
+    private static bool _exit;
 
     static void Main() {
 
       InitializeDatastore.Run();
+
       TwitterCredentials.SetCredentials(PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret, PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret);
-      var userStream = Stream.CreateUserStream();
-      userStream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet.Text);
-      userStream.StartStreamAsync();
+      UserStream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet.Text);
+      UserStream.StartStreamAsync();
 
-      _recentMessages = new ConcurrentQueue<Message>();
-
-      var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
-      _logger = new ActionBlock<Message>(m => Log(m), hungryCaterpillar);
-      _sender = new ActionBlock<object>(m => Send(m), hungryCaterpillar);
-      _banner = new ActionBlock<Message>(m => Ban(m), hungryCaterpillar);
-      _commander = new ActionBlock<Message>(m => Command(m), hungryCaterpillar);
-      _modCommander = new ActionBlock<Message>(m => ModCommand(m), hungryCaterpillar);
-      
       //todo, make sure this dosn't run more often than once a minute
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
       PeriodicTask.Run(InitializeDatastore.UpdateEmoticons, TimeSpan.FromHours(1));
 
       //_banner.LinkTo(_commander);
       //consoleSync.Consumer(Constants.ConsoleBuffer);
-      
-      _client = new InfiniteClient.InfiniteClient();
-      _client.Run();
-      _client.PropertyChanged += client_PropertyChanged;
+
+      Client.Run();
+      Client.PropertyChanged += client_PropertyChanged;
       Console.CancelKeyPress += Console_CancelKeyPress;
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
 
-      _exit = false;
       while (!_exit) { //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
         var input = Console.ReadLine();
         if (!String.IsNullOrEmpty(input)) {
           if (input == "exit") {
             _exit = true;
           } else if (input[0] == '~') {
-            _client.Send(input.Substring(1));
+            Client.Send(input.Substring(1));
           } else if (input[0] == '<') {
-            _modCommander.Post(Make.Message(input));
+            ModCommander.Post(Make.Message(input));
           }
         }
       }
@@ -94,27 +85,28 @@ namespace Dbot.Main {
     }
 
     private static void TweetDetected(string tweet) {
-      Send(Make.Message("twitter.com/steven_bonnell just tweeted: " + tweet));
+      Sender.Post(Make.Message("twitter.com/steven_bonnell just tweeted: " + tweet));
     }
 
     private static void Send(object input) {
       if (input is Victim) {
 
       } else if (input is Message) {
-        _client.Send(((Message) input).Text);
+        Client.Send(((Message) input).Text);
       } else if (input is String) {
-        _client.Send((string) input);
+        Client.Send((string) input);
       } else Tools.ErrorLog("Unsupported type.");
     }
 
     private static void Ban(Message input) {
-      var bantest = new Banner.Banner(input, _recentMessages).BanParser();
+      var bantest = new Banner.Banner(input, RecentMessages).BanParser();
       if (bantest == null) {
-        //do thing
+        if (input.Text[0] == '!')
+          Commander.Post(input);
       } else {
-        //do other thing
+        Sender.Post(bantest);
       }
-      var success = _dequeueDictionary.TryAdd(input.Ordinal, input);
+      var success = DequeueDictionary.TryAdd(input.Ordinal, input);
       Debug.Assert(success);
     }
 
@@ -136,31 +128,35 @@ namespace Dbot.Main {
     private static void client_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var client = (IClient) sender;
       client.CoreMsg.Ordinal = _index;
-      _recentMessages.Enqueue(client.CoreMsg);
+      RecentMessages.Enqueue(client.CoreMsg);
       _index++;
 
       var dequeue = true;
       for (var i = _dequeueIndex; i < _dequeueIndex + Settings.MessageLogSize; i++) {
-        if (_dequeueDictionary.ContainsKey(i)) {
+        if (DequeueDictionary.ContainsKey(i)) {
           continue;
         }
         dequeue = false;
       }
 
       var success = true;
-      while (dequeue && success && _dequeueDictionary.Count > 0) {
+      while (dequeue && success && DequeueDictionary.Count > 0) {
         var asdf = new Message();
-        success = _recentMessages.TryDequeue(out asdf);
+        success = RecentMessages.TryDequeue(out asdf);
         if (success) {
-          _dequeueDictionary.TryRemove(_dequeueIndex, out asdf);
+          DequeueDictionary.TryRemove(_dequeueIndex, out asdf);
           Console.WriteLine("dequeued " + _dequeueIndex);
         }
         _dequeueIndex++;
       }
       if (dequeue) { }
 
-      _logger.Post(client.CoreMsg);
-      _banner.Post(client.CoreMsg);
+      Logger.Post(client.CoreMsg);
+      if (client.CoreMsg.IsMod) {
+        if (client.CoreMsg.Text[0] == '!')
+          ModCommander.Post(client.CoreMsg);
+      } else
+        Banner.Post(client.CoreMsg);
     }
   }
 }
