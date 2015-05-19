@@ -25,7 +25,7 @@ namespace Dbot.InfiniteClient {
 
 
     public void Send(string input) {
-      throw new NotImplementedException();
+      Console.WriteLine("Sending: " + input);
     }
 
     // boiler-plate

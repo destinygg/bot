@@ -15,6 +15,8 @@ using Dbot.Utility;
 using Dbot.WebsocketClient;
 using Dbot.InfiniteClient;
 using Dbot.Banner;
+using Tweetinvi;
+using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Main {
   static class Dbot {
@@ -32,9 +34,14 @@ namespace Dbot.Main {
     private static int _index;
     private static int _dequeueIndex;
 
-    static void Main(string[] args) {
+    static void Main() {
 
       InitializeDatastore.Run();
+      TwitterCredentials.SetCredentials(PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret, PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret);
+      var userStream = Stream.CreateUserStream();
+      userStream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet.Text);
+      userStream.StartStreamAsync();
+
       _recentMessages = new ConcurrentQueue<Message>();
 
       var hungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
@@ -84,6 +91,10 @@ namespace Dbot.Main {
       if (mc.Message != null) {
         Send(mc.Message);
       }
+    }
+
+    private static void TweetDetected(string tweet) {
+      Send(Make.Message("twitter.com/steven_bonnell just tweeted: " + tweet));
     }
 
     private static void Send(object input) {
