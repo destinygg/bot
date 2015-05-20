@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Threading;
 using System.Threading.Tasks.Dataflow;
 using Dbot.Common;
 using Dbot.CommonModels;
@@ -22,14 +23,13 @@ using Message = Dbot.CommonModels.Message;
 namespace Dbot.Main {
   static class Dbot {
 
-    private static readonly ExecutionDataflowBlockOptions HungryCaterpillar = new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = DataflowBlockOptions.Unbounded };
-    private static readonly ActionBlock<Message> Logger = new ActionBlock<Message>(m => Log(m), HungryCaterpillar);
-    private static readonly ActionBlock<object> Sender = new ActionBlock<object>(m => Send(m), HungryCaterpillar);
-    private static readonly ActionBlock<Message> Commander = new ActionBlock<Message>(m => Command(m), HungryCaterpillar);
-    private static readonly ActionBlock<Message> ModCommander = new ActionBlock<Message>(m => ModCommand(m), HungryCaterpillar);
-    private static readonly ActionBlock<Message> Banner = new ActionBlock<Message>(m => Ban(m), HungryCaterpillar);
+    private static readonly ActionBlock<Message> Logger = new ActionBlock<Message>(m => Log(m));
+    private static readonly ActionBlock<object> Sender = new ActionBlock<object>(m => Send(m));
+    private static readonly ActionBlock<Message> Commander = new ActionBlock<Message>(m => Command(m));
+    private static readonly ActionBlock<Message> ModCommander = new ActionBlock<Message>(m => ModCommand(m));
+    private static readonly ActionBlock<Message> Banner = new ActionBlock<Message>(m => Ban(m));
     private static readonly IUserStream UserStream = Stream.CreateUserStream();
-    private static readonly ConcurrentQueue<Message> RecentMessages = new ConcurrentQueue<Message>();
+    private static readonly ConcurrentDictionary<int, Message> ContextDictionary = new ConcurrentDictionary<int, Message>();
     private static readonly ConcurrentDictionary<int, Message> DequeueDictionary = new ConcurrentDictionary<int, Message>();
     private static readonly IClient Client = new InfiniteClient.InfiniteClient();
     private static int _index;
@@ -48,8 +48,6 @@ namespace Dbot.Main {
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
       PeriodicTask.Run(InitializeDatastore.UpdateEmoticons, TimeSpan.FromHours(1));
 
-      //_banner.LinkTo(_commander);
-      //consoleSync.Consumer(Constants.ConsoleBuffer);
 
       Client.Run();
       Client.PropertyChanged += client_PropertyChanged;
@@ -99,7 +97,8 @@ namespace Dbot.Main {
     }
 
     private static void Ban(Message input) {
-      var bantest = new Banner.Banner(input, RecentMessages).BanParser();
+      var recentMessages = ContextDictionary.Where(x => x.Key < input.Ordinal && x.Key >= input.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
+      var bantest = new Banner.Banner(input, recentMessages).BanParser();
       if (bantest == null) {
         if (input.Text[0] == '!')
           Commander.Post(input);
@@ -111,9 +110,10 @@ namespace Dbot.Main {
     }
 
     private static void Log(Message message) {
-      Console.WriteLine(message.Nick + ": " + message.Text);
+      //Console.Write(message.Nick + ": " + message.Text);
+      //Console.Write(message.Text + ".");
       message.Nick = message.Nick.ToLower();
-      Datastore.InsertMessage(message);
+      //Datastore.InsertMessage(message);
     }
 
     static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {
@@ -128,28 +128,20 @@ namespace Dbot.Main {
     private static void client_PropertyChanged(object sender, PropertyChangedEventArgs e) {
       var client = (IClient) sender;
       client.CoreMsg.Ordinal = _index;
-      RecentMessages.Enqueue(client.CoreMsg);
+      ContextDictionary.TryAdd(_index, client.CoreMsg);
       _index++;
 
-      var dequeue = true;
-      for (var i = _dequeueIndex; i < _dequeueIndex + Settings.MessageLogSize; i++) {
-        if (DequeueDictionary.ContainsKey(i)) {
-          continue;
-        }
-        dequeue = false;
-      }
+      Thread.Sleep(1);
 
-      var success = true;
-      while (dequeue && success && DequeueDictionary.Count > 0) {
+      while (DequeueDictionary.Count > Settings.MessageLogSize) {
         var asdf = new Message();
-        success = RecentMessages.TryDequeue(out asdf);
-        if (success) {
-          DequeueDictionary.TryRemove(_dequeueIndex, out asdf);
-          Console.WriteLine("dequeued " + _dequeueIndex);
-        }
+        var contextTest = ContextDictionary.TryRemove(_dequeueIndex, out asdf);
+        var dequeueTest = DequeueDictionary.TryRemove(_dequeueIndex, out asdf);
+        Debug.Assert(contextTest);
+        Debug.Assert(dequeueTest);
+        Console.WriteLine("dequeued " + _dequeueIndex);
         _dequeueIndex++;
       }
-      if (dequeue) { }
 
       Logger.Post(client.CoreMsg);
       if (client.CoreMsg.IsMod) {

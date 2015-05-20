@@ -113,11 +113,11 @@ namespace UnitTest {
       var originatingMessageLong = Make.Message(om + a200 + a200);
       var originatingMessageShort = Make.Message(om + a200.ToCharArray().Skip(om.Length + 1)); // todo, this isn't 199 chars long, but it'll do for now.
 
-      var context = new ConcurrentQueue<Message>();
-      context.Enqueue(Make.Message(a200 + " 1"));
+      var context = new List<Message>();
+      context.Add(Make.Message(a200 + " 1"));
       //Datastore.RecentMessages.Add(Make.Message(a200 + " 2"));
       //Datastore.RecentMessages.Add(Make.Message(a200 + " 3"));
-      context.Enqueue(originatingMessageLong);
+      context.Add(originatingMessageLong);
 
       var ban10 = new Banner(originatingMessageLong, context).LongSpam();
       Assert.AreEqual(ban10.Duration, TimeSpan.FromMinutes(10));
@@ -142,12 +142,12 @@ namespace UnitTest {
         new Tuple<string, bool> ("a somewhat short message3", true),
       };
 
-      var context = new ConcurrentQueue<Message>();
-
+      var total = new List<Message>();
       foreach (var tuple in testList) {
-        var message = Make.Message(tuple.Item1);
-        context.Enqueue(message);
-        var testCase = new Banner(message, context).SelfSpam();
+        total.Add(Make.Message(tuple.Item1));
+        var op = total.First();
+        var context = total.Skip(1).ToList();
+        var testCase = new Banner(op, context).SelfSpam();
         if (tuple.Item2) {
           Assert.IsNotNull(testCase);
         } else {

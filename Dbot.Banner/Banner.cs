@@ -23,24 +23,26 @@ namespace Dbot.Banner {
     private readonly string _unnormalized;
     private readonly List<Message> _context;
 
-    public Banner(Message input, ConcurrentQueue<Message> context = null) {
+    public Banner(Message input, List<Message> context = null) {
       this._message = input;
       this._text = StringTools.RemoveDiacritics(input.Text).Unidecode();
       this._unnormalized = input.Text;
       if (context != null)
-        this._context = context.TakeWhile(x => x.Ordinal <= _message.Ordinal).Reverse().Take(Settings.MessageLogSize).ToList();
+        this._context = context;
     }
 
     public Victim BanParser() {
       Thread.Sleep(1000);
 
       var testList = new List<int>();
-      for (var i = _message.Ordinal; i > _message.Ordinal - 10; i--) {
+      for (var i = _message.Ordinal - Settings.MessageLogSize; i < _message.Ordinal; i++) {
         if (i >= 0)
           testList.Add(i);
       }
-      Debug.Assert(testList.SequenceEqual(_context.Select(x => x.Ordinal)));
-      Debug.Assert(_context.Count<=Settings.MessageLogSize);
+
+      var testvar = _context.Select(x => x.Ordinal).OrderBy(x => x).ToList();
+      if (!testvar.SequenceEqual(testList)) { }
+      Debug.Assert(testvar.SequenceEqual(testList));
 
       return null;
     }
@@ -155,7 +157,7 @@ namespace Dbot.Banner {
 
     //todo: make the graduation more encompassing; it should start banning when people say 100 characters 50x for example
     public Mute LongSpam() {
-      var longMessages = _context.Take(26).Where(x => x.Text.Length > LongSpamMinimumLength).IgnoreFirstOccuranceOf(_message);
+      var longMessages = _context.Take(26).Where(x => x.Text.Length > LongSpamMinimumLength);
 
       foreach (var longMessage in longMessages) {
         var delta = StringTools.Delta(_unnormalized, longMessage.Text);
@@ -170,7 +172,7 @@ namespace Dbot.Banner {
     }
 
     public Mute SelfSpam() {
-      var shortMessages = _context.Take(11).Where(x => x.Nick == _message.Nick).IgnoreFirstOccuranceOf(_message).ToList();
+      var shortMessages = _context.Take(11).Where(x => x.Nick == _message.Nick).ToList();
       if (shortMessages.Count() > 3) {
         
         var percentList = shortMessages.Select(sm => StringTools.Delta(sm.Text, _text)).Select(delta => Convert.ToInt32(delta * 100)).Where(x => x >= 70).ToList();
