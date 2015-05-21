@@ -12,7 +12,9 @@ namespace Dbot.CommonModels {
     public bool IsMod { get; set; }
   }
 
-  public class Message : User, IEquatable<Message> {
+  public abstract class Sendable : User { }
+
+  public class Message : Sendable, IEquatable<Message> {
     public string Text { get; set; }
     public int Ordinal { get; set; }
     public bool Equals(Message other) {
@@ -24,7 +26,7 @@ namespace Dbot.CommonModels {
     }
   }
 
-  public abstract class Victim : User {
+  public abstract class Victim : Sendable {
     public virtual TimeSpan Duration { get; set; }
     public String Reason { get; set; }
   }

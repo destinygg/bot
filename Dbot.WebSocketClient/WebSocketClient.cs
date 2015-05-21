@@ -16,6 +16,7 @@ namespace Dbot.WebsocketClient {
   public class WebSocketClient : IClient {
 
     private readonly WebSocket _websocket;
+    private IProcessor _processor;
 
     public WebSocketClient() {
       var header = new List<KeyValuePair<string, string>> {
@@ -28,8 +29,9 @@ namespace Dbot.WebsocketClient {
       _websocket.MessageReceived += websocket_MessageReceived;
     }
 
-    public void Run() {
-      _websocket.Open();
+    public void Run(IProcessor processor) {
+      this._processor = processor;
+      this._websocket.Open();
     }
 
     private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -49,7 +51,7 @@ namespace Dbot.WebsocketClient {
         case "MSG": {
             var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
             var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
-            this.CoreMsg = new Message() { Nick = msg.Nick, Text = msg.Data, IsMod = isMod };
+            _processor.ProcessMessage(new Message { Nick = msg.Nick, Text = msg.Data, IsMod = isMod });
           }
           break;
         case "JOIN": {
@@ -82,43 +84,14 @@ namespace Dbot.WebsocketClient {
       Tools.Log("Connected!", ConsoleColor.Green);
     }
 
-    public void Send(string input) {
-      var msg = new MessageSender {data = input};
-      var jsonMsg = JsonConvert.SerializeObject(msg);
-      Tools.Log("MSG " + jsonMsg, ConsoleColor.Red);
-      _websocket.Send("MSG " + jsonMsg);
-    }
 
-    // boiler-plate
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected virtual void OnPropertyChanged(string propertyName) {
-      var handler = PropertyChanged;
-      if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+    public void Send(Sendable input) {
+      if (input is Message) {
+        var msg = new MessageSender { data = ((Message) input).Text };
+        var jsonMsg = JsonConvert.SerializeObject(msg);
+        Tools.Log("MSG " + jsonMsg, ConsoleColor.Red);
+        _websocket.Send("MSG " + jsonMsg);
+      }
     }
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
-      if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-      field = value;
-      OnPropertyChanged(propertyName);
-      return true;
-    }
-
-    // props
-    private string _name;
-    public string Name {
-      get { return _name; }
-      set { SetField(ref _name, value); }
-    }
-    private MessageReceiver _msg;
-    public MessageReceiver Msg {
-      get { return _msg; }
-      set { SetField(ref _msg, value); }
-    }
-
-    private Message _coreMsg;
-    public Message CoreMsg {
-      get { return _coreMsg; }
-      set { SetField(ref _coreMsg, value); }
-    }
-
   }
 }

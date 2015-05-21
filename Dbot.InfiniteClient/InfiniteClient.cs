@@ -12,41 +12,21 @@ using Dbot.Utility;
 
 namespace Dbot.InfiniteClient {
   public class InfiniteClient : IClient {
-    public async void Run() {
+    //public async void Run(Action<Message> processor ) {
+    public async void Run(IProcessor processor) {
       long i = -1;
       while (true) {
         //this.CoreMsg = new Message { Text = (DateTime.Now.Ticks - i).ToString(), Nick = "Bot", IsMod = true };
         //i = DateTime.Now.Ticks;
-        CoreMsg = new Message { Text = i.ToString(), Nick = "Bot", IsMod = true };
+        processor.ProcessMessage(new Message { Text = i.ToString(), Nick = "notBot", IsMod = false });
         await Task.Run(() => Thread.Sleep(0));
         i++;
       }
     }
 
-
-    public void Send(string input) {
-      Console.WriteLine("Sending: " + input);
-    }
-
-    // boiler-plate
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected virtual void OnPropertyChanged(string propertyName) {
-      var handler = PropertyChanged;
-      if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-    }
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
-      if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-      field = value;
-      OnPropertyChanged(propertyName);
-      return true;
-    }
-
-    // props
-
-    private Message _coreMsg;
-    public Message CoreMsg {
-      get { return _coreMsg; }
-      set { SetField(ref _coreMsg, value); }
+    public void Send(Sendable input) {
+      if (input is Message)
+        Console.WriteLine("Sending: " + ((Message) input).Text);
     }
   }
 }
