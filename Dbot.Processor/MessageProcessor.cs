@@ -58,7 +58,7 @@ namespace Dbot.Processor {
 
     private static void ModCommand(Message message) {
       var recentMessages = ContextDictionary.Where(x => x.Key < message.Ordinal && x.Key >= message.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
-      var mc = new ModCommander.ModCommander(message, recentMessages, Sender);
+      var mc = new ModCommander.ModCommander(message, recentMessages);
       if (mc.Message != null) {
         Send(mc.Message);
       }

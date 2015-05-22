@@ -43,6 +43,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dbot.CommonModels\Dbot.CommonModels.csproj">
+      <Project>{65d520b2-5739-4908-90b0-739cb4daac4d}</Project>
+      <Name>Dbot.CommonModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dbot.Data\Dbot.Data.csproj">
       <Project>{1e2409c3-c544-4ec2-aa93-9c0f5a4b02ec}</Project>
       <Name>Dbot.Data</Name>

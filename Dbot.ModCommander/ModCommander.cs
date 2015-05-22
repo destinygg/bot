@@ -4,25 +4,33 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;
 
 namespace Dbot.ModCommander {
   public class ModCommander {
-    public string Message { get; set; }
+    public Message Message { get; set; }
+    public List<Message> Context { get; set; }
 
-    public ModCommander(string input) {
-      Debug.Assert(input[0] == '!' || input[0] == '<');
-      var inputWithoutTriggerChar = input.Substring(1);
+    public ModCommander(Message message, List<Message> context) {
+      this.Message = message;
+      this.Context = context;
+    }
+
+    public Sendable ModParser() {
+      Sendable r = null;
+      Debug.Assert(Message.Text[0] == '!' || Message.Text[0] == '<');
+      var inputWithoutTriggerChar = Message.Text.Substring(1);
       var splitInput = inputWithoutTriggerChar.Split(new[] { ' ' }, 2);
       var commandMatches = Datastore.ModCommands.Where(x => x.Command == splitInput[0]);
-
+      
       var operationDictionary = new Dictionary<string, Action<ModCommands>> {
-        {"message", x =>  this.Message = 1 < splitInput.Count() ? x.Result.Replace("*", splitInput[1]) : x.Result },
+        {"message", x =>  this.Message.Text = 1 < splitInput.Count() ? x.Result.Replace("*", splitInput[1]) : x.Result },
         {"set", x => Datastore.UpdateStateVariable(x.Command, int.Parse(x.Result))},
         {"db.add", x => Tools.AddBanWord(x.Result, splitInput[1])},
         {"db.remove", x => Tools.RemoveBanWord(x.Result, splitInput[1])},
-        {"stalk", x => this.Message = Tools.Stalk(splitInput[1])},
+        {"stalk", x => this.Message.Text = Tools.Stalk(splitInput[1])},
       };
 
       foreach (var c in commandMatches) {
@@ -32,7 +40,18 @@ namespace Dbot.ModCommander {
           operationDictionary[c.Operation].Invoke(c);
         }
       }
+      
+      if (splitInput[0] == "nuke") {
+        this.Nuke();
+      }
 
+      return r;
+    }
+
+    private void Nuke() {
+      foreach (var message in Context) {
+
+      }
     }
   }
 }
