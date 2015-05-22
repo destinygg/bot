@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Dbot.CommonModels;
 using Dbot.Data;
+using Dbot.Processor;
 using Dbot.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Dbot.Banner;
 
 namespace UnitTest {
   /// <summary>

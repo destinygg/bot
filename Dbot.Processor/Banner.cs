@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;
 using Newtonsoft.Json;
 using UnidecodeSharpFork;
 
-namespace Dbot.Banner {
+namespace Dbot.Processor {
   public class Banner {
     private const int LongSpamMinimumLength = 200;
     private readonly Message _message;

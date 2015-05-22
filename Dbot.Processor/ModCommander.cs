@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dbot.CommonModels;
 using Dbot.Data;
-using Dbot.Processor;
 using Dbot.Utility;
 
-namespace Dbot.ModCommander {
+namespace Dbot.Processor {
   public class ModCommander {
     public Message Message { get; set; }
     public List<Message> Context { get; set; }

@@ -58,7 +58,7 @@ namespace Dbot.Processor {
 
     private static void ModCommand(Message message) {
       var recentMessages = ContextDictionary.Where(x => x.Key < message.Ordinal && x.Key >= message.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
-      var mc = new ModCommander.ModCommander(message, recentMessages);
+      var mc = new ModCommander(message, recentMessages);
       if (mc.Message != null) {
         Send(mc.Message);
       }
@@ -70,7 +70,7 @@ namespace Dbot.Processor {
 
     private static void Ban(Message input) {
       var recentMessages = ContextDictionary.Where(x => x.Key < input.Ordinal && x.Key >= input.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
-      var bantest = new Banner.Banner(input, recentMessages).BanParser();
+      var bantest = new Banner(input, recentMessages).BanParser();
       if (bantest == null) {
         if (input.Text[0] == '!')
           Commander.Post(input);

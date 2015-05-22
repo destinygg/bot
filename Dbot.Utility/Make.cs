@@ -10,6 +10,7 @@ namespace Dbot.Utility {
     public static Message Message(string text) {
       return new Message { Text = text };
     }
+
     public static Message Message(string nick, string text) {
       return new Message { Text = text, Nick = nick };
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Dbot.CommonModels {
 
 
-  public class User {
+  public abstract class User {
     public string Nick { get; set; }
     public bool IsMod { get; set; }
   }
@@ -40,7 +40,5 @@ namespace Dbot.CommonModels {
       get { return _duration; }
       set { _duration = value > TimeSpan.FromDays(7) ? TimeSpan.FromDays(7) : value; }
     }
-
   }
-
 }

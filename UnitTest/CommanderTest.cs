@@ -1,5 +1,5 @@
 ﻿using System;
-using Dbot.Commander;
+using Dbot.Processor;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTest {
@@ -9,6 +9,7 @@ namespace UnitTest {
     public void TestBlog() {
       var c = new Commander();
       Console.WriteLine(c.Blog());
+      //todo not finished
     }
   }
 }

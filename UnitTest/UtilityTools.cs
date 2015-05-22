@@ -8,7 +8,6 @@ using Dbot.CommonModels;
 using Dbot.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dbot.Utility;
-using Newtonsoft.Json;
 
 namespace UnitTest {
   [TestClass]

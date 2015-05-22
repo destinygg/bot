@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Dbot.Utility;
 
-namespace Dbot.Commander {
+namespace Dbot.Processor {
   public class Commander {
     public string Blog() {
       var rawblog = Tools.DownloadData("http://blog.destiny.gg/feed/").Result;

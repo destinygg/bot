@@ -2,11 +2,7 @@
 //todo Destiny Dharma needs another command where you can temp make a phrase a ban phrase for like 30 minutes NoTears Just for all these OuO faggots NoTears
 
 using System;
-using System.Collections.Concurrent;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Threading;
 using System.Threading.Tasks.Dataflow;
 using Dbot.Common;
@@ -16,10 +12,8 @@ using Dbot.Processor;
 using Dbot.Utility;
 using Dbot.WebsocketClient;
 using Dbot.InfiniteClient;
-using Dbot.Banner;
 using Tweetinvi;
 using Tweetinvi.Core.Interfaces.Streaminvi;
-using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Main {
   static class Dbot {

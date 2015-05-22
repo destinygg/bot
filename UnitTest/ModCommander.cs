@@ -8,9 +8,6 @@ namespace UnitTest {
   [TestClass]
   public class ModCommander {
 
-    /// <summary>
-    /// This should always work, just leaving it here for posterity.
-    /// </summary>
     [TestMethod]
     public void StringSplit_EnsuringStringSplitWithCountWorksLikeIThinkItDoes() {
       var testList = new List<string> {
