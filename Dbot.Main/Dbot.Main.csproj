@@ -105,10 +105,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dbot.Banner\Dbot.Banner.csproj">
-      <Project>{52c8958f-bb47-4598-9308-6739139fe903}</Project>
-      <Name>Dbot.Banner</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Dbot.CommonModels\Dbot.CommonModels.csproj">
       <Project>{65d520b2-5739-4908-90b0-739cb4daac4d}</Project>
       <Name>Dbot.CommonModels</Name>

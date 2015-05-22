@@ -63,14 +63,6 @@
     <Compile Include="UtilityTools.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dbot.Banner\Dbot.Banner.csproj">
-      <Project>{52c8958f-bb47-4598-9308-6739139fe903}</Project>
-      <Name>Dbot.Banner</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dbot.Commander\Dbot.Commander.csproj">
-      <Project>{A90CED47-DABA-4C5A-9340-761BDBB31A5D}</Project>
-      <Name>Dbot.Commander</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Dbot.CommonModels\Dbot.CommonModels.csproj">
       <Project>{65D520B2-5739-4908-90B0-739CB4DAAC4D}</Project>
       <Name>Dbot.CommonModels</Name>
@@ -78,6 +70,10 @@
     <ProjectReference Include="..\Dbot.Data\Dbot.Data.csproj">
       <Project>{1E2409C3-C544-4EC2-AA93-9C0F5A4B02EC}</Project>
       <Name>Dbot.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dbot.Processor\Dbot.Processor.csproj">
+      <Project>{70D90913-35AE-4502-90E7-8C1316A92CF2}</Project>
+      <Name>Dbot.Processor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
       <Project>{e27fab2d-880d-4137-b32a-23e7db585bf3}</Project>
