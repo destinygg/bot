@@ -125,10 +125,6 @@
       <Project>{7377ac35-f3b7-4734-84bc-8865f72749b9}</Project>
       <Name>Dbot.InfiniteClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dbot.ModCommander\Dbot.ModCommander.csproj">
-      <Project>{b9c623b7-1aa0-4803-843a-81fde1660fcb}</Project>
-      <Name>Dbot.ModCommander</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Dbot.Processor\Dbot.Processor.csproj">
       <Project>{70D90913-35AE-4502-90E7-8C1316A92CF2}</Project>
       <Name>Dbot.Processor</Name>
