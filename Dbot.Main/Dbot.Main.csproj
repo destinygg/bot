@@ -129,6 +129,10 @@
       <Project>{b9c623b7-1aa0-4803-843a-81fde1660fcb}</Project>
       <Name>Dbot.ModCommander</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dbot.Processor\Dbot.Processor.csproj">
+      <Project>{70D90913-35AE-4502-90E7-8C1316A92CF2}</Project>
+      <Name>Dbot.Processor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
       <Project>{E27FAB2D-880D-4137-B32A-23E7DB585BF3}</Project>
       <Name>Dbot.Utility</Name>

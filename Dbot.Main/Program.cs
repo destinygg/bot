@@ -12,6 +12,7 @@ using System.Threading.Tasks.Dataflow;
 using Dbot.Common;
 using Dbot.CommonModels;
 using Dbot.Data;
+using Dbot.Processor;
 using Dbot.Utility;
 using Dbot.WebsocketClient;
 using Dbot.InfiniteClient;
@@ -22,18 +23,9 @@ using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Main {
   static class Dbot {
-
-    private static readonly ActionBlock<Message> Logger = new ActionBlock<Message>(m => Log(m));
-    private static readonly ActionBlock<object> Sender = new ActionBlock<object>(m => Send(m));
-    private static readonly ActionBlock<Message> Commander = new ActionBlock<Message>(m => Command(m));
-    private static readonly ActionBlock<Message> ModCommander = new ActionBlock<Message>(m => ModCommand(m));
-    private static readonly ActionBlock<Message> Banner = new ActionBlock<Message>(m => Ban(m));
+    private static readonly IClient Client = new WebSocketClient();
+    private static readonly IProcessor Processor = new MessageProcessor(Client);
     private static readonly IUserStream UserStream = Stream.CreateUserStream();
-    private static readonly ConcurrentDictionary<int, Message> ContextDictionary = new ConcurrentDictionary<int, Message>();
-    private static readonly ConcurrentDictionary<int, Message> DequeueDictionary = new ConcurrentDictionary<int, Message>();
-    private static readonly IClient Client = new InfiniteClient.InfiniteClient();
-    private static int _index;
-    private static int _dequeueIndex;
     private static bool _exit;
 
     static void Main() {
@@ -48,9 +40,7 @@ namespace Dbot.Main {
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
       PeriodicTask.Run(InitializeDatastore.UpdateEmoticons, TimeSpan.FromHours(1));
 
-
-      Client.Run();
-      Client.PropertyChanged += client_PropertyChanged;
+      Client.Run(Processor);
       Console.CancelKeyPress += Console_CancelKeyPress;
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
@@ -61,9 +51,9 @@ namespace Dbot.Main {
           if (input == "exit") {
             _exit = true;
           } else if (input[0] == '~') {
-            Client.Send(input.Substring(1));
+            Client.Send(Make.Message(input.Substring(1)));
           } else if (input[0] == '<') {
-            ModCommander.Post(Make.Message(input));
+            MessageProcessor.ModCommander.Post(Make.Message(input));
           }
         }
       }
@@ -71,49 +61,8 @@ namespace Dbot.Main {
       Exit();
     }
 
-    private static void Command(Message message) {
-
-    }
-
-    private static void ModCommand(Message message) {
-      var mc = new ModCommander.ModCommander(message.Text);
-      if (mc.Message != null) {
-        Send(mc.Message);
-      }
-    }
-
     private static void TweetDetected(string tweet) {
-      Sender.Post(Make.Message("twitter.com/steven_bonnell just tweeted: " + tweet));
-    }
-
-    private static void Send(object input) {
-      if (input is Victim) {
-
-      } else if (input is Message) {
-        Client.Send(((Message) input).Text);
-      } else if (input is String) {
-        Client.Send((string) input);
-      } else Tools.ErrorLog("Unsupported type.");
-    }
-
-    private static void Ban(Message input) {
-      var recentMessages = ContextDictionary.Where(x => x.Key < input.Ordinal && x.Key >= input.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
-      var bantest = new Banner.Banner(input, recentMessages).BanParser();
-      if (bantest == null) {
-        if (input.Text[0] == '!')
-          Commander.Post(input);
-      } else {
-        Sender.Post(bantest);
-      }
-      var success = DequeueDictionary.TryAdd(input.Ordinal, input);
-      Debug.Assert(success);
-    }
-
-    private static void Log(Message message) {
-      //Console.Write(message.Nick + ": " + message.Text);
-      //Console.Write(message.Text + ".");
-      message.Nick = message.Nick.ToLower();
-      //Datastore.InsertMessage(message);
+      MessageProcessor.Sender.Post(Make.Message("twitter.com/steven_bonnell just tweeted: " + tweet));
     }
 
     static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {
@@ -122,33 +71,6 @@ namespace Dbot.Main {
 
     static void Exit() {
       Datastore.Terminate();
-    }
-
-    // todo: you can make this better with http://stackoverflow.com/questions/3668217/handling-propertychanged-in-a-type-safe-way
-    private static void client_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-      var client = (IClient) sender;
-      client.CoreMsg.Ordinal = _index;
-      ContextDictionary.TryAdd(_index, client.CoreMsg);
-      _index++;
-
-      Thread.Sleep(1);
-
-      while (DequeueDictionary.Count > Settings.MessageLogSize) {
-        var asdf = new Message();
-        var contextTest = ContextDictionary.TryRemove(_dequeueIndex, out asdf);
-        var dequeueTest = DequeueDictionary.TryRemove(_dequeueIndex, out asdf);
-        Debug.Assert(contextTest);
-        Debug.Assert(dequeueTest);
-        Console.WriteLine("dequeued " + _dequeueIndex);
-        _dequeueIndex++;
-      }
-
-      Logger.Post(client.CoreMsg);
-      if (client.CoreMsg.IsMod) {
-        if (client.CoreMsg.Text[0] == '!')
-          ModCommander.Post(client.CoreMsg);
-      } else
-        Banner.Post(client.CoreMsg);
     }
   }
 }

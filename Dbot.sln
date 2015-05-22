@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.InfiniteClient", "Dbot
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{AFEC8FE1-4B09-4C0D-8DE5-740FE7E5187B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Processor", "Dbot.Processor\Dbot.Processor.csproj", "{70D90913-35AE-4502-90E7-8C1316A92CF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{7377AC35-F3B7-4734-84BC-8865F72749B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7377AC35-F3B7-4734-84BC-8865F72749B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7377AC35-F3B7-4734-84BC-8865F72749B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70D90913-35AE-4502-90E7-8C1316A92CF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70D90913-35AE-4502-90E7-8C1316A92CF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70D90913-35AE-4502-90E7-8C1316A92CF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70D90913-35AE-4502-90E7-8C1316A92CF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
