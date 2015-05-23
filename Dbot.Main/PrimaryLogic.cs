@@ -45,8 +45,9 @@ namespace Dbot.Main {
             _exit = true;
           } else if (input[0] == '~') {
             Client.Send(Make.Message(input.Substring(1)));
-          } else if (input[0] == '<') {
+          } else if (input[0] == '!') {
             MessageProcessor.ModCommander.Post(Make.Message(input));
+            MessageProcessor.Commander.Post(Make.Message(input));
           }
         }
       }

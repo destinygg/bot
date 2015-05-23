@@ -45,11 +45,11 @@ namespace UnitTest {
       InitializeDatastore.Run();
       Datastore.AddTempBanWord(bannedWord);
 
-      var banner = new Banner(Make.Message(nick, "banphrase"));
+      var banner = new Banner(Make.Message(nick, "banphrase"), new List<Message>());
 
       var testList = new List<int> { 10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10080, 10080, 10080, 10080, };
       foreach (var i in testList) {
-        banner.General(true);
+        banner.BanParser(true);
         Assert.AreEqual(Datastore.UserHistory(nick).TempWordCount.FirstOrDefault(x => x.Word == bannedWord).Count, i);
       }
 

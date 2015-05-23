@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;
@@ -27,8 +28,8 @@ namespace Dbot.Processor {
         this._context = context;
     }
 
-    public Victim BanParser() {
-      Thread.Sleep(1000);
+    public Victim BanParser(bool wait = false) {
+      //Thread.Sleep(1000);
 
       var testList = new List<int>();
       for (var i = _message.Ordinal - Settings.MessageLogSize; i < _message.Ordinal; i++) {
@@ -40,10 +41,6 @@ namespace Dbot.Processor {
       if (!testvar.SequenceEqual(testList)) { }
       Debug.Assert(testvar.SequenceEqual(testList));
 
-      return null;
-    }
-
-    public Victim General(bool wait = false) {
       if (Datastore.BannedWords.Any(x => _unnormalized.Contains(x) || _text.Contains(x)))
         return Make.Mute(_message.Nick, TimeSpan.FromDays(6), "6day, forbidden text. Probably screamer or spam.");
 

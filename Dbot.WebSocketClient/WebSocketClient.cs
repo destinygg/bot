@@ -87,6 +87,10 @@ namespace Dbot.WebsocketClient {
         var jsonMsg = JsonConvert.SerializeObject(msg);
         Tools.Log("MSG " + jsonMsg, ConsoleColor.Red);
         _websocket.Send("MSG " + jsonMsg);
+      } else if (input is Mute) {
+        Tools.Log("Muted " + ((Mute) input).Nick);
+      } else if (input is Ban) {
+        Tools.Log("Banned " + input.Nick);
       }
     }
   }

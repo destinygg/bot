@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks.Dataflow;
 using Dbot.Common;
 using Dbot.CommonModels;
@@ -25,7 +27,7 @@ namespace Dbot.Processor {
       _client = client;
     }
 
-    void IProcessor.ProcessMessage(Message message) {
+    public void ProcessMessage(Message message) {
       message.Ordinal = _contextIndex;
       ContextDictionary.TryAdd(_contextIndex, message);
       _contextIndex++;
@@ -46,8 +48,10 @@ namespace Dbot.Processor {
 
       Logger.Post(message);
       if (message.IsMod) {
-        if (message.Text[0] == '!')
+        if (message.Text[0] == '!') {
           ModCommander.Post(message);
+          Commander.Post(message);
+        }
       } else
         Banner.Post(message);
     }
@@ -58,27 +62,27 @@ namespace Dbot.Processor {
 
     private static void ModCommand(Message message) {
       var recentMessages = ContextDictionary.Where(x => x.Key < message.Ordinal && x.Key >= message.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
-      var mc = new ModCommander(message, recentMessages);
-      if (mc.Message != null) {
-        Send(mc.Message);
+      var modtest = new ModCommander(message, recentMessages).ModParser();
+      if (modtest != null) {
+        Send(modtest);
       }
     }
 
-    public static void Send(Sendable input) {
+    private static void Send(Sendable input) {
       _client.Send(input);
     }
 
-    private static void Ban(Message input) {
-      var recentMessages = ContextDictionary.Where(x => x.Key < input.Ordinal && x.Key >= input.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
-      var bantest = new Banner(input, recentMessages).BanParser();
+    private static void Ban(Message message) {
+      var recentMessages = ContextDictionary.Where(x => x.Key < message.Ordinal && x.Key >= message.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
+      var bantest = new Banner(message, recentMessages).BanParser();
       if (bantest == null) {
-        if (input.Text[0] == '!')
-          Commander.Post(input);
+        if (message.Text[0] == '!')
+          Commander.Post(message);
       } else {
         Sender.Post(bantest);
         //Sender.Post();
       }
-      var success = DequeueDictionary.TryAdd(input.Ordinal, input);
+      var success = DequeueDictionary.TryAdd(message.Ordinal, message);
       Debug.Assert(success);
     }
 

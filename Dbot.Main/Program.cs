@@ -4,16 +4,6 @@
 using System;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks.Dataflow;
-using Dbot.Common;
-using Dbot.CommonModels;
-using Dbot.Data;
-using Dbot.Processor;
-using Dbot.Utility;
-using Dbot.WebsocketClient;
-using Dbot.InfiniteClient;
-using Tweetinvi;
-using Tweetinvi.Core.Interfaces.Streaminvi;
 
 namespace Dbot.Main {
   class Dbot {
