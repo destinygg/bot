@@ -18,5 +18,14 @@ namespace Dbot.Utility {
     public static Mute Mute(string nick, TimeSpan duration, string reason = null) {
       return new Mute { Nick = nick, Duration = duration, Reason = reason };
     }
+
+    public static Ban Ban(string nick, TimeSpan duration, string reason = null) {
+      return new Ban { Nick = nick, Duration = duration, Reason = reason };
+    }
+
+    public static Ban Unban(string nick) {
+      return new Ban { Nick = nick, Duration = TimeSpan.FromMinutes(-1) };
+    }
+
   }
 }

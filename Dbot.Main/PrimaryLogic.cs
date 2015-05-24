@@ -11,6 +11,7 @@ using Dbot.WebsocketClient;
 using Tweetinvi;
 using Tweetinvi.Core.Interfaces.Streaminvi;
 using Tweetinvi.Streams;
+using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Main {
   public class PrimaryLogic {
@@ -46,8 +47,7 @@ namespace Dbot.Main {
           } else if (input[0] == '~') {
             Client.Send(Make.Message(input.Substring(1)));
           } else if (input[0] == '!') {
-            MessageProcessor.ModCommander.Post(Make.Message(input));
-            MessageProcessor.Commander.Post(Make.Message(input));
+            Client.Forward(new Message { Text = input, IsMod = true, Nick = "SYSTEM CONSOLE"});
           }
         }
       }

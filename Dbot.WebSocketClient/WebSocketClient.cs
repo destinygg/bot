@@ -30,6 +30,10 @@ namespace Dbot.WebsocketClient {
       this._websocket.Open();
     }
 
+    public void Forward(Message message) {
+      _processor.ProcessMessage(message);
+    }
+
     private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e) {
       //Log(e.Message);
       var spaceIndex = e.Message.IndexOf(' ');
@@ -90,7 +94,11 @@ namespace Dbot.WebsocketClient {
       } else if (input is Mute) {
         Tools.Log("Muted " + ((Mute) input).Nick);
       } else if (input is Ban) {
-        Tools.Log("Banned " + input.Nick);
+        if (((Ban) input).Duration.Minutes < 0) {
+          Tools.Log("Unbanned " + input.Nick);
+        } else {
+          Tools.Log("Banned " + input.Nick);
+        }
       }
     }
   }
