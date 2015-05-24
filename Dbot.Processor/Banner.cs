@@ -86,13 +86,13 @@ namespace Dbot.Processor {
       if (longSpam != null) return longSpam;
       var selfSpam = SelfSpam();
       if (selfSpam != null) return selfSpam;
-      foreach (var nukedWord in MessageProcessor.NukesActiveDuration.Keys) {
+      foreach (var nukedWord in Nuke.ActiveDuration.Keys) {
         if (StringTools.Delta(nukedWord, _message.Text) > Settings.NukeStringDelta || _message.Text.Contains(nukedWord)) {
           TimeSpan duration;
-          var success = MessageProcessor.NukesActiveDuration.TryGetValue(nukedWord, out duration);
+          var success = Nuke.ActiveDuration.TryGetValue(nukedWord, out duration);
           Debug.Assert(success);
           Queue<string> nukeVictimsQueue;
-          MessageProcessor.NukeVictimQueue.TryGetValue(nukedWord, out nukeVictimsQueue);
+          Nuke.VictimQueue.TryGetValue(nukedWord, out nukeVictimsQueue);
           //Debug.Assert(success); // this fails when the initial nuke has a bodycount of 0, because no one is on the queue or added to the dictionary
           nukeVictimsQueue.Enqueue(_message.Nick);
           return Make.Mute(_message.Nick, duration);

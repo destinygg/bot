@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks.Dataflow;
 using Dbot.Common;
 using Dbot.CommonModels;
@@ -18,12 +16,9 @@ namespace Dbot.Processor {
     private static readonly ActionBlock<Message> ModCommander = new ActionBlock<Message>(m => ModCommand(m));
     private static readonly ActionBlock<Message> Banner = new ActionBlock<Message>(m => Ban(m));
 
-    public static readonly ConcurrentDictionary<string, TimeSpan> NukesActiveDuration = new ConcurrentDictionary<string, TimeSpan>();
-    public static readonly ConcurrentDictionary<string, Queue<string>> NukeVictimQueue = new ConcurrentDictionary<string, Queue<string>>();
     private static readonly ConcurrentDictionary<int, Message> ContextDictionary = new ConcurrentDictionary<int, Message>();
     private static readonly ConcurrentDictionary<int, Message> DequeueDictionary = new ConcurrentDictionary<int, Message>();
 
-    public static CancellationTokenSource NukeCleanupCancellationTokenSource = new CancellationTokenSource();
     private static IClient _client;
     private static int _contextIndex;
     private static int _dequeueIndex;
