@@ -126,6 +126,10 @@
       <Project>{70D90913-35AE-4502-90E7-8C1316A92CF2}</Project>
       <Name>Dbot.Processor</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dbot.SampleClient\Dbot.SampleClient.csproj">
+      <Project>{80436B18-439C-46FF-9D42-D1E25A7B2480}</Project>
+      <Name>Dbot.SampleClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
       <Project>{E27FAB2D-880D-4137-B32A-23E7DB585BF3}</Project>
       <Name>Dbot.Utility</Name>

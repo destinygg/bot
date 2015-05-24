@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{AFEC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Processor", "Dbot.Processor\Dbot.Processor.csproj", "{70D90913-35AE-4502-90E7-8C1316A92CF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.SampleClient", "Dbot.SampleClient\Dbot.SampleClient.csproj", "{80436B18-439C-46FF-9D42-D1E25A7B2480}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{70D90913-35AE-4502-90E7-8C1316A92CF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70D90913-35AE-4502-90E7-8C1316A92CF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70D90913-35AE-4502-90E7-8C1316A92CF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80436B18-439C-46FF-9D42-D1E25A7B2480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80436B18-439C-46FF-9D42-D1E25A7B2480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80436B18-439C-46FF-9D42-D1E25A7B2480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80436B18-439C-46FF-9D42-D1E25A7B2480}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,5 +87,6 @@ Global
 		{80CAF0DD-1886-42F8-B119-565E7C389424} = {AFEC8FE1-4B09-4C0D-8DE5-740FE7E5187B}
 		{E27FAB2D-880D-4137-B32A-23E7DB585BF3} = {D5C9D8F2-D660-41B9-AE22-E1732127FB13}
 		{7377AC35-F3B7-4734-84BC-8865F72749B9} = {AFEC8FE1-4B09-4C0D-8DE5-740FE7E5187B}
+		{80436B18-439C-46FF-9D42-D1E25A7B2480} = {AFEC8FE1-4B09-4C0D-8DE5-740FE7E5187B}
 	EndGlobalSection
 EndGlobal
