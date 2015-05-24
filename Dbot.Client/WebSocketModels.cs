@@ -1,8 +1,4 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-
-namespace Dbot.WebsocketClient {
+﻿namespace Dbot.Client {
   public class NamesReceiver {
     public User[] Users { get; set; }
     public string Connectioncount { get; set; }

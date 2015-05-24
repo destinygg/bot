@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Dbot.Common;
 using Dbot.CommonModels;
-using Dbot.Utility;
 
-namespace Dbot.InfiniteClient {
+namespace Dbot.Client {
   public class InfiniteClient : IClient {
     private IProcessor _processor;
     //public async void Run(Action<Message> processor ) {

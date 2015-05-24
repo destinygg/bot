@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
 
-namespace Dbot.WebsocketClient {
+namespace Dbot.Client {
   public class WebSocketClient : IClient {
 
     private readonly WebSocket _websocket;
@@ -90,7 +90,7 @@ namespace Dbot.WebsocketClient {
         var msg = new MessageSender { data = ((Message) input).Text };
         var jsonMsg = JsonConvert.SerializeObject(msg);
         Tools.Log("MSG " + jsonMsg, ConsoleColor.Red);
-        _websocket.Send("MSG " + jsonMsg);
+        //_websocket.Send("MSG " + jsonMsg);
       } else if (input is Mute) {
         Tools.Log("Muted " + ((Mute) input).Nick);
       } else if (input is Ban) {
