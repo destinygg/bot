@@ -9,6 +9,7 @@ using Dbot.Data;
 using Dbot.Processor;
 using Dbot.Utility;
 using Tweetinvi;
+using Tweetinvi.Core.Interfaces;
 using Tweetinvi.Core.Interfaces.Streaminvi;
 using Tweetinvi.Streams;
 using Message = Dbot.CommonModels.Message;
@@ -23,10 +24,8 @@ namespace Dbot.Main {
     public void Run() {
       InitializeDatastore.Run();
 
-      TwitterCredentials.SetCredentials(PrivateConstants.Twitter_Access_Token,
-      PrivateConstants.Twitter_Access_Token_Secret, PrivateConstants.Twitter_Consumer_Key,
-      PrivateConstants.Twitter_Consumer_Secret);
-      UserStream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet.Text);
+      TwitterCredentials.SetCredentials(PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret, PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret);
+      UserStream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet);
       UserStream.StartStreamAsync();
 
       //todo, make sure this dosn't run more often than once a minute
@@ -47,7 +46,7 @@ namespace Dbot.Main {
           } else if (input[0] == '~') {
             Client.Send(Make.Message(input.Substring(1)));
           } else if (input[0] == '!') {
-            Client.Forward(new Message { Text = input, IsMod = true, Nick = "SYSTEM CONSOLE"});
+            Client.Forward(new Message { Text = input, IsMod = true, Nick = "SYSTEM CONSOLE" });
           }
         }
       }
@@ -55,8 +54,8 @@ namespace Dbot.Main {
       Exit();
     }
 
-    private static void TweetDetected(string tweet) {
-      MessageProcessor.Sender.Post(Make.Message("twitter.com/steven_bonnell just tweeted: " + tweet));
+    private static void TweetDetected(ITweet tweet) {
+      MessageProcessor.Sender.Post(Make.Message(true, "twitter.com/steven_bonnell just tweeted: \n" + Tools.TweetPrettier(tweet)));
     }
 
     static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {

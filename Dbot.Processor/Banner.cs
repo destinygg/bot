@@ -188,7 +188,6 @@ namespace Dbot.Processor {
         var percentList = shortMessages.Select(sm => StringTools.Delta(sm.Text, _text)).Select(delta => Convert.ToInt32(delta * 100)).Where(x => x >= 70).ToList();
 
         if (percentList.Count() >= 2) {
-          Debug.Assert(percentList.Count() == 2);
           return Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "1m " + _message.Nick + ": " + percentList.Average() + "% = your past text");
         }
       }

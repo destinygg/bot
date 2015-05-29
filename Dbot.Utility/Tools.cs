@@ -215,5 +215,12 @@ namespace Dbot.Utility {
       var deserializeObject = (JArray) JsonConvert.DeserializeObject(answer);
       return deserializeObject.ToObject<List<string>>();
     }
+    public static string TweetPrettier(ITweet tweet) {
+      var text = HttpUtility.HtmlDecode(tweet.Text);
+      foreach (var x in tweet.Urls.ToDictionary(x => x.URL, y => y.DisplayedURL)) {
+        text = text.Replace(x.Key, x.Value);
+      }
+      return text;
+    }
   }
 }

@@ -65,7 +65,16 @@ namespace Dbot.Processor {
     }
 
     private static void Send(Sendable input) {
-      _client.Send(input);
+      if (input is Message && input.IsMod) {
+        var message = (Message) input;
+        var s = message.Text.Split('\n');
+        foreach (var x in s) {
+          _client.Send(Make.Message(x));
+        }
+      }
+      else {
+        _client.Send(input);
+      }
     }
 
     private static void Ban(Message message) {
