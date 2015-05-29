@@ -55,7 +55,9 @@ namespace Dbot.Processor {
     }
 
     private static void Command(Message message) {
-
+      var output = new Commander(message).Run();
+      if (output != null)
+        Sender.Post(output);
     }
 
     private static void ModCommand(Message message) {

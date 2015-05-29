@@ -6,9 +6,11 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Dbot.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Tweetinvi.Core.Interfaces;
 
 namespace Dbot.Utility {
   public static class Tools {
@@ -104,6 +106,10 @@ namespace Dbot.Utility {
       return Tools.Epoch() + timeSpan;
     }
 
+    public static TimeSpan Epoch(DateTime dateTime) {
+      return dateTime - Epoch();
+    }
+
     public static bool GetLiveApi() {
       var answer = DownloadData("https://api.twitch.tv/kraken/streams/destiny").Result;
       dynamic dyn = JsonConvert.DeserializeObject(answer);
@@ -133,7 +139,13 @@ namespace Dbot.Utility {
     }
 
     public static string LiveStatus(bool wait = false) {
-      return Tools.LiveStatus(Tools.GetLiveApi(), DateTime.UtcNow, wait);
+      try {
+        return Tools.LiveStatus(Tools.GetLiveApi(), DateTime.UtcNow, wait);
+      } catch (Exception e) {
+        ErrorLog("Live check failed.");
+        ErrorLog(e);
+        return "Live check failed.";
+      }
     }
 
     public static string LiveStatus(bool liveStatus, DateTime compareTime, bool wait = false) {
@@ -166,7 +178,7 @@ namespace Dbot.Utility {
         return "Stream offline for " + PrettyDeltaTime(offTimeDelta, "~");
       }
       ErrorLog(String.Format("LiveStatus()'s ifs failed. LiveStatus: {0}. In minutes: OnTimeΔ {1}. OffTimeΔ {2}", liveStatus, onTimeDelta.TotalMinutes, offTimeDelta.TotalMinutes));
-      return "Bot borked";
+      return "Live check failed";
     }
 
     public static void AddBanWord(string table, string bannedPhrase) {
@@ -215,6 +227,18 @@ namespace Dbot.Utility {
       var deserializeObject = (JArray) JsonConvert.DeserializeObject(answer);
       return deserializeObject.ToObject<List<string>>();
     }
+
+    public static string FallibleCode(Func<string> inputFunc) {
+      string r;
+      try {
+        r = inputFunc();
+      } catch (Exception e) {
+        r = "A server somewhere is choking on a hairball";
+        ErrorLog(e);
+      }
+      return r;
+    }
+
     public static string TweetPrettier(ITweet tweet) {
       var text = HttpUtility.HtmlDecode(tweet.Text);
       foreach (var x in tweet.Urls.ToDictionary(x => x.URL, y => y.DisplayedURL)) {

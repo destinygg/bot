@@ -30,6 +30,7 @@ namespace Dbot.Main {
 
       //todo, make sure this dosn't run more often than once a minute
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
+      Tools.LiveStatus();
       PeriodicTask.Run(InitializeDatastore.UpdateEmoticons, TimeSpan.FromHours(1));
 
       Client.Run(Processor);

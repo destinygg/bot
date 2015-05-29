@@ -38,7 +38,7 @@ namespace Dbot.Processor {
       }
 
       var testvar = _context.Select(x => x.Ordinal).OrderBy(x => x).ToList();
-      if (!testvar.SequenceEqual(testList)) { }
+      //if (!testvar.SequenceEqual(testList)) { }
       Debug.Assert(testvar.SequenceEqual(testList));
 
       if (Datastore.BannedWords.Any(x => _unnormalized.Contains(x) || _text.Contains(x)))
