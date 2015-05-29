@@ -22,7 +22,7 @@ namespace Dbot.Processor {
       new ActionBlock<Tuple<string, IEnumerable<Message>>>(x => Icbm(x)).Post(Tuple.Create(nukedWord, context));
     }
 
-    private static void Icbm(Tuple<string, IEnumerable<Message>> inputTuple) {
+    private async static void Icbm(Tuple<string, IEnumerable<Message>> inputTuple) {
       var nukedWord = inputTuple.Item1;
       var queue = inputTuple.Item2;
       var preordainedVictims = queue.Where(message => (StringTools.Delta(nukedWord, message.Text) > Settings.NukeStringDelta || message.Text.Contains(nukedWord)) && !message.IsMod).Select(x => x.Nick).Distinct().ToList();
@@ -44,7 +44,7 @@ namespace Dbot.Processor {
             var success = VictimQueue.TryAdd(nukedWord, victimQueue);
             Debug.Assert(success);
           }
-          Thread.Sleep(Settings.NukeLoopWait);
+          await Task.Delay(Settings.NukeLoopWait);
         } else {
           return;
         }

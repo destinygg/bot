@@ -27,7 +27,7 @@ namespace Dbot.Processor {
       Tools.Log("NukeDictionary " + Nuke.ActiveDuration.Count + ", NukeVictims " + Nuke.VictimQueue.Count, ConsoleColor.Red);
     }
 
-    public static void Aegis() {
+    public static async void Aegis() {
       CancellationTokenSource.Cancel();
       MessageProcessor.Sender.Post(Make.Message("Oh shit, undo! Undo!"));
       foreach (var nukedWord in Nuke.ActiveDuration.Keys) {
@@ -44,7 +44,7 @@ namespace Dbot.Processor {
           Debug.Assert(success);
         } else {
           MessageProcessor.Sender.Post(Make.Unban(victimQueue.Dequeue()));
-          Thread.Sleep(Settings.NukeLoopWait);
+          await Task.Delay(Settings.NukeLoopWait);
         }
       }
     }
