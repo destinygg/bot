@@ -14,13 +14,8 @@ namespace Dbot.Data {
     public static void Initialize() {
       _db = new SQLiteAsyncConnection("DbotDB.sqlite");
 
-      if (0 == _db.ExecuteScalarAsync<int>("Select Count(*) FROM sqlite_master where type='table';").Result) {
-        LoadData();
-      }
-
       _tempBannedWords = _db.Table<TempBannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
       _bannedWords = _db.Table<BannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
-      _modCommands = _db.Table<ModCommands>().ToListAsync().Result;
     }
 
     private static List<string> _emoticonsList;
@@ -37,9 +32,6 @@ namespace Dbot.Data {
 
     public static int Delay { get; set; }
     public static int Viewers { get; set; }
-
-    private static List<ModCommands> _modCommands;
-    public static List<ModCommands> ModCommands { get { return _modCommands; } }
 
     //these are never used?
     //private static List<StateVariables> _stateVariables;
@@ -146,168 +138,6 @@ namespace Dbot.Data {
 
     public static void Terminate() {
       //_db.Dispose();
-    }
-
-    public static void LoadData() {
-      _db.CreateTableAsync<Stalk>();
-      _db.CreateTableAsync<TempBannedWords>();
-      _db.CreateTableAsync<BannedWords>();
-      _db.CreateTableAsync<RawUserHistory>();
-      _db.CreateTableAsync<ModCommands>().ContinueWith(x => PopulateModCommands());
-      _db.CreateTableAsync<StateVariables>().ContinueWith(x => PopulateStateVariables());
-    }
-
-    private static void PopulateModCommands() {
-      _db.InsertAllAsync(new List<ModCommands> {
-        new ModCommands {
-          Command = Ms.sing,
-          Operation = Ms.message,
-          Result = "/me sings the body electric♪",
-        },
-        new ModCommands {
-          Command = Ms.dance,
-          Operation = Ms.message,
-          Result = "/me roboboogies ¬[º-°¬] [¬º-°]¬",
-        },
-        new ModCommands {
-          Command = Ms.ninja,
-          CommandParameter = Ms.on,
-          Operation = Ms.message,
-          Result = "I am the blade of Shakuras.",
-        },
-        new ModCommands {
-          Command = Ms.ninja,
-          CommandParameter = Ms.on,
-          Operation = Ms.set,
-          Result = Ms.one,
-        },
-        new ModCommands {
-          Command = Ms.ninja,
-          CommandParameter = Ms.off,
-          Operation = Ms.message,
-          Result = "The void claims its own.",
-        },
-        new ModCommands {
-          Command = Ms.ninja,
-          CommandParameter = Ms.off,
-          Operation = Ms.set,
-          Result = Ms.zero,
-        },
-        new ModCommands {
-          Command = Ms.modabuse,
-          CommandParameter = Ms.on,
-          Operation = Ms.message,
-          Result = "Justice has come!",
-        },
-        new ModCommands {
-          Command = Ms.modabuse,
-          CommandParameter = Ms.on,
-          Operation = Ms.set,
-          Result = Ms.two,
-        },
-        new ModCommands {
-          Command = Ms.modabuse,
-          CommandParameter = Ms.semi,
-          Operation = Ms.message,
-          Result = "Calibrating void lenses."
-        },
-        new ModCommands {
-          Command = Ms.modabuse,
-          CommandParameter = Ms.semi,
-          Operation = Ms.set,
-          Result = Ms.one
-        },
-        new ModCommands {
-          Command = Ms.modabuse,
-          CommandParameter = Ms.off,
-          Operation = Ms.message,
-          Result = "Awaiting the call."
-        },
-        new ModCommands {
-          Command = Ms.modabuse,
-          CommandParameter = Ms.off,
-          Operation = Ms.set,
-          Result = Ms.zero
-        },
-        new ModCommands {
-          Command = Ms.add,
-          CommandParameter = Ms.star,
-          Operation = Ms.dbadd,
-          Result = Ms.banlist
-        },
-        new ModCommands {
-          Command = Ms.add,
-          CommandParameter = Ms.star,
-          Operation = Ms.message,
-          Result = "'*' added to banlist"
-        },
-        new ModCommands {
-          Command = Ms.del,
-          CommandParameter = Ms.star,
-          Operation = Ms.dbremove,
-          Result = Ms.banlist
-        },
-        new ModCommands {
-          Command = Ms.del,
-          CommandParameter = Ms.star,
-          Operation = Ms.message,
-          Result = "'*' removed from banlist"
-        },
-        new ModCommands {
-          Command = Ms.tempadd,
-          CommandParameter = Ms.star,
-          Operation = Ms.dbadd,
-          Result = Ms.tempbanlist,
-        },
-        new ModCommands {
-          Command = Ms.tempadd,
-          CommandParameter = Ms.star,
-          Operation = Ms.message,
-          Result = "'*' added to temp banlist"
-        },
-        new ModCommands {
-          Command = Ms.tempdel,
-          CommandParameter = Ms.star,
-          Operation = Ms.dbremove,
-          Result = Ms.tempbanlist,
-        },
-        new ModCommands {
-          Command = Ms.tempdel,
-          CommandParameter = Ms.star,
-          Operation = Ms.message,
-          Result = "'*' removed from temp banlist"
-        },
-        new ModCommands {
-          Command = Ms.stalk,
-          CommandParameter = Ms.star,
-          Operation = Ms.stalk,
-        }
-      });
-    }
-
-    private static void PopulateStateVariables() {
-      _db.InsertAllAsync(new List<StateVariables> {
-        new StateVariables {
-          Key = Ms.ninja,
-          Value = 0
-        },
-        new StateVariables {
-          Key = Ms.modabuse,
-          Value = 0
-        },
-        new StateVariables {
-          Key = Ms.bancount,
-          Value = 0
-        },
-        new StateVariables {
-          Key = Ms.offTime,
-          Value = 0
-        },
-        new StateVariables {
-          Key = Ms.onTime,
-          Value = 0
-        }
-      });
     }
   }
 }

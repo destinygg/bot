@@ -11,17 +11,6 @@ using SQLite;
 
 namespace Dbot.Data {
 
-  public class ModCommands {
-    [PrimaryKey, AutoIncrement, NotNull]
-    public int Id { get; set; }
-    [NotNull]
-    public string Command { get; set; }
-    public string CommandParameter { get; set; }
-    [NotNull]
-    public string Operation { get; set; }
-    public string Result { get; set; }
-  }
-
   public class StateVariables {
     [PrimaryKey, NotNull]
     public string Key { get; set; }
