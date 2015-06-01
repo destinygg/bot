@@ -48,6 +48,7 @@ namespace Dbot.Processor {
     }
 
     public Message Run() {
+      MessageProcessor.LastCommandTime = DateTime.UtcNow;
       var command = _commandDictionary.FirstOrDefault(y => y.Key.Any(x => _text.StartsWith(x))).Value;
       return command == null ? null : Make.Message(true, command.Invoke());
     }

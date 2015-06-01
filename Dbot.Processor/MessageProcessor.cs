@@ -10,6 +10,7 @@ using Dbot.Utility;
 namespace Dbot.Processor {
   public class MessageProcessor : IProcessor {
 
+    public static DateTime LastCommandTime = DateTime.MinValue;
     public static readonly ActionBlock<Sendable> Sender = new ActionBlock<Sendable>(m => Send(m));
     private static readonly ActionBlock<Message> Logger = new ActionBlock<Message>(m => Log(m));
     private static readonly ActionBlock<Message> Commander = new ActionBlock<Message>(m => Command(m));
@@ -83,7 +84,7 @@ namespace Dbot.Processor {
       var recentMessages = ContextDictionary.Where(x => x.Key < message.Ordinal && x.Key >= message.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
       var bantest = new Banner(message, recentMessages).BanParser();
       if (bantest == null) {
-        if (message.Text[0] == '!')
+        if (message.Text[0] == '!' && (LastCommandTime.Add(Settings.UserCommandInterval) <= DateTime.UtcNow))
           Commander.Post(message);
       } else {
         Sender.Post(bantest);
