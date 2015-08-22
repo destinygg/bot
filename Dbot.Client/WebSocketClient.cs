@@ -74,6 +74,7 @@ namespace Dbot.Client {
 
     private void websocket_Closed(object sender, EventArgs e) { 
       Tools.Log("Connection lost!", ConsoleColor.Red);
+      this._websocket.Open();
     }
 
     private void websocket_Error(object sender, ErrorEventArgs e) {
