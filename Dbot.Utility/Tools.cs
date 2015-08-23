@@ -244,7 +244,7 @@ namespace Dbot.Utility {
       foreach (var x in tweet.Urls.ToDictionary(x => x.URL, y => y.DisplayedURL)) {
         text = text.Replace(x.Key, x.Value);
       }
-      return text;
+      return text.Replace("\n\n", "\n");
     }
   }
 }

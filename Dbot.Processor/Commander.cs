@@ -8,6 +8,9 @@ using Dbot.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Tweetinvi;
+using Tweetinvi.Core.Interfaces;
+using Tweetinvi.Logic.Exceptions;
+using ExceptionHandler = Tweetinvi.ExceptionHandler;
 using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Processor {
@@ -38,7 +41,7 @@ namespace Dbot.Processor {
       { new List<string> { "pastsong", "lastsong", "previoussong", "earliersong" }, 
         () => Tools.FallibleCode(EarlierSong) },
       { new List<string> { "twitter", "tweet", "twatter" }, 
-        () => Tools.FallibleCode(Twitter) },
+        Twitter },
       { new List<string> { "youtube", "yt" }, 
         () => Tools.FallibleCode(Youtube) },
     };
@@ -118,9 +121,19 @@ namespace Dbot.Processor {
 
     private static string Twitter() {
       TwitterCredentials.SetCredentials(PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret, PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret);
-      var tweet = User.GetUserFromScreenName("steven_bonnell").GetUserTimeline(10).Skip(3).First();
-      var delta = Tools.PrettyDeltaTime(DateTime.UtcNow - tweet.CreatedAt);
+      ExceptionHandler.SwallowWebExceptions = false;
+      IUser user;
+      try {
+        user = User.GetUserFromScreenName("steven_bonnell");
+        var timeline = user.GetUserTimeline(1);
+        var tweet = timeline.First();
+        var delta = Tools.PrettyDeltaTime(tweet.TweetLocalCreationDate - tweet.CreatedAt);
       return delta + " ago: " + Tools.TweetPrettier(tweet);
+      } catch (TwitterException e) {
+        if (e.WebException != null && !string.IsNullOrWhiteSpace(e.WebException.Message))
+          return "Twitter borked: " + e.WebException.Message;
+        return "Twitter borked.";
+      }
     }
 
     private static string Youtube() {
