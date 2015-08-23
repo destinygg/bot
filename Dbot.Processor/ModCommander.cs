@@ -9,135 +9,63 @@ using System.Threading.Tasks.Dataflow;
 using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;
+using T = System.Tuple<string, System.Action<string>>;
+using X = System.Collections.Generic.List<System.Tuple<string, System.Action<string>>>;
+using Ms = Dbot.Data.MagicStrings;
 
 namespace Dbot.Processor {
   public class ModCommander {
     private readonly Message _message;
     private readonly IEnumerable<Message> _context;
-    private static readonly List<ModCommands> CommandList = new List<ModCommands> {
-      new ModCommands {
-        Command = Ms.sing,
-        Operation = Ms.message,
-        Result = "/me sings the body electric♪",
-      },
-      new ModCommands {
-        Command = Ms.dance,
-        Operation = Ms.message,
-        Result = "/me roboboogies ¬[º-°¬] [¬º-°]¬",
-      },
-      new ModCommands {
-        Command = Ms.ninja,
-        CommandParameter = Ms.on,
-        Operation = Ms.message,
-        Result = "I am the blade of Shakuras.",
-      },
-      new ModCommands {
-        Command = Ms.ninja,
-        CommandParameter = Ms.on,
-        Operation = Ms.set,
-        Result = Ms.one,
-      },
-      new ModCommands {
-        Command = Ms.ninja,
-        CommandParameter = Ms.off,
-        Operation = Ms.message,
-        Result = "The void claims its own.",
-      },
-      new ModCommands {
-        Command = Ms.ninja,
-        CommandParameter = Ms.off,
-        Operation = Ms.set,
-        Result = Ms.zero,
-      },
-      new ModCommands {
-        Command = Ms.modabuse,
-        CommandParameter = Ms.on,
-        Operation = Ms.message,
-        Result = "Justice has come!",
-      },
-      new ModCommands {
-        Command = Ms.modabuse,
-        CommandParameter = Ms.on,
-        Operation = Ms.set,
-        Result = Ms.two,
-      },
-      new ModCommands {
-        Command = Ms.modabuse,
-        CommandParameter = Ms.semi,
-        Operation = Ms.message,
-        Result = "Calibrating void lenses."
-      },
-      new ModCommands {
-        Command = Ms.modabuse,
-        CommandParameter = Ms.semi,
-        Operation = Ms.set,
-        Result = Ms.one
-      },
-      new ModCommands {
-        Command = Ms.modabuse,
-        CommandParameter = Ms.off,
-        Operation = Ms.message,
-        Result = "Awaiting the call."
-      },
-      new ModCommands {
-        Command = Ms.modabuse,
-        CommandParameter = Ms.off,
-        Operation = Ms.set,
-        Result = Ms.zero
-      },
-      new ModCommands {
-        Command = Ms.add,
-        CommandParameter = Ms.star,
-        Operation = Ms.dbadd,
-        Result = Ms.banlist
-      },
-      new ModCommands {
-        Command = Ms.add,
-        CommandParameter = Ms.star,
-        Operation = Ms.message,
-        Result = "'*' added to banlist"
-      },
-      new ModCommands {
-        Command = Ms.del,
-        CommandParameter = Ms.star,
-        Operation = Ms.dbremove,
-        Result = Ms.banlist
-      },
-      new ModCommands {
-        Command = Ms.del,
-        CommandParameter = Ms.star,
-        Operation = Ms.message,
-        Result = "'*' removed from banlist"
-      },
-      new ModCommands {
-        Command = Ms.tempadd,
-        CommandParameter = Ms.star,
-        Operation = Ms.dbadd,
-        Result = Ms.tempbanlist,
-      },
-      new ModCommands {
-        Command = Ms.tempadd,
-        CommandParameter = Ms.star,
-        Operation = Ms.message,
-        Result = "'*' added to temp banlist"
-      },
-      new ModCommands {
-        Command = Ms.tempdel,
-        CommandParameter = Ms.star,
-        Operation = Ms.dbremove,
-        Result = Ms.tempbanlist,
-      },
-      new ModCommands {
-        Command = Ms.tempdel,
-        CommandParameter = Ms.star,
-        Operation = Ms.message,
-        Result = "'*' removed from temp banlist"
-      },
-      new ModCommands {
-        Command = Ms.stalk,
-        CommandParameter = Ms.star,
-        Operation = Ms.stalk,
-      }
+    private static readonly Action<string> Send = x => MessageProcessor.Sender.Post(Make.Message(x));
+
+    private static readonly Dictionary<Regex, X> RegexCommandDictionary = new Dictionary<Regex, X> {
+#warning why does <sing have utterly borked up System.Console.WriteLine();
+      { new Regex(@"^!sing.*"), new X {
+        new T ("/me sings the body electric♪", x => Send(x)),
+      } },
+      { new Regex(@"^!dance.*"), new X {
+        new T ("/me roboboogies ¬[º-°¬] [¬º-°]¬", x => Send(x)),
+      } },
+      { new Regex(@"^!ninja on.*"), new X {
+        new T ("I am the blade of Shakuras.", x => Send(x)),
+        new T ("1", x => Datastore.UpdateStateVariable("ninja", int.Parse(x))),
+      } },
+      { new Regex(@"^!ninja off.*"), new X {
+        new T ("The void claims its own.", x => Send(x)),
+        new T ("0", x => Datastore.UpdateStateVariable("ninja", int.Parse(x))),
+      } },
+      { new Regex(@"^!modabuse on.*"), new X {
+        new T ("Justice has come!", x => Send(x)),
+        new T ("2", x => Datastore.UpdateStateVariable("modabuse", int.Parse(x))),
+      } },
+      { new Regex(@"^!modabuse semi.*"), new X {
+        new T ("Calibrating void lenses.", x => Send(x)),
+        new T ("1", x => Datastore.UpdateStateVariable("modabuse", int.Parse(x))),
+      } },
+      { new Regex(@"^!modabuse off.*"), new X {
+        new T ("Awaiting the call.", x => Send(x)),
+        new T ("0", x => Datastore.UpdateStateVariable("modabuse", int.Parse(x))),
+      } },
+      { new Regex(@"^!add (.*)"), new X {
+        new T ("'*' added to banlist", x => Send(x)),
+        new T (Ms.star, x => Tools.AddBanWord(Ms.banList, x)),
+      } },
+      { new Regex(@"^!del (.*)"), new X {
+        new T ("'*' removed from banlist", x => Send(x)),
+        new T (Ms.star, x => Tools.RemoveBanWord(Ms.banList, x)),
+      } },
+      { new Regex(@"^!tempadd (.*)"), new X {
+        new T ("'*' added to temp banlist", x => Send(x)),
+        new T (Ms.star, x => Tools.AddBanWord(Ms.tempBanList, x)),
+      } },
+      { new Regex(@"^!tempdel (.*)"), new X {
+        new T ("'*' removed from temp banlist", x => Send(x)),
+        new T (Ms.star, x => Tools.RemoveBanWord(Ms.tempBanList, x)),
+      } },
+      { new Regex(@"^!stalk (.*)"), new X {
+        new T (Tools.Stalk(Ms.star), x => Send(x)),
+      } },
     };
 
     public ModCommander(Message message, IEnumerable<Message> context) {
@@ -160,19 +88,17 @@ namespace Dbot.Processor {
       }
     }
 
-    private static void DataDriven(IList<string> splitInput) {
-      var commandMatches = CommandList.Where(x => x.Command == splitInput[0]);
-      var operationDictionary = new Dictionary<string, Action<ModCommands>> {
-        {"message", x =>  MessageProcessor.Sender.Post(Make.Message(1 < splitInput.Count() ? x.Result.Replace("*", splitInput[1]) : x.Result)) },
-        {"set", x => Datastore.UpdateStateVariable(x.Command, int.Parse(x.Result))},
-        {"db.add", x => Tools.AddBanWord(x.Result, splitInput[1])},
-        {"db.remove", x => Tools.RemoveBanWord(x.Result, splitInput[1])},
-        {"stalk", x => MessageProcessor.Sender.Post(Make.Message(Tools.Stalk(splitInput[1])))},
-      };
-      foreach (var c in commandMatches.Where(c => (c.CommandParameter == null)
-        || (splitInput.Count() > 1 && c.CommandParameter == splitInput[1])
-        || (splitInput.Count() > 1 && c.CommandParameter == "*"))) {
-        operationDictionary[c.Operation].Invoke(c);
+    private void DataDriven(IList<string> splitInput) {
+      foreach (var x in RegexCommandDictionary) {
+        var regex = x.Key.Match(_message.Text);
+        if (regex.Success) {
+          foreach (var y in x.Value) {
+            var parameter = y.Item1;
+            var command = y.Item2;
+            parameter = parameter.Replace(Ms.star, regex.Groups[1].Value);
+            command.Invoke(parameter);
+          }
+        }
       }
     }
   }

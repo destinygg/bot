@@ -158,23 +158,23 @@ namespace Dbot.Utility {
       var time = (Int32) (compareTime - Tools.Epoch()).TotalSeconds;
 
       if (liveStatus && Datastore.onTime() != 0) { //we've been live for some time
-        Datastore.UpdateStateVariable(Ms.offTime, 0, wait);
+        Datastore.UpdateStateVariable(MagicStrings.offTime, 0, wait);
         return "Live with " + Datastore.Viewers + " viewers for " + PrettyDeltaTime(onTimeDelta, "~");
       }
       if (liveStatus && Datastore.onTime() == 0) { // we just went live
-        Datastore.UpdateStateVariable(Ms.onTime, time, wait);
-        Datastore.UpdateStateVariable(Ms.offTime, 0, wait);
+        Datastore.UpdateStateVariable(MagicStrings.onTime, time, wait);
+        Datastore.UpdateStateVariable(MagicStrings.offTime, 0, wait);
         return "Destiny is live! With " + Datastore.Viewers + " viewers for ~0m";
       }
       if (!liveStatus && Datastore.onTime() != 0 && Datastore.offTime() == 0) { //we've just gone offline
-        Datastore.UpdateStateVariable(Ms.offTime, time, wait);
+        Datastore.UpdateStateVariable(MagicStrings.offTime, time, wait);
         return "Stream went offline in the past ~10m";
       }
       if (!liveStatus && offTimeDelta < TimeSpan.FromMinutes(10)) {
         return "Stream went offline in the past ~10m";
       }
       if (!liveStatus && Datastore.offTime() != 0) { //we've been not live for a while
-        Datastore.UpdateStateVariable(Ms.onTime, 0, wait);
+        Datastore.UpdateStateVariable(MagicStrings.onTime, 0, wait);
         return "Stream offline for " + PrettyDeltaTime(offTimeDelta, "~");
       }
       ErrorLog(String.Format("LiveStatus()'s ifs failed. LiveStatus: {0}. In minutes: OnTimeΔ {1}. OffTimeΔ {2}", liveStatus, onTimeDelta.TotalMinutes, offTimeDelta.TotalMinutes));

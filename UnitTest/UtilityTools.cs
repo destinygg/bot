@@ -112,8 +112,8 @@ namespace UnitTest {
       InitializeDatastore.Run();
       Datastore.Viewers = 0;
 
-      Datastore.UpdateStateVariable(Ms.onTime, 0, true);
-      Datastore.UpdateStateVariable(Ms.offTime, 300, true);
+      Datastore.UpdateStateVariable(MagicStrings.onTime, 0, true);
+      Datastore.UpdateStateVariable(MagicStrings.offTime, 300, true);
 
       Assert.AreEqual(Datastore.onTime(), 0);
       Assert.AreEqual(Datastore.offTime(), 300);

@@ -44,11 +44,11 @@ namespace Dbot.Data {
     public static List<string> TempBannedWords { get { return _tempBannedWords; } }
 
     public static int offTime() {
-      return _db.Table<StateVariables>().Where(x => x.Key == Ms.offTime).FirstAsync().Result.Value;
+      return _db.Table<StateVariables>().Where(x => x.Key == MagicStrings.offTime).FirstAsync().Result.Value;
     }
 
     public static int onTime() {
-      return _db.Table<StateVariables>().Where(x => x.Key == Ms.onTime).FirstAsync().Result.Value;
+      return _db.Table<StateVariables>().Where(x => x.Key == MagicStrings.onTime).FirstAsync().Result.Value;
     }
 
     public static UserHistory UserHistory(string nick) {
