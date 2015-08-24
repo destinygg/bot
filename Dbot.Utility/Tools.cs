@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using Dbot.Data;
@@ -245,6 +246,10 @@ namespace Dbot.Utility {
         text = text.Replace(x.Key, x.Value);
       }
       return text.Replace("\n\n", "\n");
+    }
+
+    public static Regex CompiledRegex(string pattern) {
+      return new Regex(pattern, RegexOptions.Compiled);
     }
   }
 }

@@ -21,49 +21,49 @@ namespace Dbot.Processor {
 
     private static readonly Dictionary<Regex, X> RegexCommandDictionary = new Dictionary<Regex, X> {
 #warning why does <sing have utterly borked up System.Console.WriteLine();
-      { new Regex(@"^!sing.*"), new X {
+      { Tools.CompiledRegex(@"^!sing.*"), new X {
         new T ("/me sings the body electric♪", x => Send(x)),
       } },
-      { new Regex(@"^!dance.*"), new X {
+      { Tools.CompiledRegex(@"^!dance.*"), new X {
         new T ("/me roboboogies ¬[º-°¬] [¬º-°]¬", x => Send(x)),
       } },
-      { new Regex(@"^!ninja on.*"), new X {
+      { Tools.CompiledRegex(@"^!ninja on.*"), new X {
         new T ("I am the blade of Shakuras.", x => Send(x)),
         new T ("1", x => Datastore.UpdateStateVariable("ninja", int.Parse(x))),
       } },
-      { new Regex(@"^!ninja off.*"), new X {
+      { Tools.CompiledRegex(@"^!ninja off.*"), new X {
         new T ("The void claims its own.", x => Send(x)),
         new T ("0", x => Datastore.UpdateStateVariable("ninja", int.Parse(x))),
       } },
-      { new Regex(@"^!modabuse on.*"), new X {
+      { Tools.CompiledRegex(@"^!modabuse on.*"), new X {
         new T ("Justice has come!", x => Send(x)),
         new T ("2", x => Datastore.UpdateStateVariable("modabuse", int.Parse(x))),
       } },
-      { new Regex(@"^!modabuse semi.*"), new X {
+      { Tools.CompiledRegex(@"^!modabuse semi.*"), new X {
         new T ("Calibrating void lenses.", x => Send(x)),
         new T ("1", x => Datastore.UpdateStateVariable("modabuse", int.Parse(x))),
       } },
-      { new Regex(@"^!modabuse off.*"), new X {
+      { Tools.CompiledRegex(@"^!modabuse off.*"), new X {
         new T ("Awaiting the call.", x => Send(x)),
         new T ("0", x => Datastore.UpdateStateVariable("modabuse", int.Parse(x))),
       } },
-      { new Regex(@"^!add (.*)"), new X {
+      { Tools.CompiledRegex(@"^!add (.*)"), new X {
         new T ("'*' added to banlist", x => Send(x)),
         new T (Ms.star, x => Tools.AddBanWord(Ms.banList, x)),
       } },
-      { new Regex(@"^!del (.*)"), new X {
+      { Tools.CompiledRegex(@"^!del (.*)"), new X {
         new T ("'*' removed from banlist", x => Send(x)),
         new T (Ms.star, x => Tools.RemoveBanWord(Ms.banList, x)),
       } },
-      { new Regex(@"^!tempadd (.*)"), new X {
+      { Tools.CompiledRegex(@"^!tempadd (.*)"), new X {
         new T ("'*' added to temp banlist", x => Send(x)),
         new T (Ms.star, x => Tools.AddBanWord(Ms.tempBanList, x)),
       } },
-      { new Regex(@"^!tempdel (.*)"), new X {
+      { Tools.CompiledRegex(@"^!tempdel (.*)"), new X {
         new T ("'*' removed from temp banlist", x => Send(x)),
         new T (Ms.star, x => Tools.RemoveBanWord(Ms.tempBanList, x)),
       } },
-      { new Regex(@"^!stalk (.*)"), new X {
+      { Tools.CompiledRegex(@"^!stalk (.*)"), new X {
         new T (Tools.Stalk(Ms.star), x => Send(x)),
       } },
     };
