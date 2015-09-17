@@ -29,7 +29,7 @@ namespace UnitTest {
       };
 
       foreach (var s in testList) {
-        actualAnswer.Add(s.Split(new [] { ' ' }, 2));
+        actualAnswer.Add(s.Split(new[] { ' ' }, 2));
       }
 
       var a = actualAnswer.First().First();

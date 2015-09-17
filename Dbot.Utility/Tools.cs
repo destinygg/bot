@@ -216,6 +216,9 @@ namespace Dbot.Utility {
         return await client.DownloadStringTaskAsync(url);
       } catch (Exception e) {
         Log("An error in DownloadData!", ConsoleColor.Red);
+        Log("Url   : " + url, ConsoleColor.Red);
+        if (header == "") Log("Header is empty string.", ConsoleColor.Red);
+        else Log("Header: " + header, ConsoleColor.Red);
         Log(e.Message, ConsoleColor.Red);
         Log(e.Source, ConsoleColor.Red);
         Log(e.StackTrace, ConsoleColor.Red);
