@@ -16,7 +16,8 @@ using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Main {
   public class PrimaryLogic {
-    private static readonly IClient Client = new WebSocketClient();
+    private static readonly IClient Client = new SampleClient();
+    //private static readonly IClient Client = new WebSocketClient();
     private static readonly IProcessor Processor = new MessageProcessor(Client);
     private static readonly IUserStream UserStream = Stream.CreateUserStream();
     private static bool _exit;
@@ -53,6 +54,12 @@ namespace Dbot.Main {
       }
 
       Exit();
+    }
+
+    public async Task<IList<string>> TestRun(IEnumerable<Message> testInput) {
+      InitializeDatastore.Run();
+      var testClient = new TestClient();
+      return await testClient.Run(new MessageProcessor(testClient), testInput);
     }
 
     private static void TweetDetected(ITweet tweet) {

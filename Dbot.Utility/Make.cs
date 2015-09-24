@@ -15,7 +15,7 @@ namespace Dbot.Utility {
       return new Message { Text = text, Nick = nick };
     }
     public static Message Message(bool isMod, string text) {
-      return new Message { Text = text, IsMod = isMod};
+      return new Message { Text = text, IsMod = isMod, Nick = "AutoMod"};
     }
 
     public static Mute Mute(string nick, TimeSpan duration, string reason = null) {

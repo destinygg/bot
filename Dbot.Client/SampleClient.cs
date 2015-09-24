@@ -8,7 +8,7 @@ using Dbot.Common;
 using Dbot.CommonModels;
 using Dbot.Utility;
 
-namespace Dbot.SampleClient {
+namespace Dbot.Client {
   public class SampleClient : IClient {
     private IProcessor _processor;
 
@@ -25,18 +25,7 @@ namespace Dbot.SampleClient {
     }
 
     public void Send(Sendable input) {
-      if (input is Message) {
-        Tools.Log("MSG " + ((Message) input).Text, ConsoleColor.Red);
-        //_websocket.Send("MSG " + jsonMsg);
-      } else if (input is Mute) {
-        Tools.Log("Muted " + ((Mute) input).Nick);
-      } else if (input is Ban) {
-        if (((Ban) input).Duration.Minutes < 0) {
-          Tools.Log("Unbanned " + input.Nick);
-        } else {
-          Tools.Log("Banned " + input.Nick);
-        }
-      }
+      Tools.Log(input, new List<string>());
     }
 
     private readonly List<Message> _messageList = new List<Message> {
@@ -61,6 +50,7 @@ namespace Dbot.SampleClient {
       Make.Message("s", "abcdefghijklmnopqrstuvwxyz"),
       Make.Message("t", "abcdefghijklmnopqrstuvwxyz"),
       Make.Message("u", "abcdefghijklmnopqrstuvwxyz"),
+      Make.Message("u", "!time"),
     };
   }
 }

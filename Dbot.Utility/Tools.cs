@@ -12,6 +12,7 @@ using Dbot.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Tweetinvi.Core.Interfaces;
+using Dbot.CommonModels;
 
 namespace Dbot.Utility {
   public static class Tools {
@@ -23,6 +24,26 @@ namespace Dbot.Utility {
       Console.ForegroundColor = color;
       Console.WriteLine(" " + text);
       Console.ResetColor();
+    }
+
+    public static void Log(Sendable input, IList<string> log) {
+      if (input is Message) {
+        var messageInput = (Message) input;
+        log.Add("Messaged " + messageInput.Text);
+      } else if (input is Mute) {
+        var muteInput = (Mute) input;
+        log.Add("Muted " + muteInput.Nick + " for " + Tools.PrettyDeltaTime(muteInput.Duration));
+      } else if (input is Ban) {
+        var banInput = (Ban) input;
+        if (banInput.Duration.TotalSeconds < 0) {
+          log.Add("Unbanned " + input.Nick);
+        } else {
+          log.Add("Banned " + input.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
+        }
+      } else {
+        throw new Exception("Unsupported Sendable");
+      }
+      Tools.Log(log.Last());
     }
 
     public static void ErrorLog(string text) {

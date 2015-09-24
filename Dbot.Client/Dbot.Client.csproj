@@ -49,6 +49,7 @@
     <Compile Include="InfiniteClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SampleClient.cs" />
+    <Compile Include="TestClient.cs" />
     <Compile Include="WebSocketClient.cs" />
     <Compile Include="WebSocketModels.cs" />
   </ItemGroup>
