@@ -11,11 +11,11 @@ namespace Dbot.Processor {
   public class MessageProcessor : IProcessor {
 
     public static DateTime LastCommandTime = DateTime.MinValue;
+    public static readonly ActionBlock<Message> Banner = new ActionBlock<Message>(m => Ban(m));
     public static readonly ActionBlock<Sendable> Sender = new ActionBlock<Sendable>(m => Send(m));
     private static readonly ActionBlock<Message> Logger = new ActionBlock<Message>(m => Log(m));
     private static readonly ActionBlock<Message> Commander = new ActionBlock<Message>(m => Command(m));
     private static readonly ActionBlock<Message> ModCommander = new ActionBlock<Message>(m => ModCommand(m));
-    private static readonly ActionBlock<Message> Banner = new ActionBlock<Message>(m => Ban(m));
 
     private static readonly ConcurrentDictionary<int, Message> ContextDictionary = new ConcurrentDictionary<int, Message>();
     private static readonly ConcurrentDictionary<int, Message> DequeueDictionary = new ConcurrentDictionary<int, Message>();

@@ -17,54 +17,73 @@ namespace Dbot.Processor {
   public class ModCommander {
     private readonly Message _message;
     private readonly IEnumerable<Message> _context;
-    private static readonly Action<string> Send = x => MessageProcessor.Sender.Post(Make.Message(x));
+    private static void Send(string message) {
+      MessageProcessor.Sender.Post(Make.Message(message));
+    }
 
-    private static readonly Dictionary<Regex, X> RegexCommandDictionary = new Dictionary<Regex, X> {
-#warning why does <sing have utterly borked up System.Console.WriteLine();
-      { Tools.CompiledRegex(@"^!sing.*"), new X {
-        new T ("/me sings the body electric♪", x => Send(x)),
+//todo Why does <sing have utterly borked up System.Console.WriteLine();
+    private readonly Dictionary<Regex, Action<GroupCollection>> _regexCommandDictionary = new Dictionary<Regex, Action<GroupCollection>>{
+      { Tools.CompiledRegex(@"^!sing.*"), r => {
+        Send("/me sings the body electric♪");
       } },
-      { Tools.CompiledRegex(@"^!dance.*"), new X {
-        new T ("/me roboboogies ¬[º-°¬] [¬º-°]¬", x => Send(x)),
+      { Tools.CompiledRegex(@"^!dance.*"), r => {
+        Send("/me roboboogies ¬[º-°¬] [¬º-°]¬");
       } },
-      { Tools.CompiledRegex(@"^!ninja on.*"), new X {
-        new T ("I am the blade of Shakuras.", x => Send(x)),
-        new T ("1", x => Datastore.UpdateStateVariable("ninja", int.Parse(x))),
+      { Tools.CompiledRegex(@"^!ninja on.*"), r => {
+        Send("I am the blade of Shakuras.");
+        Datastore.UpdateStateVariable("ninja", 1);
       } },
-      { Tools.CompiledRegex(@"^!ninja off.*"), new X {
-        new T ("The void claims its own.", x => Send(x)),
-        new T ("0", x => Datastore.UpdateStateVariable("ninja", int.Parse(x))),
+      { Tools.CompiledRegex(@"^!ninja off.*"), r => {
+        Send("The void claims its own.");
+        Datastore.UpdateStateVariable("ninja", 0);
       } },
-      { Tools.CompiledRegex(@"^!modabuse on.*"), new X {
-        new T ("Justice has come!", x => Send(x)),
-        new T ("2", x => Datastore.UpdateStateVariable("modabuse", int.Parse(x))),
+      { Tools.CompiledRegex(@"^!modabuse on.*"), r => {
+        Send("Justice has come!");
+        Datastore.UpdateStateVariable("modabuse", 2);
       } },
-      { Tools.CompiledRegex(@"^!modabuse semi.*"), new X {
-        new T ("Calibrating void lenses.", x => Send(x)),
-        new T ("1", x => Datastore.UpdateStateVariable("modabuse", int.Parse(x))),
+      { Tools.CompiledRegex(@"^!modabuse semi.*"), r => {
+        Send("Calibrating void lenses.");
+        Datastore.UpdateStateVariable("modabuse", 1);
       } },
-      { Tools.CompiledRegex(@"^!modabuse off.*"), new X {
-        new T ("Awaiting the call.", x => Send(x)),
-        new T ("0", x => Datastore.UpdateStateVariable("modabuse", int.Parse(x))),
+      { Tools.CompiledRegex(@"^!modabuse off.*"), r => {
+        Send("Awaiting the call.");
+        Datastore.UpdateStateVariable("modabuse", 0);
       } },
-      { Tools.CompiledRegex(@"^!add (.*)"), new X {
-        new T ("'*' added to banlist", x => Send(x)),
-        new T (Ms.star, x => Tools.AddBanWord(Ms.banList, x)),
+      { Tools.CompiledRegex(@"^!add (.*)"), r => {
+        Send(r[0].Value + " added to banlist");
+        Tools.AddBanWord(Ms.banList, Ms.star);
       } },
-      { Tools.CompiledRegex(@"^!del (.*)"), new X {
-        new T ("'*' removed from banlist", x => Send(x)),
-        new T (Ms.star, x => Tools.RemoveBanWord(Ms.banList, x)),
+      { Tools.CompiledRegex(@"^!del (.*)"), r => {
+        Send("'*' removed from banlist");
+        Tools.RemoveBanWord(Ms.banList, Ms.star);
       } },
-      { Tools.CompiledRegex(@"^!tempadd (.*)"), new X {
-        new T ("'*' added to temp banlist", x => Send(x)),
-        new T (Ms.star, x => Tools.AddBanWord(Ms.tempBanList, x)),
+      { Tools.CompiledRegex(@"^!tempadd (.*)"), r => {
+        Send("'*' added to temp banlist");
+        Tools.AddBanWord(Ms.tempBanList, Ms.star);
       } },
-      { Tools.CompiledRegex(@"^!tempdel (.*)"), new X {
-        new T ("'*' removed from temp banlist", x => Send(x)),
-        new T (Ms.star, x => Tools.RemoveBanWord(Ms.tempBanList, x)),
+      { Tools.CompiledRegex(@"^!tempdel (.*)"), r => {
+        Send("'*' removed from temp banlist");
+        Tools.RemoveBanWord(Ms.tempBanList, Ms.star);
       } },
-      { Tools.CompiledRegex(@"^!stalk (.*)"), new X {
-        new T (Tools.Stalk(Ms.star), x => Send(x)),
+      { Tools.CompiledRegex(@"^!stalk (.*)"), r => {
+        Send(Tools.Stalk(Ms.star));
+      } },
+      { Tools.CompiledRegex(@"^!stalk (.*)"), r => {
+        Send(Tools.Stalk(Ms.star));
+      } },
+      { Tools.CompiledRegex(@"^!(?:ban|b) *(?:(\d*)| +) +(\S+)"), r => {
+        var rawRegexTime = r[1].Value;
+        int rawTime;
+        if (string.IsNullOrWhiteSpace(rawRegexTime)) {
+          rawTime = 1;
+          Send("Time unspecified, default to 1hr.");
+        }
+        else rawTime = int.Parse(rawRegexTime);
+        MessageProcessor.Sender.Post(new Ban {
+          Duration = TimeSpan.FromHours(rawTime),
+          Nick = r[2].Value,
+          Reason = "Manual bot ban.",
+        });
       } },
     };
 
@@ -89,15 +108,10 @@ namespace Dbot.Processor {
     }
 
     private void DataDriven(IList<string> splitInput) {
-      foreach (var x in RegexCommandDictionary) {
+      foreach (var x in _regexCommandDictionary) {
         var regex = x.Key.Match(_message.Text);
         if (regex.Success) {
-          foreach (var y in x.Value) {
-            var parameter = y.Item1;
-            var command = y.Item2;
-            parameter = parameter.Replace(Ms.star, regex.Groups[1].Value);
-            command.Invoke(parameter);
-          }
+          x.Value.Invoke(regex.Groups);
         }
       }
     }
