@@ -74,8 +74,13 @@ namespace Dbot.Processor {
         foreach (var x in s) {
           _client.Send(Make.Message(x));
         }
-      }
-      else {
+      } else if (input is Victim) {
+        var victimInput = (Victim) input;
+        if (!victimInput.SilentReason && !string.IsNullOrWhiteSpace(victimInput.Reason)) {
+          _client.Send(Make.Message(victimInput.Reason));
+        }
+        _client.Send(input);
+      } else {
         _client.Send(input);
       }
     }

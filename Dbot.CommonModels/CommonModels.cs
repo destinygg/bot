@@ -28,7 +28,8 @@ namespace Dbot.CommonModels {
 
   public abstract class Victim : Sendable {
     public virtual TimeSpan Duration { get; set; }
-    public String Reason { get; set; }
+    public string Reason { get; set; }
+    public bool SilentReason { get; set; }
   }
 
   public class Ban : Victim { }
