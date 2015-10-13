@@ -21,7 +21,7 @@ namespace Dbot.Processor {
       MessageProcessor.Sender.Post(Make.Message(message));
     }
 
-//todo Why does <sing have utterly borked up System.Console.WriteLine();
+    //todo Why does <sing have utterly borked up System.Console.WriteLine();
     private readonly Dictionary<Regex, Action<GroupCollection>> _regexCommandDictionary = new Dictionary<Regex, Action<GroupCollection>>{
       { Tools.CompiledRegex(@"^!sing.*"), r => {
         Send("/me sings the body electric♪");
@@ -72,20 +72,33 @@ namespace Dbot.Processor {
         Send(Tools.Stalk(Ms.star));
       } },
       { Tools.CompiledRegex(@"^!(?:ban|b) *(?:(\d*)| +) +(\S+)"), r => {
-        var rawRegexTime = r[1].Value;
-        int rawTime;
-        if (string.IsNullOrWhiteSpace(rawRegexTime)) {
-          rawTime = 1;
-          Send("Time unspecified, default to 1hr.");
-        }
-        else rawTime = int.Parse(rawRegexTime);
+        var rawTime = BanTime(r[1].Value);
         MessageProcessor.Sender.Post(new Ban {
           Duration = TimeSpan.FromHours(rawTime),
           Nick = r[2].Value,
-          Reason = "Manual bot ban.",
+          Reason = "Manual bot ban for " + rawTime.ToString() + "hrs.",
+          SilentReason = true,
+        });
+      } },
+      { Tools.CompiledRegex(@"^!(?:mute|m) *(?:(\d*)| +) +(\S+)"), r => {
+        var rawTime = BanTime(r[1].Value);
+        MessageProcessor.Sender.Post(new Mute {
+          Duration = TimeSpan.FromHours(rawTime),
+          Nick = r[2].Value,
+          Reason = "Manual bot mute for " + rawTime.ToString() + "hrs.",
+          SilentReason = true,
         });
       } },
     };
+
+    private static int BanTime(string regexMatch) {
+      int rawTime;
+      if (string.IsNullOrWhiteSpace(regexMatch)) {
+        rawTime = 1;
+        Send("Time unspecified, default to 1hr.");
+      } else rawTime = int.Parse(regexMatch);
+      return rawTime;
+    }
 
     public ModCommander(Message message, IEnumerable<Message> context) {
       _message = message;
