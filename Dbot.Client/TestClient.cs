@@ -22,6 +22,7 @@ namespace Dbot.Client {
       _processor = processor;
       foreach (var message in testInput) {
         processor.ProcessMessage(message);
+        await Task.Run(() => Task.Delay(100));
       }
       return Log;
     }
