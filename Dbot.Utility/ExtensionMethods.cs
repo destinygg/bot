@@ -17,5 +17,10 @@ namespace Dbot.Utility {
         yield return element;
       }
     }
+
+    public static IEnumerable<T> TakeLast<T>(this IEnumerable<T> source, int n) {
+      var enumerated = source as IList<T> ?? source.ToList();
+      return enumerated.Skip(Math.Max(0, enumerated.Count() - n));
+    }
   }
 }

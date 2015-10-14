@@ -182,13 +182,11 @@ namespace Dbot.Processor {
     }
 
     public Mute SelfSpam() {
-      var shortMessages = _context.Take(11).Where(x => x.Nick == _message.Nick).ToList();
-      if (shortMessages.Count() > 3) {
-        
+      var shortMessages = _context.TakeLast(Settings.SelfSpamContextLength).Where(x => x.Nick == _message.Nick).ToList();
+      if (shortMessages.Count() >= 2) {
         var percentList = shortMessages.Select(sm => StringTools.Delta(sm.Text, _text)).Select(delta => Convert.ToInt32(delta * 100)).Where(x => x >= 70).ToList();
-
         if (percentList.Count() >= 2) {
-          return Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "1m " + _message.Nick + ": " + percentList.Average() + "% = your past text");
+          return Make.Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text");
         }
       }
       return null;
