@@ -15,7 +15,7 @@ namespace Dbot.Processor {
     public static readonly ConcurrentDictionary<string, Queue<string>> VictimQueue = new ConcurrentDictionary<string, Queue<string>>();
 
     public static void Launcher(string nukedWord, TimeSpan duration, IEnumerable<Message> context ) {
-      Task.Run(() => AntiNuke.Dissipate(nukedWord), AntiNuke.CancellationTokenSource.Token);
+      Task.Run(() => AntiNuke.Dissipate(nukedWord, duration), AntiNuke.CancellationTokenSource.Token);
       var success = ActiveDuration.TryAdd(nukedWord, duration);
       Debug.Assert(success);
       MessageProcessor.Sender.Post(Make.Message("Fire ze " + duration.Minutes + " missiles!"));

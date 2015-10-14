@@ -10,14 +10,14 @@ namespace Dbot.Processor {
   public static class AntiNuke {
     public static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
-    public static async void Dissipate(string nukedWord) {
-      await Task.Delay(Settings.NukeDuration);
+    public static async void Dissipate(string nukedWord, TimeSpan duration) {
+      await Task.Delay(duration);
       if (CancellationTokenSource.IsCancellationRequested) {
         CancellationTokenSource = new CancellationTokenSource();
         return;
       }
-      TimeSpan duration;
-      var success = Nuke.ActiveDuration.TryRemove(nukedWord, out duration);
+      TimeSpan tempDuration;
+      var success = Nuke.ActiveDuration.TryRemove(nukedWord, out tempDuration);
       Debug.Assert(success);
 
       Queue<string> victimsQueue;
