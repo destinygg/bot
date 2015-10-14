@@ -1,0 +1,18 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Dbot.Utility {
+  public static class PrivateConstants {
+    public static string botWebsocketAuth = "authtoken=XXX";
+    public static string imgurAuthHeader = "Authorization: Client-ID XXX";
+    public static string Twitter_Access_Token = "XXX";
+    public static string Twitter_Access_Token_Secret = "XXX";
+    public static string Twitter_Consumer_Key = "XXX";
+    public static string Twitter_Consumer_Secret = "XXX";
+    public static string LastFMAPIKey = "XXX";
+    public static string Youtube = "XXX";
+  }
+}
