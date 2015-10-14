@@ -26,15 +26,15 @@ namespace Dbot.CommonModels {
     }
   }
 
-  public abstract class Victim : Sendable {
+  public abstract class HasVictim : Sendable {
     public virtual TimeSpan Duration { get; set; }
     public string Reason { get; set; }
     public bool SilentReason { get; set; }
   }
 
-  public class Ban : Victim { }
+  public class Ban : HasVictim { }
 
-  public class Mute : Victim {
+  public class Mute : HasVictim {
     private TimeSpan _duration;
 
     public override TimeSpan Duration {

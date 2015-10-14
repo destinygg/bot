@@ -28,7 +28,7 @@ namespace Dbot.Processor {
         this._context = context;
     }
 
-    public Victim BanParser(bool wait = false) {
+    public HasVictim BanParser(bool wait = false) {
       //Thread.Sleep(1000);
 
       var testList = new List<int>();
@@ -124,7 +124,7 @@ namespace Dbot.Processor {
 
     #region ImgurNsfw
     //todo this could be improved; check on an individual image link basis (more accurate regex); save safe/nsfw imgurIDs to DB
-    public Victim ImgurNsfw() {
+    public HasVictim ImgurNsfw() {
       if ((_unnormalized.Contains("nsfw") || _unnormalized.Contains("nsfl")) && (!_unnormalized.Contains("not nsfw")))
         return null;
 
