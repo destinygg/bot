@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Dbot.Data;
 using Dbot.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
-namespace UnitTest {
+namespace Dbot.UnitTest {
   /// <summary>
   /// This REQUIRES sqlite.testsettings to be selected in Test>Test Settings.
   /// Also, rebuild, or it won't find the method/class to test.

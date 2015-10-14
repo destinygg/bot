@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,7 +7,7 @@ using Dbot.Processor;
 using Dbot.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTest {
+namespace Dbot.UnitTest {
   [TestClass]
   public class CommanderTest {
     [TestMethod]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -9,7 +9,7 @@ using Dbot.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dbot.Utility;
 
-namespace UnitTest {
+namespace Dbot.UnitTest {
   [TestClass]
 
 #warning Keep Utility in the name to give us easy access to Tools

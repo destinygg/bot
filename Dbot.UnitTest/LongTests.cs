@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ using Dbot.Main;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dbot.Utility;
 
-namespace UnitTest {
+namespace Dbot.UnitTest {
   [TestClass]
   public class LongTests {
     [TestMethod]

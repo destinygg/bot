@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ using Dbot.Processor;
 using Dbot.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTest {
+namespace Dbot.UnitTest {
   /// <summary>
   /// This REQUIRES sqlite.testsettings to be selected in Test>Test Settings.
   /// Also, rebuild, or it won't find the method/class to test.
