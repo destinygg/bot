@@ -32,7 +32,9 @@ namespace Dbot.CommonModels {
     public bool SilentReason { get; set; }
   }
 
-  public class Ban : HasVictim { }
+  public class Ban : HasVictim {
+    public bool Ip { get; set; }
+  }
 
   public class Mute : HasVictim {
     private TimeSpan _duration;

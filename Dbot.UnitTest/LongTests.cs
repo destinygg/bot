@@ -30,10 +30,16 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!m3 UserX"),
         Make.Message(true, "!mute 4 UserX"),
         Make.Message(true, "!m 5 UserX"),
+        Make.Message(true, "!mute UserX reason goes here"),
+        Make.Message(true, "!m UserX reason goes here"),
+        Make.Message(true, "!mute6 UserX reason goes here"),
+        Make.Message(true, "!m7 UserX reason goes here"),
+        Make.Message(true, "!mute 8 UserX reason goes here"),
+        Make.Message(true, "!m 9 UserX reason goes here"),
       });
       
-      Assert.IsTrue(r.Count(x => x == "Muted userx for 1h") == 2);
-      foreach (var i in Enumerable.Range(2, 4)) {
+      Assert.IsTrue(r.Count(x => x == "Muted userx for 1h") == 4);
+      foreach (var i in Enumerable.Range(2, 8)) {
         Assert.IsTrue(r.Count(x => x == "Muted userx for " + i + "h") == 1);
       }
     }
@@ -41,17 +47,47 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task ManualBanTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message>() {
-        Make.Message(true, "!Ban UserX"),
+        Make.Message(true, "!ban UserX"),
         Make.Message(true, "!b UserX"),
-        Make.Message(true, "!Ban2 UserX"),
+        Make.Message(true, "!ban2 UserX"),
         Make.Message(true, "!b3 UserX"),
         Make.Message(true, "!Ban 4 UserX"),
         Make.Message(true, "!b 5 UserX"),
+        Make.Message(true, "!ban UserX reason goes here"),
+        Make.Message(true, "!b UserX reason goes here"),
+        Make.Message(true, "!ban6 UserX reason goes here"),
+        Make.Message(true, "!b7 UserX reason goes here"),
+        Make.Message(true, "!ban 8 UserX reason goes here"),
+        Make.Message(true, "!b 9 UserX reason goes here"),
       });
       
-      Assert.IsTrue(r.Count(x => x == "Banned userx for 1h") == 2);
-      foreach (var i in Enumerable.Range(2, 4)) {
+      Assert.IsTrue(r.Count(x => x == "Banned userx for 1h") == 4);
+      foreach (var i in Enumerable.Range(2, 8)) {
         Assert.IsTrue(r.Count(x => x == "Banned userx for " + i + "h") == 1);
+      }
+    }
+
+    [TestMethod]
+    public async Task ManualIpbanTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message>() {
+        Make.Message(true, "!ipban UserX"),
+        Make.Message(true, "!i UserX"),
+        Make.Message(true, "!ipban2 UserX"),
+        Make.Message(true, "!i3 UserX"),
+        Make.Message(true, "!ipban 4 UserX"),
+        Make.Message(true, "!i 5 UserX"),
+        Make.Message(true, "!ipban UserX reason goes here"),
+        Make.Message(true, "!i UserX reason goes here"),
+        Make.Message(true, "!ipban6 UserX reason goes here"),
+        Make.Message(true, "!i7 UserX reason goes here"),
+        Make.Message(true, "!ipban 8 UserX reason goes here"),
+        Make.Message(true, "!i 9 UserX reason goes here"),
+      });
+
+      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned userx for ") == 2);
+      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned userx for reason goes here") == 2);
+      foreach (var i in Enumerable.Range(2, 8)) {
+        Assert.IsTrue(r.Count(x => x == "Ipbanned userx for " + i + "h") == 1);
       }
     }
 

@@ -71,33 +71,47 @@ namespace Dbot.Processor {
       { Tools.CompiledRegex(@"^!stalk (.*)"), r => {
         Send(Tools.Stalk(Ms.star));
       } },
-      { Tools.CompiledRegex(@"^!(?:ban|b) *(?:(\d*)| +) +(\S+)"), r => {
+      { Tools.CompiledRegex(@"^!(?:ban|b) *(?:(\d*)| +) +(\S+) *(.*)"), r => {
         var rawTime = BanTime(r[1].Value);
         MessageProcessor.Sender.Post(new Ban {
           Duration = TimeSpan.FromHours(rawTime),
           Nick = r[2].Value,
-          Reason = "Manual bot ban for " + rawTime.ToString() + "hrs.",
+          Reason = r[3].Value,
           SilentReason = true,
         });
       } },
-      { Tools.CompiledRegex(@"^!(?:mute|m) *(?:(\d*)| +) +(\S+)"), r => {
+      { Tools.CompiledRegex(@"^!(?:ipban|i) *(?:(\d*)| +) +(\S+) *(.*)"), r => {
+        var rawTime = BanTime(r[1].Value, true);
+        MessageProcessor.Sender.Post(new Ban {
+          Duration = TimeSpan.FromHours(rawTime),
+          Nick = r[2].Value,
+          Reason = r[3].Value,
+          SilentReason = true,
+          Ip = true,
+        });
+      } },
+      { Tools.CompiledRegex(@"^!(?:mute|m) *(?:(\d*)| +) +(\S+) *(.*)"), r => {
         var rawTime = BanTime(r[1].Value);
         MessageProcessor.Sender.Post(new Mute {
           Duration = TimeSpan.FromHours(rawTime),
           Nick = r[2].Value,
-          Reason = "Manual bot mute for " + rawTime.ToString() + "hrs.",
+          Reason = r[3].Value,
           SilentReason = true,
         });
       } },
     };
 
-    private static int BanTime(string regexMatch) {
+    private static int BanTime(string regexMatch, bool ip = false) {
       int rawTime;
       if (string.IsNullOrWhiteSpace(regexMatch)) {
-        rawTime = 1;
+        if (ip) {
+          Send("That's permanent DuckerZ");
+          return 0;
+        }
         Send("Time unspecified, default to 1hr.");
-      } else rawTime = int.Parse(regexMatch);
-      return rawTime;
+        return 1;
+      }
+      return int.Parse(regexMatch);
     }
 
     public ModCommander(Message message, IEnumerable<Message> context) {

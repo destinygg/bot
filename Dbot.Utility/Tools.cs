@@ -37,6 +37,12 @@ namespace Dbot.Utility {
         var banInput = (Ban) input;
         if (banInput.Duration.TotalSeconds < 0) {
           log.Add("Unbanned " + input.Nick);
+        } else if (banInput.Ip) {
+          if (banInput.Duration.TotalSeconds == 0) {
+            log.Add("Permanently ipbanned " + input.Nick + " for " + banInput.Reason);
+          } else {
+            log.Add("Ipbanned " + input.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
+          }
         } else {
           log.Add("Banned " + input.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
         }
