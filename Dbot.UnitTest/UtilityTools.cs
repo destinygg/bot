@@ -95,8 +95,8 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public void DownloadData_API() {
-      var actualAnswer = Tools.DownloadData("http://www.thomas-bayer.com/sqlrest/CUSTOMER/0/").Result;
-      var expectedAnswer = "<?xml version=\"1.0\"?><CUSTOMER xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n    <ID>0</ID>\n    <FIRSTNAME>Laura</FIRSTNAME>\n    <LASTNAME>Steel</LASTNAME>\n    <STREET>429 Seventh Av.</STREET>\n    <CITY>Dallas</CITY>\n</CUSTOMER>";
+      var actualAnswer = Tools.DownloadData("http://pastebin.com/raw.php?i=gvSgcrt7").Result;
+      var expectedAnswer = "test";
       Assert.AreEqual(actualAnswer, expectedAnswer);
     }
 
