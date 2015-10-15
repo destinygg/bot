@@ -123,8 +123,11 @@ namespace Dbot.UnitTest {
     }
 
     [TestMethod]
-    public async Task NukeTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message>() {
+    public async Task NukeAndAegisTest() {
+      var firstBufferSize = 25;
+      var secondBufferSize = 25;
+      var thirdBufferSize = 225;
+      var messageList = new List<Message>{
         Make.Message("red1", "red"),
         Make.Message("red2", "red"),
         Make.Message("red3", "red"),
@@ -135,34 +138,9 @@ namespace Dbot.UnitTest {
         
         Make.Message(true, "!nuke red"),
         Make.Message(true, "!nuke yellow"),
-        
-        Make.Message("User1", "I'm"),
-        Make.Message("User2", "innocent."),
-        Make.Message("User3", "No"),
-        Make.Message("User4", "touching."),
-        Make.Message("User5", "Some"),
-        Make.Message("User6", "random"),
-        Make.Message("User7", "text"),
-        Make.Message("User8", "goes"),
-        Make.Message("User9", "here."),
-        Make.Message("User10", "Don't"),
-        Make.Message("User11", "touch"),
-        Make.Message("User12", "my"),
-        Make.Message("User13", "pie."),
-        Make.Message("User14", "I'm"),
-        Make.Message("User15", "not"),
-        Make.Message("User16", "done"),
-        Make.Message("User17", "putting"),
-        Make.Message("User18", "in"),
-        Make.Message("User19", "filler"),
-        Make.Message("User20", "text"),
-        Make.Message("User21", "yet."),
-        Make.Message("User22", "This"),
-        Make.Message("User23", "must"),
-        Make.Message("User24", "be"),
-        Make.Message("User25", "much"),
-        Make.Message("User26", "longer."),
-        
+      };
+      messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => Make.Message("User" + i, "test")));
+      messageList.AddRange(new List<Message>{
         Make.Message("red4", "red"),
         Make.Message("red5", "red"),
         Make.Message("red6", "red"),
@@ -172,17 +150,32 @@ namespace Dbot.UnitTest {
         Make.Message("yellow6", "yellow"),
         //Make.Message(true, "!mute User26"),
       });
-      await Task.Delay(500);
+      messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => Make.Message("User" + i, "test")));
+      messageList.AddRange(new List<Message>{
+        Make.Message(true, "!aegis"),
+        Make.Message("red7", "red"),
+        Make.Message("yellow7", "yellow7"),
+      });
+      messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => Make.Message("User" + i, "test")));
+
+      var r = await new PrimaryLogic().TestRun(messageList);
 
       foreach (var i in Enumerable.Range(2, 4)) {
         Assert.IsTrue(r.Count(x => x.Contains("Muted red" + i.ToString())) == 1);
         Assert.IsTrue(r.Count(x => x.Contains("Muted yellow" + i.ToString())) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains("Unbanned red" + i.ToString())) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains("Unbanned yellow" + i.ToString())) == 1);
       }
       Assert.IsTrue(r.Count(x => x.Contains("Muted red1")) >= 1);
       Assert.IsTrue(r.Count(x => x.Contains("Muted yellow1")) >= 1);
-      foreach (var i in Enumerable.Range(1, 25)) {
+      Assert.IsTrue(r.Count(x => x.Contains("Unbanned red1")) >= 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Unbanned yellow1")) >= 1);
+      foreach (var i in Enumerable.Range(1, firstBufferSize + secondBufferSize + thirdBufferSize)) {
         Assert.IsTrue(!r.Any(x => x.Contains("Muted user" + i.ToString())));
       }
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted red7")));
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted yellow7")));
+    }
     }
   }
 }
