@@ -24,7 +24,7 @@ namespace Dbot.Data {
       get { return _emoticonsList; }
       set {
         _emoticonsList = value;
-        EmoticonRegex = new Regex(@"(?:^|[\s,\.\?!])(" + String.Join("|", _emoticonsList) + @")(?=$|[\s,\.\?!])", RegexOptions.Compiled & RegexOptions.IgnoreCase);
+        EmoticonRegex = new Regex(string.Join("|", _emoticonsList), RegexOptions.Compiled | RegexOptions.IgnoreCase);
       }
     }
 

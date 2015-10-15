@@ -176,6 +176,21 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(!r.Any(x => x.Contains("Muted red7")));
       Assert.IsTrue(!r.Any(x => x.Contains("Muted yellow7")));
     }
+
+    [TestMethod]
+    public async Task EmotesTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message>() {
+        Make.Message("UserX","Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa"),
+        Make.Message("UserX","OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle"),
+        Make.Message("UserX","LUL LUL LUL LUL LUL LUL LUL LUL"),
+      });
+      await Task.Delay(300);
+
+      Assert.IsTrue(r.Count(x=>x.Contains("Muted userx for 10m")) > 0);
+      Assert.IsTrue(r.Count(x=>x.Contains("Muted userx for 20m")) > 0);
+      Assert.IsTrue(r.Count(x=>x.Contains("Muted userx for 40m")) > 0);
+      Assert.IsTrue(r.Count(x=>x.Contains("10m for face spam")) > 0);
+      Assert.IsTrue(r.Count(x=>x.Contains("your ban time has doubled")) > 0);
     }
   }
 }
