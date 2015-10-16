@@ -29,7 +29,7 @@ namespace Dbot.Processor {
       { new List<string> { "bancount" }, 
         () => Datastore.GetStateVariable("bancount") + " souls reaped" },
       { new List<string> { "time" }, 
-        () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Central Standard Time").ToShortTimeString() + " Central Steven Time" },
+        () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Settings.Timezone).ToShortTimeString() + " Central Steven Time" },
       { new List<string> { "live" }, 
         () => Tools.LiveStatus() },
       { new List<string> { "blog", "blag" }, 
