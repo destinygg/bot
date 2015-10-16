@@ -165,6 +165,7 @@ namespace Dbot.Processor {
     #endregion
 
     //todo: make the graduation more encompassing; it should start banning when people say 100 characters 50x for example
+    //todo: remove duplicate spaces and other characters with http://stackoverflow.com/questions/4429995/how-do-you-remove-repeated-characters-in-a-string
     public Mute LongSpam() {
       var longMessages = _context.TakeLast(Settings.LongSpamContextLength).Where(x => x.Text.Length > Settings.LongSpamMinimumLength);
       return (longMessages.Select(longMessage => Convert.ToInt32(StringTools.Delta(_unnormalized, longMessage.Text) * 100))
