@@ -45,7 +45,7 @@ namespace Dbot.Processor {
           Debug.Assert(success);
         } else {
           MessageProcessor.Sender.Post(Make.Unban(victimQueue.Dequeue()));
-          await Task.Delay(Settings.NukeLoopWait);
+          await Task.Delay(Settings.AegisLoopWait);
         }
       }
     }

@@ -20,6 +20,7 @@ namespace Dbot.Utility {
 
     public const double NukeStringDelta = 0.7;
     public const int NukeLoopWait = 2000;
+    public const int AegisLoopWait = 250;
     public const int NukeDefaultDuration = 30;
 
     public static bool IsMono;
