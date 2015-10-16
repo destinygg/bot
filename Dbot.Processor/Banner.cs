@@ -14,7 +14,6 @@ using UnidecodeSharpFork;
 
 namespace Dbot.Processor {
   public class Banner {
-    private const int LongSpamMinimumLength = 200;
     private readonly Message _message;
     private readonly string _text;
     private readonly string _unnormalized;
@@ -167,12 +166,12 @@ namespace Dbot.Processor {
 
     //todo: make the graduation more encompassing; it should start banning when people say 100 characters 50x for example
     public Mute LongSpam() {
-      var longMessages = _context.Take(26).Where(x => x.Text.Length > LongSpamMinimumLength);
+      var longMessages = _context.TakeLast(26).Where(x => x.Text.Length > Settings.LongSpamMinimumLength);
 
       foreach (var longMessage in longMessages) {
         var delta = StringTools.Delta(_unnormalized, longMessage.Text);
         if (delta > 0.7) {
-          if (_message.Text.Length > LongSpamMinimumLength + 100) {
+          if (_message.Text.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier) {
             return Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text");
           }
           return Make.Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text");

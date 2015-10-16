@@ -37,7 +37,7 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!mute 8 UserX reason goes here"),
         Make.Message(true, "!m 9 UserX reason goes here"),
       });
-      
+
       Assert.IsTrue(r.Count(x => x == "Muted userx for 1h") == 4);
       foreach (var i in Enumerable.Range(2, 8)) {
         Assert.IsTrue(r.Count(x => x == "Muted userx for " + i + "h") == 1);
@@ -60,7 +60,7 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!ban 8 UserX reason goes here"),
         Make.Message(true, "!b 9 UserX reason goes here"),
       });
-      
+
       Assert.IsTrue(r.Count(x => x == "Banned userx for 1h") == 4);
       foreach (var i in Enumerable.Range(2, 8)) {
         Assert.IsTrue(r.Count(x => x == "Banned userx for " + i + "h") == 1);
@@ -114,7 +114,7 @@ namespace Dbot.UnitTest {
       }
       messageList.Add(Make.Message("BanVictimA", "playing a longer game"));
       var r = await new PrimaryLogic().TestRun(messageList);
-      
+
       Assert.IsTrue(r.Any(x => x.Contains("Muted banvictima")));
       Assert.IsTrue(r.Any(x => x.Contains("Muted banvictimb")));
       foreach (var i in Enumerable.Range(1, beginningBufferSize + endingBufferSize)) {
@@ -184,13 +184,50 @@ namespace Dbot.UnitTest {
         Make.Message("UserX","OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle"),
         Make.Message("UserX","LUL LUL LUL LUL LUL LUL LUL LUL"),
       });
-      await Task.Delay(300);
+      await Task.Delay(400);
 
-      Assert.IsTrue(r.Count(x=>x.Contains("Muted userx for 10m")) > 0);
-      Assert.IsTrue(r.Count(x=>x.Contains("Muted userx for 20m")) > 0);
-      Assert.IsTrue(r.Count(x=>x.Contains("Muted userx for 40m")) > 0);
-      Assert.IsTrue(r.Count(x=>x.Contains("10m for face spam")) > 0);
-      Assert.IsTrue(r.Count(x=>x.Contains("your ban time has doubled")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("10m for face spam")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("your ban time has doubled")) > 0);
+    }
+
+    [TestMethod]
+    public async Task LongSpam() {
+      var longBuilder = new StringBuilder();
+      var longerBuilder = new StringBuilder();
+      var longestBuilder = new StringBuilder();
+      foreach (var i in Enumerable.Range(1, Settings.LongSpamMinimumLength)) {
+        longBuilder.Append("a");
+      }
+      foreach (var i in Enumerable.Range(1, Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier)) {
+        longerBuilder.Append("x");
+        longestBuilder.Append("y");
+      }
+      var longMessage = longBuilder.ToString();
+      var longerMessage = longerBuilder.ToString();
+      var longestMessage = longestBuilder.ToString();
+
+      var messageList = Enumerable.Range(1, 40).Select(i => Make.Message("User" + i, Tools.RandomString(Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier + 1))).ToList();
+
+      messageList.AddRange(new List<Message> {
+        Make.Message("UserA", longMessage),
+        Make.Message("SpamA", longMessage),
+        Make.Message("UserB", longMessage + "b"),
+        Make.Message("SpamB", longMessage + "b"),
+        Make.Message("UserX", longerMessage),
+        Make.Message("SpamX", longerMessage),
+        Make.Message("UserY", longestMessage + "y"),
+        Make.Message("SpamY", longestMessage + "y"),
+      });
+
+      var r = await new PrimaryLogic().TestRun(messageList);
+
+      Assert.IsTrue(r.Count(x => x.Contains("Muted user")) == 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted spamb for 1m")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted spamx for 1m")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted spamy for 10m")) > 0);
     }
   }
 }

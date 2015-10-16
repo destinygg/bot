@@ -12,5 +12,7 @@ namespace Dbot.Utility {
     public const int NukeDefaultDuration = 30;
     public static readonly TimeSpan UserCommandInterval = TimeSpan.FromSeconds(10);
     public const int SelfSpamContextLength = 15;
+    public const int LongSpamMinimumLength = 40;
+    public static int LongSpamLongerBanMultiplier = 3;
   }
 }
