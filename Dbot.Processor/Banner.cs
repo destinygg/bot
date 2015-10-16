@@ -166,29 +166,24 @@ namespace Dbot.Processor {
 
     //todo: make the graduation more encompassing; it should start banning when people say 100 characters 50x for example
     public Mute LongSpam() {
-      var longMessages = _context.TakeLast(26).Where(x => x.Text.Length > Settings.LongSpamMinimumLength);
-
-      foreach (var longMessage in longMessages) {
-        var delta = StringTools.Delta(_unnormalized, longMessage.Text);
-        if (delta > 0.7) {
-          if (_message.Text.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier) {
-            return Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text");
-          }
-          return Make.Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + Convert.ToInt32(delta * 100) + "% = past text");
-        }
-      }
-      return null;
+      var longMessages = _context.TakeLast(Settings.LongSpamContextLength).Where(x => x.Text.Length > Settings.LongSpamMinimumLength);
+      return (longMessages.Select(longMessage => Convert.ToInt32(StringTools.Delta(_unnormalized, longMessage.Text) * 100))
+        .Where(delta => delta > Settings.LongSpamSimilarity)
+        .Select(
+          delta =>
+            _message.Text.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier
+              ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + delta + "% = past text")
+              : Make.Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + delta + "% = past text"))
+              ).FirstOrDefault();
     }
 
     public Mute SelfSpam() {
       var shortMessages = _context.TakeLast(Settings.SelfSpamContextLength).Where(x => x.Nick == _message.Nick).ToList();
-      if (shortMessages.Count() >= 2) {
-        var percentList = shortMessages.Select(sm => StringTools.Delta(sm.Text, _text)).Select(delta => Convert.ToInt32(delta * 100)).Where(x => x >= 70).ToList();
-        if (percentList.Count() >= 2) {
-          return Make.Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text");
-        }
-      }
-      return null;
+      if (shortMessages.Count() < 2) return null;
+      var percentList = shortMessages.Select(sm => StringTools.Delta(sm.Text, _text)).Select(delta => Convert.ToInt32(delta * 100)).Where(x => x >= Settings.SelfSpamSimilarity).ToList();
+      return percentList.Count() >= 2
+        ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text")
+        : null;
     }
   }
 }
