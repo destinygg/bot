@@ -50,26 +50,23 @@ namespace Dbot.Processor {
         Datastore.UpdateStateVariable("modabuse", 0);
       } },
       { Tools.CompiledRegex(@"^!add (.*)"), r => {
-        Send(r[0].Value + " added to banlist");
-        Tools.AddBanWord(Ms.banList, Ms.star);
+        Send(r[1].Value + " added to banlist");
+        Tools.AddBanWord(Ms.banList, r[1].Value);
       } },
       { Tools.CompiledRegex(@"^!del (.*)"), r => {
-        Send("'*' removed from banlist");
-        Tools.RemoveBanWord(Ms.banList, Ms.star);
+        Send(r[1].Value + " removed from banlist");
+        Tools.RemoveBanWord(Ms.banList, r[1].Value);
       } },
       { Tools.CompiledRegex(@"^!tempadd (.*)"), r => {
-        Send("'*' added to temp banlist");
-        Tools.AddBanWord(Ms.tempBanList, Ms.star);
+        Send(r[1].Value + " added to temp banlist");
+        Tools.AddBanWord(Ms.tempBanList, r[1].Value);
       } },
       { Tools.CompiledRegex(@"^!tempdel (.*)"), r => {
-        Send("'*' removed from temp banlist");
-        Tools.RemoveBanWord(Ms.tempBanList, Ms.star);
+        Send(r[1].Value + " removed from temp banlist");
+        Tools.RemoveBanWord(Ms.tempBanList, r[1].Value);
       } },
       { Tools.CompiledRegex(@"^!stalk (.*)"), r => {
-        Send(Tools.Stalk(Ms.star));
-      } },
-      { Tools.CompiledRegex(@"^!stalk (.*)"), r => {
-        Send(Tools.Stalk(Ms.star));
+        Send(Tools.Stalk(r[1].Value));
       } },
       { Tools.CompiledRegex(@"^!(?:ban|b) *(?:(\d*)| +) +(\S+) *(.*)"), r => {
         var rawTime = BanTime(r[1].Value);

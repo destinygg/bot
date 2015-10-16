@@ -41,7 +41,7 @@ namespace Dbot.Processor {
       Debug.Assert(testvar.SequenceEqual(testList));
 
       if (Datastore.BannedWords.Any(x => _unnormalized.Contains(x) || _text.Contains(x)))
-        return Make.Mute(_message.Nick, TimeSpan.FromDays(6), "6day, forbidden text. Probably screamer or spam.");
+        return Make.Mute(_message.Nick, TimeSpan.FromDays(7), "1 week, forbidden text.");
 
       var userHistory = Datastore.UserHistory(_message.Nick) ?? new UserHistory { Nick = _message.Nick };
 

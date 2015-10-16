@@ -30,7 +30,7 @@ namespace Dbot.Processor {
 
     public static async void Aegis() {
       CancellationTokenSource.Cancel();
-      MessageProcessor.Sender.Post(Make.Message("Oh shit, undo! Undo!"));
+      MessageProcessor.Sender.Post(Make.Message("I immediately regret this decision."));
       foreach (var nukedWord in Nuke.ActiveDuration.Keys) {
         TimeSpan duration;
         var success = Nuke.ActiveDuration.TryRemove(nukedWord, out duration);

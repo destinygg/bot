@@ -239,5 +239,37 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("Muted spamx for 1m")) > 0);
       Assert.IsTrue(r.Count(x => x.Contains("Muted spamy for 10m")) > 0);
     }
+
+    [TestMethod]
+    public async Task BannedWordTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        Make.Message(true, "!add test"),
+        Make.Message(true, "!tempadd bork"),
+        Make.Message(true, "!tempadd herp"),
+        Make.Message("UserA", "test"),
+        Make.Message("UserB", "testing statement"),
+        Make.Message("UserC", "bork"),
+        Make.Message("UserC", "borking statement"),
+        Make.Message("UserC", "lorkborking statement"),
+        Make.Message("UserC", "herp statement"),
+        Make.Message("UserC", "herpderp statement"),
+        Make.Message("UserC", "herpy derpy statement"),
+        Make.Message("UserX", "not a valid target"),
+        Make.Message("UserX", "not a valid target"),
+        Make.Message(true, "!del test"),
+        Make.Message(true, "!tempdel bork"),
+        Make.Message("UserD", "test"),
+        Make.Message("UserD", "bork"),
+        Make.Message("UserX", "Innocent as could be"),
+        Make.Message("UserX", "Innocent as could be"),
+      });
+
+      Assert.IsTrue(r.Count(x => x.Contains("Muted usera for 7 days")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userb for 7 days")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 10m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 20m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 40m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userd")) == 0);
+    }
   }
 }
