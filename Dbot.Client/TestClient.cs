@@ -12,7 +12,7 @@ namespace Dbot.Client {
   public class TestClient : IClient {
 
     private IProcessor _processor;
-    private static IList<string> Log = new List<string>();
+    private static IList<string> Log;
 
     public void Run(IProcessor processor) {
       throw new NotImplementedException();
@@ -20,6 +20,7 @@ namespace Dbot.Client {
 
     public async Task<IList<string>> Run(IProcessor processor, IEnumerable<Message> testInput) {
       _processor = processor;
+      Log = new List<string>();
       foreach (var message in testInput) {
         processor.ProcessMessage(message);
         await Task.Run(() => Task.Delay(100));
