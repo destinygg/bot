@@ -13,12 +13,22 @@ namespace Dbot.UnitTest {
   [TestClass]
   public class LongTests {
     [TestMethod]
-    public async Task SingTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message>() {
+    public async Task SimpleCommandsTest() {
+      var messageList = new List<Message> {
+        Make.Message(true, "!live"),
+        Make.Message(true, "!song"),
+        Make.Message(true, "!time"),
         Make.Message(true, "!sing"),
-      });
+      };
 
-      Assert.IsTrue(r.First().Contains("/me sings the body electric♪"));
+      messageList.AddRange(Enumerable.Range(1, 25).Select(i => Make.Message("UserX", "Wait... " + Tools.RandomString(10))).ToList());
+
+      var r = await new PrimaryLogic().TestRun(messageList);
+
+      Assert.IsTrue(r.Count(x => x.Contains("/me sings the body electric♪")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Live with") || x.Contains("Stream went offline in the past ~10m") || x.Contains("Stream offline for") || x.Contains("Destiny is live!")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Central Steven Time")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("No song played/scrobbled") || x.Contains("last.fm/user/stevenbonnellii")) == 1);
     }
 
     [TestMethod]
