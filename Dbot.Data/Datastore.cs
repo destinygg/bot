@@ -59,16 +59,18 @@ namespace Dbot.Data {
 
     public static void SaveUserHistory(UserHistory history, bool wait = false) {
       var result = _db.Table<RawUserHistory>().Where(x => x.Nick == history.Nick).FirstOrDefaultAsync().Result;
+      var save = history.CopyTo();
       if (result == null) {
         if (wait)
-          _db.InsertAsync(history.CopyTo()).Wait();
+          _db.InsertAsync(save).Wait();
         else
-          _db.InsertAsync(history.CopyTo());
+          _db.InsertAsync(save);
       } else {
-        if (wait)
-          _db.UpdateAsync(history.CopyTo()).Wait();
-        else
-          _db.UpdateAsync(history.CopyTo());
+        //if (wait) {
+        _db.DeleteAsync(result).Wait();
+        _db.InsertAsync(save).Wait();
+        //} else
+        //  _db.UpdateAsync(save); //todo why does Update/Async not work?
       }
       Debug.Assert(_db.Table<RawUserHistory>().Where(x => x.Nick == history.Nick).CountAsync().Result == 1);
     }

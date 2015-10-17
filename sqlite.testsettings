@@ -2,8 +2,8 @@
 <TestSettings name="sqlite" id="feee47a2-f950-4b17-9125-26695cdf1a15" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Description>These are default test settings for a local test run.</Description>
   <Deployment>
-    <DeploymentItem filename="Dbot.Main\bin\Debug\SQLite3.dll" />
-    <DeploymentItem filename="Dbot.Main\bin\Debug\" />
+    <DeploymentItem filename="Dbot.Data\DbotDB.sqlite" />
+    <DeploymentItem filename="Dbot.Data\SQLite3.dll" />
   </Deployment>
   <Execution>
     <TestTypeSpecific>

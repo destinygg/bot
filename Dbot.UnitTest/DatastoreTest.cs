@@ -18,7 +18,6 @@ namespace Dbot.UnitTest {
 
       //test insert
       var expectedAnswer = new UserHistory(new RawUserHistory {
-        Id = 1,
         Unicode = 2,
         FaceSpam = 3,
         FullWidth = 4,
@@ -34,7 +33,6 @@ namespace Dbot.UnitTest {
 
       // testing update
       expectedAnswer = new UserHistory(new RawUserHistory {
-        Id = 1,
         Unicode = 12,
         FaceSpam = 13,
         FullWidth = 14,
