@@ -19,8 +19,8 @@ namespace Dbot.Utility {
     public const int LongSpamLongerBanMultiplier = 3;
 
     public const double NukeStringDelta = 0.7;
-    public const int NukeLoopWait = 2000;
-    public const int AegisLoopWait = 250;
+    public const int NukeLoopWait = 0;
+    public const int AegisLoopWait = 0;
     public const int NukeDefaultDuration = 30;
 
     public static bool IsMono;
