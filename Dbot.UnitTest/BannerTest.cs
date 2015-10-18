@@ -59,13 +59,6 @@ namespace Dbot.UnitTest {
     }
 
     [TestMethod]
-    public void StringNormalize() {
-      var message = Make.Message("nick", "NeoDéstiny е ё ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｑｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＱＸＹＺАнастасияäöüÄÖÜОльгаТатьяна");
-      var banner = new Banner(message);
-      Assert.AreEqual(banner.Normalized, "NeoDestiny e e abcdefghijklmnopqrstuvqxyzABCDEFGHIJKLMNOPQRSTUVQXYZAnastasiyaaouAOUOl'gaTat'yana");
-    }
-
-    [TestMethod]
     public void ShortSpam() {
       InitializeDatastore.Run();
 

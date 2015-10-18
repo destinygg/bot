@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnidecodeSharpFork;
 
 namespace Dbot.Utility {
   public static class StringTools {
@@ -112,7 +113,7 @@ namespace Dbot.Utility {
           stringBuilder.Append(c);
         }
       }
-      return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+      return stringBuilder.ToString().Normalize(NormalizationForm.FormC).Unidecode();
     }
   }
 }

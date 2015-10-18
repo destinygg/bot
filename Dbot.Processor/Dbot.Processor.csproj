@@ -86,9 +86,6 @@
     <Reference Include="Tweetinvi.WebLogic">
       <HintPath>..\packages\TweetinviAPI.0.9.3.0\lib\Tweetinvi.WebLogic.dll</HintPath>
     </Reference>
-    <Reference Include="UnidecodeSharpFork">
-      <HintPath>..\packages\UnidecodeSharpFork.1.0.0\lib\UnidecodeSharpFork.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AntiNuke.cs" />

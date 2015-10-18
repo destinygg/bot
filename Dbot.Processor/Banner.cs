@@ -10,7 +10,6 @@ using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;
 using Newtonsoft.Json;
-using UnidecodeSharpFork;
 
 namespace Dbot.Processor {
   public class Banner {
@@ -21,7 +20,7 @@ namespace Dbot.Processor {
 
     public Banner(Message input, List<Message> context = null) {
       this._message = input;
-      this._text = StringTools.RemoveDiacritics(input.Text).Unidecode();
+      this._text = StringTools.RemoveDiacritics(input.Text);
       this._unnormalized = input.Text;
       if (context != null)
         this._context = context;

@@ -180,5 +180,11 @@ namespace Dbot.UnitTest {
       var actualAnswer = testList.IgnoreFirstOccuranceOf(Make.Message("bork")).ToList();
       Assert.IsTrue(actualAnswer.SequenceEqual(expectedAnswer));
     }
+
+    [TestMethod]
+    public void StringNormalize() {
+      var test = StringTools.RemoveDiacritics("NeoDéstiny е ё ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｑｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＱＸＹＺАнастасияäöüÄÖÜОльгаТатьяна");
+      Assert.AreEqual(test, "NeoDestiny e e abcdefghijklmnopqrstuvqxyzABCDEFGHIJKLMNOPQRSTUVQXYZAnastasiyaaouAOUOl'gaTat'yana");
+    }
   }
 }
