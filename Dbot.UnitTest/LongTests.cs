@@ -297,5 +297,16 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("Muted usera")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userb")) == 1);
     }
+
+    [TestMethod]
+    public async Task StalkTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        Make.Message("UniqueUserA", "Unique Message A"),
+        Make.Message(true, "!stalk UniqueUserA"),
+      });
+      await Task.Delay(300);
+
+      Assert.IsTrue(r.Count(x => x.Contains("Unique Message A")) == 1);
+    }
   }
 }

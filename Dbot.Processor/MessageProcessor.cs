@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks.Dataflow;
 using Dbot.Common;
 using Dbot.CommonModels;
+using Dbot.Data;
 using Dbot.Utility;
 
 namespace Dbot.Processor {
@@ -98,7 +99,7 @@ namespace Dbot.Processor {
     private static void Log(Message message) {
       Console.WriteLine(message.Ordinal + " " + message.Nick + ": " + message.Text);
       message.Nick = message.Nick.ToLower();
-      //Datastore.InsertMessage(message);
+      Datastore.InsertMessage(message);
     }
 
     private static void DoneWithContext(Message message) {

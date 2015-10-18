@@ -227,10 +227,9 @@ namespace Dbot.Utility {
 
     public static string Stalk(string user) {
       var msg = Datastore.Stalk(user);
-      if (msg != null) {
-        return Tools.PrettyDeltaTime(DateTime.UtcNow - Tools.Epoch()) + " ago: " + msg.Text;
-      }
-      return user + " not found";
+      if (msg == null) return user + " not found";
+      var baseTime = DateTime.UtcNow - Tools.Epoch();
+      return Tools.PrettyDeltaTime(TimeSpan.FromSeconds(baseTime.TotalSeconds - msg.Time)) + " ago: " + msg.Text;
     }
 
     // http://stackoverflow.com/questions/13240915/converting-a-webclient-method-to-async-await
