@@ -55,7 +55,7 @@ namespace Dbot.Processor {
         return r;
       }
 
-      if (Datastore.EmoticonRegex.Matches(_text).Count > 7) {
+      if (Datastore.EmoteRegex.Matches(_text).Count > 7) {
         var r = this.MuteIncreaser(userHistory.FaceSpam, "face spam");
         userHistory.FaceSpam = (int) r.Duration.TotalMinutes;
         Datastore.SaveUserHistory(userHistory, wait);
@@ -196,8 +196,8 @@ namespace Dbot.Processor {
     }
 
     public Mute EmoteUserSpam() {
-      if (!Datastore.EmoticonWordRegex.Match(_message.Text).Success) return null;
-      var emoteWordCount = _context.TakeLast(Settings.EmoteUserSpamContextLength).Count(x => Datastore.EmoticonWordRegex.Match(x.Text).Success) + 1; // To include the latest message that isn't in context yet.
+      if (!Datastore.EmoteWordRegex.Match(_message.Text).Success) return null;
+      var emoteWordCount = _context.TakeLast(Settings.EmoteUserSpamContextLength).Count(x => Datastore.EmoteWordRegex.Match(x.Text).Success) + 1; // To include the latest message that isn't in context yet.
       return emoteWordCount >= Settings.EmoteUserSpamTriggerLength ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "Too many faces.") : null;
     }
   }

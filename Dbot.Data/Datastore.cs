@@ -18,19 +18,19 @@ namespace Dbot.Data {
       _bannedWords = _db.Table<BannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
     }
 
-    private static List<string> _emoticonsList;
+    private static List<string> _emotesList;
 
-    public static List<string> EmoticonsList {
-      get { return _emoticonsList; }
+    public static List<string> EmotesList {
+      get { return _emotesList; }
       set {
-        _emoticonsList = value;
-        EmoticonRegex = new Regex(string.Join("|", _emoticonsList), RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        EmoticonWordRegex = new Regex(@"^(?:" + string.Join("|", _emoticonsList) + @")\s*\S+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        _emotesList = value;
+        EmoteRegex = new Regex(string.Join("|", _emotesList), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        EmoteWordRegex = new Regex(@"^(?:" + string.Join("|", _emotesList) + @")\s*\S+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
       }
     }
 
-    public static Regex EmoticonRegex { get; set; }
-    public static Regex EmoticonWordRegex { get; set; }
+    public static Regex EmoteRegex { get; set; }
+    public static Regex EmoteWordRegex { get; set; }
 
     public static int Delay { get; set; }
     public static int Viewers { get; set; }

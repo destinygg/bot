@@ -252,7 +252,7 @@ namespace Dbot.Utility {
       }
     }
 
-    public static List<string> GetEmoticons() {
+    public static List<string> GetEmotes() {
       var answer = DownloadData("http://www.destiny.gg/chat/emotes.json").Result;
       var deserializeObject = (JArray) JsonConvert.DeserializeObject(answer);
       return deserializeObject.ToObject<List<string>>();

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -102,7 +102,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public void DownloadData_Faces() {
-      var rawJson = Tools.GetEmoticons();
+      var rawJson = Tools.GetEmotes();
       var actualAnswer = rawJson.Contains("Kappa");
       Assert.IsTrue(actualAnswer);
     }

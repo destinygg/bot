@@ -31,7 +31,7 @@ namespace Dbot.Main {
 
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
       Tools.LiveStatus();
-      PeriodicTask.Run(InitializeDatastore.UpdateEmoticons, TimeSpan.FromHours(1));
+      PeriodicTask.Run(InitializeDatastore.UpdateEmotes, TimeSpan.FromHours(1));
 
       Client.Run(Processor);
       Console.CancelKeyPress += Console_CancelKeyPress;
