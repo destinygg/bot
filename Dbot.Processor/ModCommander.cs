@@ -22,93 +22,100 @@ namespace Dbot.Processor {
     }
 
     //todo Why does <sing have utterly borked up System.Console.WriteLine();
-    private readonly Dictionary<Regex, Action<GroupCollection>> _regexCommandDictionary = new Dictionary<Regex, Action<GroupCollection>>{
-      { Tools.CompiledRegex(@"^!sing.*"), r => {
+    private readonly Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>> _regexCommandDictionary = new Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>>{
+      { Tools.CompiledRegex(@"^!sing.*"), (g,c) => {
         Send("/me sings the body electric♪");
       } },
-      { Tools.CompiledRegex(@"^!dance.*"), r => {
+      { Tools.CompiledRegex(@"^!dance.*"), (g,c) => {
         Send("/me roboboogies ¬[º-°¬] [¬º-°]¬");
       } },
-      { Tools.CompiledRegex(@"^!ninja on.*"), r => {
+      { Tools.CompiledRegex(@"^!ninja on.*"), (g,c) => {
         Send("I am the blade of Shakuras.");
         Datastore.UpdateStateVariable("ninja", 1);
       } },
-      { Tools.CompiledRegex(@"^!ninja off.*"), r => {
+      { Tools.CompiledRegex(@"^!ninja off.*"), (g,c) => {
         Send("The void claims its own.");
         Datastore.UpdateStateVariable("ninja", 0);
       } },
-      { Tools.CompiledRegex(@"^!modabuse on.*"), r => {
+      { Tools.CompiledRegex(@"^!modabuse on.*"), (g,c) => {
         Send("Justice has come!");
         Datastore.UpdateStateVariable("modabuse", 2);
       } },
-      { Tools.CompiledRegex(@"^!modabuse semi.*"), r => {
+      { Tools.CompiledRegex(@"^!modabuse semi.*"), (g,c) => {
         Send("Calibrating void lenses.");
         Datastore.UpdateStateVariable("modabuse", 1);
       } },
-      { Tools.CompiledRegex(@"^!modabuse off.*"), r => {
+      { Tools.CompiledRegex(@"^!modabuse off.*"), (g,c) => {
         Send("Awaiting the call.");
         Datastore.UpdateStateVariable("modabuse", 0);
       } },
-      { Tools.CompiledRegex(@"^!add (.*)"), r => {
-        Send(r[1].Value + " added to banlist");
-        Tools.AddBanWord(Ms.banList, r[1].Value);
+      { Tools.CompiledRegex(@"^!add (.*)"), (g,c) => {
+        Send(g[1].Value + " added to banlist");
+        Tools.AddBanWord(Ms.banList, g[1].Value);
       } },
-      { Tools.CompiledRegex(@"^!del (.*)"), r => {
-        Send(r[1].Value + " removed from banlist");
-        Tools.RemoveBanWord(Ms.banList, r[1].Value);
+      { Tools.CompiledRegex(@"^!del (.*)"), (g,c) => {
+        Send(g[1].Value + " removed from banlist");
+        Tools.RemoveBanWord(Ms.banList, g[1].Value);
       } },
-      { Tools.CompiledRegex(@"^!tempadd (.*)"), r => {
-        Send(r[1].Value + " added to temp banlist");
-        Tools.AddBanWord(Ms.tempBanList, r[1].Value);
+      { Tools.CompiledRegex(@"^!tempadd (.*)"), (g,c) => {
+        Send(g[1].Value + " added to temp banlist");
+        Tools.AddBanWord(Ms.tempBanList, g[1].Value);
       } },
-      { Tools.CompiledRegex(@"^!tempdel (.*)"), r => {
-        Send(r[1].Value + " removed from temp banlist");
-        Tools.RemoveBanWord(Ms.tempBanList, r[1].Value);
+      { Tools.CompiledRegex(@"^!tempdel (.*)"), (g,c) => {
+        Send(g[1].Value + " removed from temp banlist");
+        Tools.RemoveBanWord(Ms.tempBanList, g[1].Value);
       } },
-      { Tools.CompiledRegex(@"^!stalk (.*)"), r => {
-        Send(Tools.Stalk(r[1].Value));
+      { Tools.CompiledRegex(@"^!stalk (.*)"), (g,c) => {
+        Send(Tools.Stalk(g[1].Value));
       } },
-      { Tools.CompiledRegex(@"^!(?:ban|b) *(?:(\d*)| +) +(\S+) *(.*)"), r => {
-        var rawTime = BanTime(r[1].Value);
+      { Tools.CompiledRegex(@"^!(?:ban|b) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
+        var rawTime = BanTime(g[1].Value);
         MessageProcessor.Sender.Post(new Ban {
           Duration = TimeSpan.FromHours(rawTime),
-          Nick = r[2].Value,
-          Reason = r[3].Value,
+          Nick = g[2].Value,
+          Reason = g[3].Value,
           SilentReason = true,
         });
       } },
-      { Tools.CompiledRegex(@"^!(?:ipban|i) *(?:(\d*)| +) +(\S+) *(.*)"), r => {
-        var rawTime = BanTime(r[1].Value, true);
+      { Tools.CompiledRegex(@"^!(?:ipban|i) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
+        var rawTime = BanTime(g[1].Value, true);
         MessageProcessor.Sender.Post(new Ban {
           Duration = TimeSpan.FromHours(rawTime),
-          Nick = r[2].Value,
-          Reason = r[3].Value,
+          Nick = g[2].Value,
+          Reason = g[3].Value,
           SilentReason = true,
           Ip = true,
         });
       } },
-      { Tools.CompiledRegex(@"^!(?:mute|m) *(?:(\d*)| +) +(\S+) *(.*)"), r => {
-        var rawTime = BanTime(r[1].Value);
+      { Tools.CompiledRegex(@"^!(?:mute|m) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
+        var rawTime = BanTime(g[1].Value);
         MessageProcessor.Sender.Post(new Mute {
           Duration = TimeSpan.FromHours(rawTime),
-          Nick = r[2].Value,
-          Reason = r[3].Value,
+          Nick = g[2].Value,
+          Reason = g[3].Value,
           SilentReason = true,
         });
+      } },
+      { Tools.CompiledRegex(@"!nuke *(\d*) *(.*)"), (g,c) => {
+        var nukeDuration = TimeSpan.FromMinutes(g[1].Value == "" ? Settings.NukeDefaultDuration : Convert.ToInt32(g[1].Value));
+        var nukedWord = g[2].Value;
+        if (Nuke.ActiveDuration.Keys.FirstOrDefault(x => x == nukedWord) == null) {
+          Nuke.Launcher(nukedWord, nukeDuration, c);
+        }
+      } },
+      { Tools.CompiledRegex(@"^!aegis.*"), (g,c) => {
+        AntiNuke.Aegis();
       } },
     };
 
     private static int BanTime(string regexMatch, bool ip = false) {
-      int rawTime;
-      if (string.IsNullOrWhiteSpace(regexMatch)) {
-        if (ip) {
-          Send("That's permanent DuckerZ");
-          return 0;
-        }
-        Send("Time unspecified, default to 1hr.");
-        return 1;
+      if (!string.IsNullOrWhiteSpace(regexMatch)) return int.Parse(regexMatch);
+      if (ip) {
+        Send("That's permanent DuckerZ");
+        return 0;
       }
-      return int.Parse(regexMatch);
+      Send("Time unspecified, default to 1hr.");
+      return 1;
     }
 
     public ModCommander(Message message, IEnumerable<Message> context) {
@@ -118,34 +125,12 @@ namespace Dbot.Processor {
 
     public void Run() {
       Debug.Assert(_message.Text[0] == '!' || _message.Text[0] == '<');
-      var splitInput = _message.Text.Substring(1).Split(new[] { ' ' }, 2);
-      DataDriven(splitInput);
-
-      var nukeRegex = Regex.Match(_message.Text, @"!nuke *(\d*) *(.*)");
-      var nukeDuration = TimeSpan.FromMinutes(nukeRegex.Groups[1].Value == "" ? Settings.NukeDefaultDuration : Convert.ToInt32(nukeRegex.Groups[1].Value));
-      var nukedWord = nukeRegex.Groups[2].Value;
-      if (nukeRegex.Success && Nuke.ActiveDuration.Keys.FirstOrDefault(x => x == nukedWord) == null) {
-        Nuke.Launcher(nukedWord, nukeDuration, _context);
-      } else if (splitInput[0] == "aegis") {
-        AntiNuke.Aegis();
-      }
-    }
-
-    private void DataDriven(IList<string> splitInput) {
       foreach (var x in _regexCommandDictionary) {
         var regex = x.Key.Match(_message.Text);
         if (regex.Success) {
-          x.Value.Invoke(regex.Groups);
+          x.Value.Invoke(regex.Groups, _context);
         }
       }
     }
-  }
-
-  public class ModCommands {
-    public int Id { get; set; }
-    public string Command { get; set; }
-    public string CommandParameter { get; set; }
-    public string Operation { get; set; }
-    public string Result { get; set; }
   }
 }
