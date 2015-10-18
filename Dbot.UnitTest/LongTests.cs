@@ -315,5 +315,23 @@ namespace Dbot.UnitTest {
 
       Assert.IsTrue(r.Count(x => x.Contains("Unique Message A")) == 1);
     }
+
+    [TestMethod]
+    public async Task EmoteUserSpamTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        Make.Message("UserA", "Buffer"),
+        Make.Message("User1", "Kappa UserA"),
+        Make.Message("User2", "Kappa UserA"),
+        Make.Message("User3", "Kappa UserA"),
+        Make.Message("User4", "Kappa UserA"),
+        Make.Message("User5", "Kappa UserA"),
+        Make.Message("UserA", "Buffer"),
+        Make.Message("User6", "Kappa UserA"),
+      });
+      await Task.Delay(300);
+
+      Assert.IsTrue(r.Count(x => x.Contains("Muted user5")) == 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted user6")) == 1);
+    }
   }
 }

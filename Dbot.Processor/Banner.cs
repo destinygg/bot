@@ -81,17 +81,18 @@ namespace Dbot.Processor {
       if (selfSpam != null) return selfSpam;
       var numberSpam = NumberSpam();
       if (numberSpam != null) return numberSpam;
-      foreach (var nukedWord in Nuke.ActiveDuration.Keys) {
-        if (StringTools.Delta(nukedWord, _message.Text) > Settings.NukeStringDelta || _message.Text.Contains(nukedWord)) {
-          TimeSpan duration;
-          var success = Nuke.ActiveDuration.TryGetValue(nukedWord, out duration);
-          Debug.Assert(success);
-          Queue<string> nukeVictimsQueue;
-          Nuke.VictimQueue.TryGetValue(nukedWord, out nukeVictimsQueue);
-          //Debug.Assert(success); // this fails when the initial nuke has a bodycount of 0, because no one is on the queue or added to the dictionary
-          if (nukeVictimsQueue != null) nukeVictimsQueue.Enqueue(_message.Nick);
-          return Make.Mute(_message.Nick, duration);
-        }
+      var emoteUserSpam = EmoteUserSpam();
+      if (emoteUserSpam != null) return emoteUserSpam;
+
+      foreach (var nukedWord in Nuke.ActiveDuration.Keys.Where(nukedWord => StringTools.Delta(nukedWord, _message.Text) > Settings.NukeStringDelta || _message.Text.Contains(nukedWord))) {
+        TimeSpan duration;
+        var success = Nuke.ActiveDuration.TryGetValue(nukedWord, out duration);
+        Debug.Assert(success);
+        Queue<string> nukeVictimsQueue;
+        Nuke.VictimQueue.TryGetValue(nukedWord, out nukeVictimsQueue);
+        //Debug.Assert(success); // this fails when the initial nuke has a bodycount of 0, because no one is on the queue or added to the dictionary
+        if (nukeVictimsQueue != null) nukeVictimsQueue.Enqueue(_message.Nick);
+        return Make.Mute(_message.Nick, duration);
       }
 
       return null;
@@ -192,6 +193,12 @@ namespace Dbot.Processor {
       if (!numberRegex.Match(_message.Text).Success) return null;
       var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(x => numberRegex.Match(_message.Text).Success && _message.Nick == x.Nick) + 1; // To include the latest message that isn't in context yet.
       return numberMessages >= Settings.NumberSpamTriggerLength ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "Counting down to your ban?") : null;
+    }
+
+    public Mute EmoteUserSpam() {
+      if (!Datastore.EmoticonWordRegex.Match(_message.Text).Success) return null;
+      var emoteWordCount = _context.TakeLast(Settings.EmoteUserSpamContextLength).Count(x => Datastore.EmoticonWordRegex.Match(x.Text).Success) + 1; // To include the latest message that isn't in context yet.
+      return emoteWordCount >= Settings.EmoteUserSpamTriggerLength ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "Too many faces.") : null;
     }
   }
 }

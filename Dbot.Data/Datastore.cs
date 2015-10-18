@@ -25,10 +25,12 @@ namespace Dbot.Data {
       set {
         _emoticonsList = value;
         EmoticonRegex = new Regex(string.Join("|", _emoticonsList), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        EmoticonWordRegex = new Regex(@"^(?:" + string.Join("|", _emoticonsList) + @")\s*\S+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
       }
     }
 
     public static Regex EmoticonRegex { get; set; }
+    public static Regex EmoticonWordRegex { get; set; }
 
     public static int Delay { get; set; }
     public static int Viewers { get; set; }
