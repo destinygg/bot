@@ -29,7 +29,7 @@ namespace Dbot.Utility {
     public static void Log(Sendable input, IList<string> log) {
       if (input is Message) {
         var messageInput = (Message) input;
-        log.Add("Messaged " + messageInput.Text);
+        log.Add("Messaged " + messageInput.OriginalText);
       } else if (input is Mute) {
         var muteInput = (Mute) input;
         log.Add("Muted " + muteInput.Nick + " for " + Tools.PrettyDeltaTime(muteInput.Duration));

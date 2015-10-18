@@ -15,7 +15,21 @@ namespace Dbot.CommonModels {
   public abstract class Sendable : User { }
 
   public class Message : Sendable, IEquatable<Message> {
-    public string Text { get; set; }
+    private string _originalText;
+    public string OriginalText {
+      get { return _originalText; }
+      set {
+        _originalText = value;
+        _text = value.ToLower();
+      }
+    }
+
+    private string _text;
+    public string Text {
+      get { return _text; }
+      set { OriginalText = value; }
+    }
+
     public int Ordinal { get; set; }
     public bool Equals(Message other) {
       return

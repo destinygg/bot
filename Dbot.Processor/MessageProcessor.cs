@@ -43,7 +43,6 @@ namespace Dbot.Processor {
       }
 
       Logger.Post(message);
-      message.Text = message.Text.ToLower();
       if (message.IsMod) {
         if (message.Text[0] == '!') {
           Commander.Post(message);
@@ -70,7 +69,7 @@ namespace Dbot.Processor {
     private static void Send(Sendable input) {
       if (input is Message && input.IsMod) {
         var message = (Message) input;
-        var s = message.Text.Split('\n');
+        var s = message.OriginalText.Split('\n');
         foreach (var x in s) {
           _client.Send(Make.Message(x));
         }

@@ -8,14 +8,14 @@ using Dbot.CommonModels;
 namespace Dbot.Utility {
   public static class Make {
     public static Message Message(string text) {
-      return new Message { Text = text };
+      return new Message { OriginalText = text };
     }
 
     public static Message Message(string nick, string text) {
-      return new Message { Text = text, Nick = nick };
+      return new Message { OriginalText = text, Nick = nick };
     }
     public static Message Message(bool isMod, string text) {
-      return new Message { Text = text, IsMod = isMod, Nick = "AutoMod"};
+      return new Message { OriginalText = text, IsMod = isMod, Nick = "AutoMod" };
     }
 
     public static Mute Mute(string nick, TimeSpan duration, string reason = null) {

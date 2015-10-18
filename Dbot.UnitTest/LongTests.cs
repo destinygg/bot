@@ -21,7 +21,7 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!sing"),
       };
 
-      messageList.AddRange(Enumerable.Range(1, 25).Select(i => Make.Message("UserX", "Wait... " + Tools.RandomString(10))).ToList());
+      messageList.AddRange(Enumerable.Range(1, 100).Select(i => Make.Message("UserX", "Wait... " + Tools.RandomString(10))).ToList());
 
       var r = await new PrimaryLogic().TestRun(messageList);
 
