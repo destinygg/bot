@@ -33,7 +33,6 @@ namespace Dbot.Processor {
       ContextDictionary.TryAdd(_contextIndex, message);
       _contextIndex++;
 
-      //Thread.Sleep(1);
       Message removed;
       while (DequeueDictionary.Count > Settings.MessageLogSize && DequeueDictionary.TryRemove(_dequeueIndex, out removed)) {
         var contextTest = ContextDictionary.TryRemove(_dequeueIndex, out removed);
@@ -98,7 +97,6 @@ namespace Dbot.Processor {
 
     private static void Log(Message message) {
       Console.WriteLine(message.Ordinal + " " + message.Nick + ": " + message.Text);
-      //Console.Write(message.Text + ".");
       message.Nick = message.Nick.ToLower();
       //Datastore.InsertMessage(message);
     }

@@ -29,7 +29,6 @@ namespace Dbot.Main {
       UserStream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet);
       UserStream.StartStreamAsync();
 
-      //todo, make sure this dosn't run more often than once a minute
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
       Tools.LiveStatus();
       PeriodicTask.Run(InitializeDatastore.UpdateEmoticons, TimeSpan.FromHours(1));

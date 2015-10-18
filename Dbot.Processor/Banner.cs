@@ -27,17 +27,12 @@ namespace Dbot.Processor {
     }
 
     public HasVictim BanParser(bool wait = false) {
-      //Thread.Sleep(1000);
-
       var testList = new List<int>();
       for (var i = _message.Ordinal - Settings.MessageLogSize; i < _message.Ordinal; i++) {
         if (i >= 0)
           testList.Add(i);
       }
 
-      var testvar = _context.Select(x => x.Ordinal).OrderBy(x => x).ToList();
-      //if (!testvar.SequenceEqual(testList)) { }
-      Debug.Assert(testvar.SequenceEqual(testList));
 
       if (Datastore.BannedWords.Any(x => _unnormalized.Contains(x) || _text.Contains(x)))
         return Make.Mute(_message.Nick, TimeSpan.FromDays(7), "1 week, forbidden text.");
@@ -94,7 +89,7 @@ namespace Dbot.Processor {
           Queue<string> nukeVictimsQueue;
           Nuke.VictimQueue.TryGetValue(nukedWord, out nukeVictimsQueue);
           //Debug.Assert(success); // this fails when the initial nuke has a bodycount of 0, because no one is on the queue or added to the dictionary
-          nukeVictimsQueue.Enqueue(_message.Nick);
+          if (nukeVictimsQueue != null) nukeVictimsQueue.Enqueue(_message.Nick);
           return Make.Mute(_message.Nick, duration);
         }
       }
@@ -104,16 +99,20 @@ namespace Dbot.Processor {
 
     public Mute MuteIncreaser(int original, string custom) {
       var r = new Mute();
-      if (original == 0) {
-        r.Reason = "10m for " + custom + ".";
-        r.Duration = TimeSpan.FromMinutes(10);
-      } else if (original == 10) {
-        r.Reason = "20m for " + custom + "; your ban time has doubled. Future bans will not be explicitly justified.";
-        r.Duration = TimeSpan.FromMinutes(20);
-      } else {
-        r.Duration = TimeSpan.FromMinutes(original * 2);
-        if (r.Duration >= TimeSpan.FromMinutes(10240))
-          r.Duration = TimeSpan.FromDays(7); // max of 1 week for mutes
+      switch (original) {
+        case 0:
+          r.Reason = "10m for " + custom + ".";
+          r.Duration = TimeSpan.FromMinutes(10);
+          break;
+        case 10:
+          r.Reason = "20m for " + custom + "; your ban time has doubled. Future bans will not be explicitly justified.";
+          r.Duration = TimeSpan.FromMinutes(20);
+          break;
+        default:
+          r.Duration = TimeSpan.FromMinutes(original * 2);
+          if (r.Duration >= TimeSpan.FromMinutes(10240))
+            r.Duration = TimeSpan.FromDays(7); // max of 1 week for mutes
+          break;
       }
       r.Nick = _message.Nick;
       return r;
@@ -139,18 +138,18 @@ namespace Dbot.Processor {
 
     private bool IsNsfw(string imgurId) {
       if (imgurId == "gallery")
-        imgurId = getImgurId(imgurId, @".*imgur\.com/gallery/(\w+).*");
+        imgurId = GetImgurId(imgurId, @".*imgur\.com/gallery/(\w+).*");
       if (imgurId == "r")
-        imgurId = getImgurId(imgurId, @".*imgur\.com/r/\w+/(\w+).*");
+        imgurId = GetImgurId(imgurId, @".*imgur\.com/r/\w+/(\w+).*");
       if (imgurId == "a") {
-        imgurId = getImgurId(imgurId, @".*imgur\.com/a/(\w+).*");
+        imgurId = GetImgurId(imgurId, @".*imgur\.com/a/(\w+).*");
         return this.IsNsfwApi("https://api.imgur.com/3/album/" + imgurId);
       }
       return this.IsNsfwApi("https://api.imgur.com/3/image/" + imgurId);
     }
 
 
-    private string getImgurId(string imgurId, string regex) {
+    private string GetImgurId(string imgurId, string regex) {
       var match = Regex.Match(_text, regex);
       if (match.Success) return match.Groups[1].Value;
       Debug.Assert(match.Success);
