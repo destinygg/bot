@@ -194,7 +194,7 @@ namespace Dbot.UnitTest {
         Make.Message("UserX","OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle"),
         Make.Message("UserX","LUL LUL LUL LUL LUL LUL LUL LUL"),
       });
-      await Task.Delay(400);
+      await Task.Delay(1000);
 
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) > 0);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) > 0);
@@ -231,7 +231,6 @@ namespace Dbot.UnitTest {
         Make.Message("UserY", longestMessage + "y"),
         Make.Message("SpamY", longestMessage + "y"),
       });
-
       var r = await new PrimaryLogic().TestRun(messageList);
 
       Assert.IsTrue(r.Count(x => x.Contains("Muted user")) == 0);
@@ -270,6 +269,33 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 20m")) == 2);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 40m")) == 2);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userd")) == 0);
+    }
+
+    [TestMethod]
+    public async Task NumberSpamTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        Make.Message("UserX", "Buffer"),
+        Make.Message("UserY", "Buffer"),
+        Make.Message("UserZ", "Buffer"),
+        Make.Message("UserA", "1"),
+        Make.Message("UserA", "2"),
+        Make.Message("UserA", "3"),
+        Make.Message("UserA", "4"),
+        Make.Message("UserA", "5"),
+        Make.Message("UserA", "6"),
+        Make.Message("UserB", "#1."),
+        Make.Message("UserB", "#2."),
+        Make.Message("UserB", "#3."),
+        Make.Message("UserB", "#4."),
+        Make.Message("UserB", "#5."),
+        Make.Message("UserB", "#6."),
+        Make.Message("UserX", "Buffer"),
+        Make.Message("UserY", "Buffer"),
+        Make.Message("UserZ", "Buffer"),
+      });
+
+      Assert.IsTrue(r.Count(x => x.Contains("Muted usera")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userb")) == 1);
     }
   }
 }

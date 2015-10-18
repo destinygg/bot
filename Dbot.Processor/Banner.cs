@@ -85,6 +85,8 @@ namespace Dbot.Processor {
       if (longSpam != null) return longSpam;
       var selfSpam = SelfSpam();
       if (selfSpam != null) return selfSpam;
+      var numberSpam = NumberSpam();
+      if (numberSpam != null) return numberSpam;
       foreach (var nukedWord in Nuke.ActiveDuration.Keys) {
         if (StringTools.Delta(nukedWord, _message.Text) > Settings.NukeStringDelta || _message.Text.Contains(nukedWord)) {
           TimeSpan duration;
@@ -185,6 +187,13 @@ namespace Dbot.Processor {
       return percentList.Count() >= 2
         ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text")
         : null;
+    }
+
+    public Mute NumberSpam() {
+      var numberRegex = new Regex(@"^.{0,2}\d+.{0,10}");
+      if (!numberRegex.Match(_message.Text).Success) return null;
+      var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(x => numberRegex.Match(_message.Text).Success && _message.Nick == x.Nick) + 1; // To include the latest message that isn't in context yet.
+      return numberMessages >= Settings.NumberSpamTriggerLength ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "Counting down to your ban?" + _message.Text) : null;
     }
   }
 }

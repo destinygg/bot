@@ -11,9 +11,12 @@ namespace Dbot.Utility {
 
     public const int SelfSpamSimilarity = 75;
     public const int LongSpamSimilarity = 75;
-    
+
     public const int SelfSpamContextLength = 15;
     public const int LongSpamContextLength = 26;
+    public static int NumberSpamContextLength = 20;
+
+    public static int NumberSpamTriggerLength = 6;
 
     public const int LongSpamMinimumLength = 40;
     public const int LongSpamLongerBanMultiplier = 3;
