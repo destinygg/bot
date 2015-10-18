@@ -289,6 +289,12 @@ namespace Dbot.UnitTest {
         Make.Message("UserB", "#4."),
         Make.Message("UserB", "#5."),
         Make.Message("UserB", "#6."),
+        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
+        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
+        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
+        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
+        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
+        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
         Make.Message("UserX", "Buffer"),
         Make.Message("UserY", "Buffer"),
         Make.Message("UserZ", "Buffer"),
@@ -296,6 +302,7 @@ namespace Dbot.UnitTest {
 
       Assert.IsTrue(r.Count(x => x.Contains("Muted usera")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userb")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc")) == 0);
     }
 
     [TestMethod]
