@@ -17,6 +17,12 @@ namespace Dbot.Data {
     public int Value { get; set; }
   }
 
+  public class StateStrings {
+    [PrimaryKey, NotNull]
+    public string Key { get; set; }
+    public string Value { get; set; }
+  }
+
   public class TempBannedWords {
     [PrimaryKey, AutoIncrement, NotNull]
     public int Id { get; set; }

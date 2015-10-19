@@ -92,10 +92,39 @@ namespace Dbot.Data {
       }
     }
 
+    public static void UpdateStateString(string key, string value, bool wait = false) {
+      var result = _db.Table<StateStrings>().Where(x => x.Key == key).FirstOrDefaultAsync().Result;
+      if (result == null) {
+        if (wait)
+          _db.InsertAsync(new StateStrings { Key = key, Value = value }).Wait();
+        else
+          _db.InsertAsync(new StateStrings { Key = key, Value = value });
+      } else {
+        if (wait)
+          _db.UpdateAsync(new StateStrings { Key = key, Value = value }).Wait();
+        else
+          _db.UpdateAsync(new StateStrings { Key = key, Value = value });
+      }
+    }
+
     public static int GetStateVariable(string key) {
       var temp = _db.Table<StateVariables>().Where(x => x.Key == key);
       Debug.Assert(temp.CountAsync().Result == 1);
       return temp.FirstAsync().Result.Value;
+    }
+
+    public static string GetStateString(string key) {
+      var temp = _db.Table<StateStrings>().Where(x => x.Key == key);
+      Debug.Assert(temp.CountAsync().Result == 1);
+      return temp.FirstAsync().Result.Value;
+    }
+
+    public static List<string> GetStateString_JsonStringList(string key) {
+      return JsonConvert.DeserializeObject<List<string>>(GetStateString(key));
+    }
+
+    public static void SetStateString_JsonStringList(string key, List<string> value, bool wait = false) {
+      UpdateStateString(key, JsonConvert.SerializeObject(value), wait);
     }
 
     public static void AddBanWord(string bannedPhrase) {
