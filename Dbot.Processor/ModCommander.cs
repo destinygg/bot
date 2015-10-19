@@ -75,7 +75,7 @@ namespace Dbot.Processor {
           Send(newEmote + " added to third party emotes list");
         }
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!del(ete)?emote (.+)"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?emote (.+)"), (g,c) => {
         var deletedEmote = g[1].Value;
         var emotes= Datastore.GetStateString_JsonStringList(Ms.ThirdPartyEmotes);
         if (emotes.Count(x => x == deletedEmote) >= 1) {

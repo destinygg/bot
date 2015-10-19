@@ -226,7 +226,7 @@ namespace Dbot.Utility {
     }
 
     public static string Stalk(string user) {
-      var msg = Datastore.Stalk(user);
+      var msg = Datastore.Stalk(user.ToLower());
       if (msg == null) return user + " not found";
       var baseTime = DateTime.UtcNow - Tools.Epoch();
       return Tools.PrettyDeltaTime(TimeSpan.FromSeconds(baseTime.TotalSeconds - msg.Time)) + " ago: " + msg.Text;
