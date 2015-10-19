@@ -8,9 +8,9 @@ using Dbot.Data;
 namespace Dbot.Utility {
   public static class InitializeDatastore {
     public static void Run() {
+      Datastore.Initialize();
       UpdateEmotes();
       UpdateSettings();
-      Datastore.Initialize();
     }
 
     private static void UpdateSettings() {
@@ -20,6 +20,7 @@ namespace Dbot.Utility {
 
     public static void UpdateEmotes() {
       Datastore.EmotesList = Tools.GetEmotes();
+      Datastore.ThirdPartyEmotesList = Datastore.GetStateString_JsonStringList(MagicStrings.ThirdPartyEmotes);
     }
   }
 }

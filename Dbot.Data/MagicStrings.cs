@@ -5,5 +5,6 @@ namespace Dbot.Data {
     public const string tempBanList = "TempBannedWords";
     public const string onTime = "OnTime";
     public const string offTime = "OffTime";
+    public const string ThirdPartyEmotes = "ThirdPartyEmotes";
   }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Dbot.CommonModels;
+using Newtonsoft.Json;
 using SQLite;
 
 namespace Dbot.Data {
@@ -18,15 +19,29 @@ namespace Dbot.Data {
       _bannedWords = _db.Table<BannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
     }
 
-    private static List<string> _emotesList;
+    private static List<string> _emotesList = new List<string>();
 
     public static List<string> EmotesList {
       get { return _emotesList; }
       set {
         _emotesList = value;
-        EmoteRegex = new Regex(string.Join("|", _emotesList), RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        EmoteWordRegex = new Regex(@"^(?:" + string.Join("|", _emotesList) + @")\s*\S+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        GenerateEmoteRegex();
       }
+    }
+
+    private static List<string> _thirdPartyEmotesList = new List<string>();
+    public static List<string> ThirdPartyEmotesList {
+      get { return _thirdPartyEmotesList; }
+      set {
+        _thirdPartyEmotesList = value;
+        GenerateEmoteRegex();
+      }
+    }
+
+    private static void GenerateEmoteRegex() {
+      var bothLists = new List<string>().Concat(_thirdPartyEmotesList).Concat(_emotesList).ToList();
+      EmoteRegex = new Regex(string.Join("|", bothLists), RegexOptions.Compiled | RegexOptions.IgnoreCase);
+      EmoteWordRegex = new Regex(@"^(?:" + string.Join("|", bothLists) + @")\s*\S+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     }
 
     public static Regex EmoteRegex { get; set; }
