@@ -75,10 +75,10 @@ namespace Dbot.Processor {
         }
       } else if (input is HasVictim) {
         var victimInput = (HasVictim) input;
+        _client.Send(input);
         if (!victimInput.SilentReason && !string.IsNullOrWhiteSpace(victimInput.Reason)) {
           _client.Send(Make.Message(victimInput.Reason));
         }
-        _client.Send(input);
       } else {
         _client.Send(input);
       }
@@ -97,7 +97,9 @@ namespace Dbot.Processor {
     }
 
     private static void Log(Message message) {
-      Console.WriteLine(message.Ordinal + " " + message.Nick + ": " + message.Text);
+#if DEBUG
+      Console.WriteLine(message.Ordinal + " " + message.Nick + ": " + message.OriginalText);
+#endif
       message.Nick = message.Nick.ToLower();
       Datastore.InsertMessage(message);
     }
