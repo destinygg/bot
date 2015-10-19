@@ -9,8 +9,6 @@ using System.Threading.Tasks.Dataflow;
 using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;
-using T = System.Tuple<string, System.Action<string>>;
-using X = System.Collections.Generic.List<System.Tuple<string, System.Action<string>>>;
 using Ms = Dbot.Data.MagicStrings;
 
 namespace Dbot.Processor {
@@ -23,52 +21,52 @@ namespace Dbot.Processor {
 
     //todo Why does <sing have utterly borked up System.Console.WriteLine();
     private readonly Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>> _regexCommandDictionary = new Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>>{
-      { Tools.CompiledRegex(@"^!sing.*"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!sing.*"), (g,c) => {
         Send("/me sings the body electric♪");
       } },
-      { Tools.CompiledRegex(@"^!dance.*"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!dance.*"), (g,c) => {
         Send("/me roboboogies ¬[º-°¬] [¬º-°]¬");
       } },
-      { Tools.CompiledRegex(@"^!ninja on.*"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!ninja on.*"), (g,c) => {
         Send("I am the blade of Shakuras.");
         Datastore.UpdateStateVariable("ninja", 1);
       } },
-      { Tools.CompiledRegex(@"^!ninja off.*"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!ninja off.*"), (g,c) => {
         Send("The void claims its own.");
         Datastore.UpdateStateVariable("ninja", 0);
       } },
-      { Tools.CompiledRegex(@"^!modabuse on.*"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!modabuse on.*"), (g,c) => {
         Send("Justice has come!");
         Datastore.UpdateStateVariable("modabuse", 2);
       } },
-      { Tools.CompiledRegex(@"^!modabuse semi.*"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!modabuse semi.*"), (g,c) => {
         Send("Calibrating void lenses.");
         Datastore.UpdateStateVariable("modabuse", 1);
       } },
-      { Tools.CompiledRegex(@"^!modabuse off.*"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!modabuse off.*"), (g,c) => {
         Send("Awaiting the call.");
         Datastore.UpdateStateVariable("modabuse", 0);
       } },
-      { Tools.CompiledRegex(@"^!add (.*)"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!add (.*)"), (g,c) => {
         Send(g[1].Value + " added to banlist");
         Tools.AddBanWord(Ms.banList, g[1].Value);
       } },
-      { Tools.CompiledRegex(@"^!del (.*)"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!del (.*)"), (g,c) => {
         Send(g[1].Value + " removed from banlist");
         Tools.RemoveBanWord(Ms.banList, g[1].Value);
       } },
-      { Tools.CompiledRegex(@"^!tempadd (.*)"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!tempadd (.*)"), (g,c) => {
         Send(g[1].Value + " added to temp banlist");
         Tools.AddBanWord(Ms.tempBanList, g[1].Value);
       } },
-      { Tools.CompiledRegex(@"^!tempdel (.*)"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!tempdel (.*)"), (g,c) => {
         Send(g[1].Value + " removed from temp banlist");
         Tools.RemoveBanWord(Ms.tempBanList, g[1].Value);
       } },
-      { Tools.CompiledRegex(@"^!stalk (.*)"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!addemote (.*)"), (g,c) => {
         Send(Tools.Stalk(g[1].Value));
       } },
-      { Tools.CompiledRegex(@"^!(?:ban|b) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!(?:ban|b) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
         var rawTime = BanTime(g[1].Value);
         MessageProcessor.Sender.Post(new Ban {
           Duration = TimeSpan.FromHours(rawTime),
@@ -77,7 +75,7 @@ namespace Dbot.Processor {
           SilentReason = true,
         });
       } },
-      { Tools.CompiledRegex(@"^!(?:ipban|i) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!(?:ipban|i) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
         var rawTime = BanTime(g[1].Value, true);
         MessageProcessor.Sender.Post(new Ban {
           Duration = TimeSpan.FromHours(rawTime),
@@ -87,7 +85,7 @@ namespace Dbot.Processor {
           Ip = true,
         });
       } },
-      { Tools.CompiledRegex(@"^!(?:mute|m) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!(?:mute|m) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
         var rawTime = BanTime(g[1].Value);
         MessageProcessor.Sender.Post(new Mute {
           Duration = TimeSpan.FromHours(rawTime),
@@ -96,14 +94,14 @@ namespace Dbot.Processor {
           SilentReason = true,
         });
       } },
-      { Tools.CompiledRegex(@"!nuke *(\d*) *(.*)"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"!nuke *(\d*) *(.*)"), (g,c) => {
         var nukeDuration = TimeSpan.FromMinutes(g[1].Value == "" ? Settings.NukeDefaultDuration : Convert.ToInt32(g[1].Value));
         var nukedWord = g[2].Value;
         if (Nuke.ActiveDuration.Keys.FirstOrDefault(x => x == nukedWord) == null) {
           Nuke.Launcher(nukedWord, nukeDuration, c);
         }
       } },
-      { Tools.CompiledRegex(@"^!aegis.*"), (g,c) => {
+      { Tools.CompiledIgnoreCaseRegex(@"^!aegis.*"), (g,c) => {
         AntiNuke.Aegis();
       } },
     };
@@ -126,7 +124,7 @@ namespace Dbot.Processor {
     public void Run() {
       Debug.Assert(_message.Text[0] == '!' || _message.Text[0] == '<');
       foreach (var x in _regexCommandDictionary) {
-        var regex = x.Key.Match(_message.Text);
+        var regex = x.Key.Match(_message.OriginalText);
         if (regex.Success) {
           x.Value.Invoke(regex.Groups, _context);
         }
