@@ -40,8 +40,8 @@ namespace Dbot.Data {
 
     private static void GenerateEmoteRegex() {
       var bothLists = new List<string>().Concat(_thirdPartyEmotesList).Concat(_emotesList).ToList();
-      EmoteRegex = new Regex(string.Join("|", bothLists), RegexOptions.Compiled | RegexOptions.IgnoreCase);
-      EmoteWordRegex = new Regex(@"^(?:" + string.Join("|", bothLists) + @")\s*\S+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+      EmoteRegex = new Regex(string.Join("|", bothLists), RegexOptions.Compiled);
+      EmoteWordRegex = new Regex(@"^(?:" + string.Join("|", bothLists) + @")\s*\S+$", RegexOptions.Compiled);
     }
 
     public static Regex EmoteRegex { get; set; }

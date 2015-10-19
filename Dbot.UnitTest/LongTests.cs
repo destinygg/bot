@@ -349,13 +349,15 @@ namespace Dbot.UnitTest {
         Make.Message("1Spam", "FaceA UserA"),
         Make.Message("2Spam", "FaceA UserA"),
         Make.Message("3Spam", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
+        Make.Message("User7", "facea facea facea facea facea facea facea facea facea facea" + Tools.RandomString(20)),
         Make.Message(true, "!delemote FaceA"),
-        Make.Message("User7", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
+        Make.Message("User8", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
+        Make.Message("4Spam", "MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB " + Tools.RandomString(20)),
       });
-      await Task.Delay(300);
+      await Task.Delay(400);
 
       Assert.IsTrue(r.Count(x => x.Contains("FaceA, MyEmoteB")) == 1);
-      SpamAndUserAssert(r, 3);
+      SpamAndUserAssert(r, 4);
     }
 
     private static void SpamAndUserAssert(IList<string> r, int spamMax) {
