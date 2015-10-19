@@ -333,5 +333,37 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("Muted user5")) == 0);
       Assert.IsTrue(r.Count(x => x.Contains("Muted user6")) == 1);
     }
+
+    [TestMethod]
+    public async Task ThirdPartyEmoteTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        Make.Message(true, "!addEMOTE FaceA"),
+        Make.Message(true, "!ADDemote MyEmoteB"),
+        Make.Message(true, "!listemote"),
+        Make.Message("User1", "FaceA UserA"),
+        Make.Message("User2", "FaceA UserA"),
+        Make.Message("User3", "FaceA UserA"),
+        Make.Message("User4", "FaceA UserA"),
+        Make.Message("User5", "FaceA UserA"),
+        Make.Message("User6", "Buffer"),
+        Make.Message("1Spam", "FaceA UserA"),
+        Make.Message("2Spam", "FaceA UserA"),
+        Make.Message("3Spam", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
+        Make.Message(true, "!delemote FaceA"),
+        Make.Message(true, "!listemote"),
+        Make.Message("User7", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
+      });
+      await Task.Delay(300);
+
+      Assert.IsTrue(r.Count(x => x.Contains("FaceA, MyEmoteB")) == 1);
+      SpamAndUserAssert(r, 3);
+    }
+
+    private static void SpamAndUserAssert(IList<string> r, int spamMax) {
+      foreach (var i in Enumerable.Range(1, spamMax)) {
+        Assert.IsTrue(r.Count(x => x.Contains("Muted " + i + "spam")) == 1);
+      }
+      Assert.IsTrue(r.Count(x => x.Contains("Muted user")) == 0);
+    }
   }
 }
