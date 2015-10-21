@@ -9,9 +9,8 @@ using Dbot.Data;
 using Dbot.Processor;
 using Dbot.Utility;
 using Tweetinvi;
+using Tweetinvi.Core.Credentials;
 using Tweetinvi.Core.Interfaces;
-using Tweetinvi.Core.Interfaces.Streaminvi;
-using Tweetinvi.Streams;
 using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Main {
@@ -19,15 +18,15 @@ namespace Dbot.Main {
     private static readonly IClient Client = new WebSocketClient();
     //private static readonly IClient Client = new WebSocketClient();
     private static readonly IProcessor Processor = new MessageProcessor(Client);
-    private static readonly IUserStream UserStream = Stream.CreateUserStream();
     private static bool _exit;
 
     public void Run() {
       InitializeDatastore.Run();
 
-      TwitterCredentials.SetCredentials(PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret, PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret);
-      UserStream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet);
-      UserStream.StartStreamAsync();
+      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret, PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret));
+      var stream = Stream.CreateUserStream();
+      stream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet);
+      stream.StartStream();
 
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
       Tools.LiveStatus();

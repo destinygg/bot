@@ -8,8 +8,7 @@ using Dbot.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Tweetinvi;
-using Tweetinvi.Core.Interfaces;
-using Tweetinvi.Logic.Exceptions;
+using Tweetinvi.Core.Exceptions;
 using ExceptionHandler = Tweetinvi.ExceptionHandler;
 using Message = Dbot.CommonModels.Message;
 
@@ -120,15 +119,13 @@ namespace Dbot.Processor {
     }
 
     private static string Twitter() {
-      TwitterCredentials.SetCredentials(PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret, PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret);
       ExceptionHandler.SwallowWebExceptions = false;
-      IUser user;
       try {
-        user = User.GetUserFromScreenName("steven_bonnell");
+        var user = User.GetUserFromScreenName("steven_bonnell");
         var timeline = user.GetUserTimeline(1);
         var tweet = timeline.First();
         var delta = Tools.PrettyDeltaTime(tweet.TweetLocalCreationDate - tweet.CreatedAt);
-      return delta + " ago: " + Tools.TweetPrettier(tweet);
+        return delta + " ago: " + Tools.TweetPrettier(tweet);
       } catch (TwitterException e) {
         if (e.WebException != null && !string.IsNullOrWhiteSpace(e.WebException.Message))
           return "Twitter borked: " + e.WebException.Message;
