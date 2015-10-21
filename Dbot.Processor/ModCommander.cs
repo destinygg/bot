@@ -93,33 +93,62 @@ namespace Dbot.Processor {
       { Tools.CompiledIgnoreCaseRegex(@"^!stalk (.*)"), (g,c) => {
         Send(Tools.Stalk(g[1].Value));
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!(?:ban|b) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
-        var rawTime = BanTime(g[1].Value);
-        MessageProcessor.Sender.Post(new Ban {
-          Duration = TimeSpan.FromHours(rawTime),
-          Nick = g[2].Value,
-          Reason = g[3].Value,
-          SilentReason = true,
-        });
+      { GenerateRegex("ban|b"), (g,c) => {
+        var number = g[1].Value;
+        var unit = g[2].Value;
+        var nick = g[3].Value;
+        var reason = g[4].Value;
+        var banTime = BanTime(number, unit);
+        if (banTime == null) {
+          Send("Invalid time.");
+        } else {
+          MessageProcessor.Sender.Post(new Ban {
+            Duration = (TimeSpan) banTime,
+            Nick = nick,
+            Reason = reason,
+            SilentReason = true,
+          });
+        }
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!(?:ipban|i) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
-        var rawTime = BanTime(g[1].Value, true);
-        MessageProcessor.Sender.Post(new Ban {
-          Duration = TimeSpan.FromHours(rawTime),
-          Nick = g[2].Value,
-          Reason = g[3].Value,
-          SilentReason = true,
-          Ip = true,
-        });
+      { GenerateRegex("ipban|ip|i"), (g,c) => {
+        var number = g[1].Value;
+        var unit = g[2].Value;
+        var nick = g[3].Value;
+        var reason = g[4].Value;
+        var banTime = BanTime(number, unit, true);
+        if (banTime == null) {
+          Send("Invalid time.");
+        } else {
+          MessageProcessor.Sender.Post(new Ban {
+            Duration = (TimeSpan) banTime,
+            Nick = nick,
+            Reason = reason,
+            SilentReason = true,
+            Ip = true,
+          });
+        }
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!(?:mute|m) *(?:(\d*)| +) +(\S+) *(.*)"), (g,c) => {
-        var rawTime = BanTime(g[1].Value);
-        MessageProcessor.Sender.Post(new Mute {
-          Duration = TimeSpan.FromHours(rawTime),
-          Nick = g[2].Value,
-          Reason = g[3].Value,
-          SilentReason = true,
-        });
+      { GenerateRegex("mute|m"), (g,c) => {
+        var number = g[1].Value;
+        var unit = g[2].Value;
+        var nick = g[3].Value;
+        var reason = g[4].Value;
+        var banTime = BanTime(number, unit);
+
+        if (banTime == null) {
+          Send("Invalid time.");
+        } else {
+          if (banTime > TimeSpan.FromDays(7) || banTime == TimeSpan.Zero) {
+            Send("Mutes have a maximum duration of 7d so this mute has been adjusted accordingly");
+            banTime = TimeSpan.FromDays(7);
+          }
+          MessageProcessor.Sender.Post(new Mute {
+            Duration = (TimeSpan) banTime,
+            Nick = nick,
+            Reason = reason,
+            SilentReason = true,
+          });
+        }
       } },
       { Tools.CompiledIgnoreCaseRegex(@"!nuke *(\d*) *(.*)"), (g,c) => {
         var nukeDuration = TimeSpan.FromMinutes(g[1].Value == "" ? Settings.NukeDefaultDuration : Convert.ToInt32(g[1].Value));
@@ -141,6 +170,46 @@ namespace Dbot.Processor {
       }
       Send("Time unspecified, default to 1hr.");
       return 1;
+    }
+
+    private static readonly List<string> Seconds = new List<string> { "s", "sec", "secs", "second", "seconds", };
+    private static readonly List<string> Minutes = new List<string> { "m", "min", "mins", "minute", "minutes", };
+    private static readonly List<string> Hours = new List<string> { "h", "hr", "hrs", "hour", "hours", };
+    private static readonly List<string> Days = new List<string> { "d", "day", "days", };
+    private static readonly List<string> Perm = new List<string> { "p", "per", "perm", "permanent" };
+    private static readonly List<string> AllButPerm = new List<string>().Concat(Seconds).Concat(Minutes).Concat(Hours).Concat(Days).ToList();
+    private static readonly List<string> AllUnits = new List<string>().Concat(AllButPerm).Concat(Perm).ToList();
+
+    private static Regex GenerateRegex(string triggers, bool isNuke = false) {
+      var times = isNuke ? AllButPerm : AllUnits;
+      var user = isNuke ? "" : @" +(\S+)";
+      return Tools.CompiledIgnoreCaseRegex("^!(?:" + triggers + @") *(?:(\d*)(" + string.Join("|", times) + ")?)?" + user + " *(.*)");
+    }
+
+
+    private static TimeSpan? BanTime(string stringInt, string s, bool ip = false) {
+      var i = stringInt == "" ? 1 : int.Parse(stringInt);
+      if (Seconds.Any(x => x == s)) {
+        return TimeSpan.FromSeconds(i);
+      }
+      if (Minutes.Any(x => x == s)) {
+        return TimeSpan.FromMinutes(i);
+      }
+      if (Hours.Any(x => x == s)) {
+        return TimeSpan.FromHours(i);
+      }
+      if (Days.Any(x => x == s)) {
+        return TimeSpan.FromDays(i);
+      }
+      if (Perm.Any(x => x == s) || (ip && s == "" && stringInt == "")) {
+        return TimeSpan.Zero;
+      }
+      if (s == "") {
+        Send("No units specified, assuming hours.");
+        return TimeSpan.FromHours(i);
+      }
+      if (ip) return TimeSpan.Zero;
+      return null;
     }
 
     public ModCommander(Message message, IEnumerable<Message> context) {

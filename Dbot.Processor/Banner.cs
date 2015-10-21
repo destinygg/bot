@@ -144,9 +144,9 @@ namespace Dbot.Processor {
         imgurId = GetImgurId(imgurId, @".*imgur\.com/r/\w+/(\w+).*");
       if (imgurId == "a") {
         imgurId = GetImgurId(imgurId, @".*imgur\.com/a/(\w+).*");
-        return this.IsNsfwApi("https://api.imgur.com/3/album/" + imgurId);
+        return IsNsfwApi("https://api.imgur.com/3/album/" + imgurId);
       }
-      return this.IsNsfwApi("https://api.imgur.com/3/image/" + imgurId);
+      return IsNsfwApi("https://api.imgur.com/3/image/" + imgurId);
     }
 
 
@@ -158,7 +158,7 @@ namespace Dbot.Processor {
       return "";
     }
 
-    private bool IsNsfwApi(string x) {
+    private static bool IsNsfwApi(string x) {
       var answer = Tools.DownloadData(x, PrivateConstants.imgurAuthHeader).Result;
       dynamic dyn = JsonConvert.DeserializeObject(answer);
       return (bool) dyn.data.nsfw;

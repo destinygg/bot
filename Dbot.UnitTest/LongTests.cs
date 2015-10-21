@@ -40,12 +40,29 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!m7 UserX reason goes here"),
         Make.Message(true, "!mute 8 UserX reason goes here"),
         Make.Message(true, "!m 9 UserX reason goes here"),
+        Make.Message(true, "!mute2m UserX"),
+        Make.Message(true, "!m3m UserX"),
+        Make.Message(true, "!mute 4m UserX"),
+        Make.Message(true, "!m 5m UserX"),
+        Make.Message(true, "!mute6m UserX reason goes here"),
+        Make.Message(true, "!m7m UserX reason goes here"),
+        Make.Message(true, "!mute 8m UserX reason goes here"),
+        Make.Message(true, "!mute 9minutes UserX reason goes here"),
+        Make.Message(true, "!mute 10perm UserX reason goes here"),
+        Make.Message(true, "!mute 11perm UserX"),
+        Make.Message(true, "!mute perm UserX"),
+        Make.Message(true, "!mute 8d UserX"),
+        Make.Message(true, "!mute 8d UserX reason goes here"),
+        Make.Message(true, "!mute 7d UserX"),
+        Make.Message(true, "!mute 7d UserX reason goes here"),
       });
 
       Assert.IsTrue(r.Count(x => x == "Muted UserX for 1h") == 4);
       foreach (var i in Enumerable.Range(2, 8)) {
         Assert.IsTrue(r.Count(x => x == "Muted UserX for " + i + "h") == 1);
+        Assert.IsTrue(r.Count(x => x == "Muted UserX for " + i + "m") == 1);
       }
+      Assert.IsTrue(r.Count(x => x == "Muted UserX for 7 days") == 7);
     }
 
     [TestMethod]
@@ -63,12 +80,25 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!b7 UserX reason goes here"),
         Make.Message(true, "!ban 8 UserX reason goes here"),
         Make.Message(true, "!b 9 UserX reason goes here"),
+        Make.Message(true, "!ban2m UserX"),
+        Make.Message(true, "!b3m UserX"),
+        Make.Message(true, "!Ban 4m UserX"),
+        Make.Message(true, "!b 5m UserX"),
+        Make.Message(true, "!ban6m UserX reason goes here"),
+        Make.Message(true, "!b7m UserX reason goes here"),
+        Make.Message(true, "!ban 8m UserX reason goes here"),
+        Make.Message(true, "!ban 9minutes UserX reason goes here"),
+        Make.Message(true, "!ban 10perm UserX reason goes here"),
+        Make.Message(true, "!ban 11perm UserX"),
+        Make.Message(true, "!ban perm UserX"),
       });
 
       Assert.IsTrue(r.Count(x => x == "Banned UserX for 1h") == 4);
       foreach (var i in Enumerable.Range(2, 8)) {
         Assert.IsTrue(r.Count(x => x == "Banned UserX for " + i + "h") == 1);
+        Assert.IsTrue(r.Count(x => x == "Banned UserX for " + i + "m") == 1);
       }
+      Assert.IsTrue(r.Count(x => x == "Banned UserX for 0m") == 3);
     }
 
     [TestMethod]
@@ -86,12 +116,24 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!i7 UserX reason goes here"),
         Make.Message(true, "!ipban 8 UserX reason goes here"),
         Make.Message(true, "!i 9 UserX reason goes here"),
+        Make.Message(true, "!ipban2m UserX"),
+        Make.Message(true, "!i3m UserX"),
+        Make.Message(true, "!ipban 4m UserX"),
+        Make.Message(true, "!i 5m UserX"),
+        Make.Message(true, "!ipban6m UserX reason goes here"),
+        Make.Message(true, "!i7m UserX reason goes here"),
+        Make.Message(true, "!ipban 8m UserX reason goes here"),
+        Make.Message(true, "!ipban 9minutes UserX reason goes here"),
+        Make.Message(true, "!ipban 10perm UserX reason goes here"),
+        Make.Message(true, "!ipban 11perm UserX"),
+        Make.Message(true, "!ipban perm UserX"),
       });
 
-      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned UserX for ") == 2);
-      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned UserX for reason goes here") == 2);
+      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned UserX for ") == 4);
+      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned UserX for reason goes here") == 3);
       foreach (var i in Enumerable.Range(2, 8)) {
         Assert.IsTrue(r.Count(x => x == "Ipbanned UserX for " + i + "h") == 1);
+        Assert.IsTrue(r.Count(x => x == "Ipbanned UserX for " + i + "m") == 1);
       }
     }
 
