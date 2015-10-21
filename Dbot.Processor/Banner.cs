@@ -21,7 +21,7 @@ namespace Dbot.Processor {
     public Banner(Message input, List<Message> context = null) {
       this._message = input;
       this._text = StringTools.RemoveDiacritics(input.Text);
-      this._unnormalized = input.Text;
+      this._unnormalized = input.OriginalText;
       if (context != null)
         this._context = context;
     }
@@ -128,7 +128,7 @@ namespace Dbot.Processor {
       if ((_unnormalized.Contains("nsfw") || _unnormalized.Contains("nsfl")) && (!_unnormalized.Contains("not nsfw")))
         return null;
 
-      var match = Regex.Match(_text, @".*imgur\.com/(\w+).*");
+      var match = Regex.Match(_unnormalized, @".*imgur\.com/(\w+).*");
       if (match.Success) {
         var imgurId = match.Groups[1].Value;
         if (IsNsfw(imgurId))
@@ -151,10 +151,10 @@ namespace Dbot.Processor {
 
 
     private string GetImgurId(string imgurId, string regex) {
-      var match = Regex.Match(_text, regex);
+      var match = Regex.Match(_unnormalized, regex);
       if (match.Success) return match.Groups[1].Value;
       Debug.Assert(match.Success);
-      Tools.ErrorLog("Imgur " + imgurId + " error on " + _message.Nick + " saying " + _text);
+      Tools.ErrorLog("Imgur " + imgurId + " error on " + _message.Nick + " saying " + _unnormalized);
       return "";
     }
 

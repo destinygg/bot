@@ -6,44 +6,45 @@ using Dbot.Data;
 using Dbot.Processor;
 using Dbot.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Tweetinvi;
+using Tweetinvi.Core.Credentials;
 
 namespace Dbot.UnitTest {
   [TestClass]
   public class CommanderTest {
     [TestMethod]
     public void CommanderTests() {
-      var stopwatch = Stopwatch.StartNew();
       InitializeDatastore.Run();
+      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret, PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret));
+
       var message = new Commander(Make.Message("!playlist")).Run();
-      Debug.Assert(message.Text == "Playlist at last.fm/user/StevenBonnellII");
+      Assert.IsTrue(message.OriginalText == "Playlist at last.fm/user/StevenBonnellII");
       message = new Commander(Make.Message("!rules")).Run();
-      Debug.Assert(message.Text == "reddit.com/1aufkc");
+      Assert.IsTrue(message.OriginalText == "reddit.com/1aufkc");
       message = new Commander(Make.Message("!refer")).Run();
-      Debug.Assert(message.Text == "destiny.gg/amazon ☜(ﾟヮﾟ☜) Amazon referral ☜(⌒▽⌒)☞ 25$ off Sprint network (☞ﾟヮﾟ)☞ destiny.gg/ting\nIn space ༼ ◔◡◔༽ destiny.gg/eve \\(ﾟ◡ﾟ )/ Destiny awaits");
+      Assert.IsTrue(message.OriginalText == "destiny.gg/amazon ☜(ﾟヮﾟ☜) Amazon referral ☜(⌒▽⌒)☞ 25$ off Sprint network (☞ﾟヮﾟ)☞ destiny.gg/ting\nIn space ༼ ◔◡◔༽ destiny.gg/eve \\(ﾟ◡ﾟ )/ Destiny awaits");
       message = new Commander(Make.Message("!irc")).Run();
-      Debug.Assert(message.Text == "IRC will be implemented Soon™. For now, chat is echoed to Rizon IRC at http://qchat.rizon.net/?channels=#destinyecho . Forwarding of IRC chat to DestinyChat is available.");
+      Assert.IsTrue(message.OriginalText == "IRC will be implemented Soon™. For now, chat is echoed to Rizon IRC at http://qchat.rizon.net/?channels=#destinyecho . Forwarding of IRC chat to DestinyChat is available.");
       message = new Commander(Make.Message("!bancount")).Run();
-      Debug.Assert(message.Text.Contains(" souls reaped"));
+      Assert.IsTrue(message.OriginalText.Contains(" souls reaped"));
       message = new Commander(Make.Message("!time")).Run();
-      Debug.Assert(message.Text.Contains(" Central Steven Time"));
+      Assert.IsTrue(message.OriginalText.Contains(" Central Steven Time"));
       message = new Commander(Make.Message("!live")).Run();
       var liveAnswers = new List<string> { "Live with ", "Destiny is live! With ", "Stream went offline in the past ~10m", "Stream offline for " };
-      Debug.Assert(liveAnswers.Any(x => message.Text.Contains(x)));
+      Assert.IsTrue(liveAnswers.Any(x => message.OriginalText.Contains(x)));
       message = new Commander(Make.Message("!blog")).Run();
-      Debug.Assert(message.Text.Contains(" posted "));
+      Assert.IsTrue(message.OriginalText.Contains(" posted "));
       message = new Commander(Make.Message("!starcraft")).Run();
-      Debug.Assert(message.Text.Contains(" game on "));
+      Assert.IsTrue(message.OriginalText.Contains(" game on "));
       message = new Commander(Make.Message("!song")).Run();
       var songAnswers = new List<string> { "No song played/scrobbled. Played ", " last.fm/user/stevenbonnellii" };
-      Debug.Assert(songAnswers.Any(x => message.Text.Contains(x)));
+      Assert.IsTrue(songAnswers.Any(x => message.OriginalText.Contains(x)));
       message = new Commander(Make.Message("!earliersong")).Run();
-      Debug.Assert(message.Text.Contains(" played before "));
+      Assert.IsTrue(message.OriginalText.Contains(" played before "));
       message = new Commander(Make.Message("!twitter")).Run();
-      Debug.Assert(message.Text.Contains(" ago: "));
+      Assert.IsTrue(message.OriginalText.Contains(" ago: "));
       message = new Commander(Make.Message("!youtube")).Run();
-      Debug.Assert(message.Text.Contains(" ago youtu.be/"));
-      stopwatch.Stop();
-      var ms = stopwatch.ElapsedMilliseconds;
+      Assert.IsTrue(message.OriginalText.Contains(" ago youtu.be/"));
     }
   }
 }
