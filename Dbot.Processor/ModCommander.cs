@@ -19,50 +19,50 @@ namespace Dbot.Processor {
       MessageProcessor.Sender.Post(Make.Message(message));
     }
 
-    private readonly Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>> _regexCommandDictionary = new Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>>{
-      { Tools.CompiledIgnoreCaseRegex(@"^!sing.*"), (g,c) => {
+    private static readonly Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>> RegexCommandDictionary = new Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>>{
+      { CompiledRegex.Song, (g,c) => {
         Send("/me sings the body electric♪");
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!dance.*"), (g,c) => {
+      { CompiledRegex.Dance, (g,c) => {
         Send("/me roboboogies ¬[º-°¬] [¬º-°]¬");
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!ninja on.*"), (g,c) => {
+      { CompiledRegex.NinjaOn, (g,c) => {
         Send("I am the blade of Shakuras.");
         Datastore.UpdateStateVariable("ninja", 1);
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!ninja off.*"), (g,c) => {
+      { CompiledRegex.NinjaOff, (g,c) => {
         Send("The void claims its own.");
         Datastore.UpdateStateVariable("ninja", 0);
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!modabuse on.*"), (g,c) => {
+      { CompiledRegex.ModabuseOn, (g,c) => {
         Send("Justice has come!");
         Datastore.UpdateStateVariable("modabuse", 2);
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!modabuse semi.*"), (g,c) => {
+      { CompiledRegex.ModabuseSemi, (g,c) => {
         Send("Calibrating void lenses.");
         Datastore.UpdateStateVariable("modabuse", 1);
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!modabuse off.*"), (g,c) => {
+      { CompiledRegex.ModabuseOff, (g,c) => {
         Send("Awaiting the call.");
         Datastore.UpdateStateVariable("modabuse", 0);
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!add (.*)"), (g,c) => {
+      { CompiledRegex.Add, (g,c) => {
         Send(g[1].Value + " added to banlist");
         Tools.AddBanWord(Ms.banList, g[1].Value);
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!del (.*)"), (g,c) => {
+      { CompiledRegex.Del, (g,c) => {
         Send(g[1].Value + " removed from banlist");
         Tools.RemoveBanWord(Ms.banList, g[1].Value);
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!tempadd (.*)"), (g,c) => {
+      { CompiledRegex.TempAdd, (g,c) => {
         Send(g[1].Value + " added to temp banlist");
         Tools.AddBanWord(Ms.tempBanList, g[1].Value);
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!tempdel (.*)"), (g,c) => {
+      { CompiledRegex.TempDel, (g,c) => {
         Send(g[1].Value + " removed from temp banlist");
         Tools.RemoveBanWord(Ms.tempBanList, g[1].Value);
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!addemote (.*)"), (g,c) => {
+      { CompiledRegex.AddEmote, (g,c) => {
         var newEmote = g[1].Value;
         var oldEmotes= Datastore.GetStateString_JsonStringList(Ms.ThirdPartyEmotes);
         if (oldEmotes.Count(x => x == newEmote) >= 1) {
@@ -74,7 +74,7 @@ namespace Dbot.Processor {
           Send(newEmote + " added to third party emotes list");
         }
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?emote (.+)"), (g,c) => {
+      { CompiledRegex.DelEmote, (g,c) => {
         var deletedEmote = g[1].Value;
         var emotes= Datastore.GetStateString_JsonStringList(Ms.ThirdPartyEmotes);
         if (emotes.Count(x => x == deletedEmote) >= 1) {
@@ -86,13 +86,13 @@ namespace Dbot.Processor {
           Send(deletedEmote + " not in third party emotes list.");
         }
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!listemote"), (g,c) => {
+      { CompiledRegex.ListEmote, (g,c) => {
         Send(string.Join(", ", Datastore.GetStateString_JsonStringList(MagicStrings.ThirdPartyEmotes)));
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!stalk (.*)"), (g,c) => {
+      { CompiledRegex.Stalk, (g,c) => {
         Send(Tools.Stalk(g[1].Value));
       } },
-      { GenerateRegex("ban|b"), (g,c) => {
+      { CompiledRegex.Ban, (g,c) => {
         var number = g[1].Value;
         var unit = g[2].Value;
         var nick = g[3].Value;
@@ -109,7 +109,7 @@ namespace Dbot.Processor {
           });
         }
       } },
-      { GenerateRegex("ipban|ip|i"), (g,c) => {
+      { CompiledRegex.Ipban, (g,c) => {
         var number = g[1].Value;
         var unit = g[2].Value;
         var nick = g[3].Value;
@@ -127,13 +127,12 @@ namespace Dbot.Processor {
           });
         }
       } },
-      { GenerateRegex("mute|m"), (g,c) => {
+      { CompiledRegex.Mute, (g,c) => {
         var number = g[1].Value;
         var unit = g[2].Value;
         var nick = g[3].Value;
         var reason = g[4].Value;
         var banTime = BanTime(number, unit);
-
         if (banTime == null) {
           Send("Invalid time.");
         } else {
@@ -149,65 +148,47 @@ namespace Dbot.Processor {
           });
         }
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"!nuke *(\d*) *(.*)"), (g,c) => {
-        var nukeDuration = TimeSpan.FromMinutes(g[1].Value == "" ? Settings.NukeDefaultDuration : Convert.ToInt32(g[1].Value));
-        var nukedWord = g[2].Value;
-        if (Nuke.ActiveDuration.Keys.FirstOrDefault(x => x == nukedWord) == null) {
-          Nuke.Launcher(nukedWord, nukeDuration, c);
+      { CompiledRegex.Nuke, (g,c) => {
+        var number = g[1].Value;
+        var unit = g[2].Value;
+        var phrase = g[3].Value;
+        var banTime = BanTime(number, unit);
+        if (banTime == null) {
+          Send("Invalid time.");
+        } else {
+          if (Nuke.ActiveDuration.Keys.FirstOrDefault(x => x == phrase) == null) {
+            Nuke.Launcher(phrase, (TimeSpan) banTime, c);
+          }
         }
       } },
-      { Tools.CompiledIgnoreCaseRegex(@"^!aegis.*"), (g,c) => {
+      { CompiledRegex.Aegis, (g,c) => {
         AntiNuke.Aegis();
       } },
     };
 
-    private static int BanTime(string regexMatch, bool ip = false) {
-      if (!string.IsNullOrWhiteSpace(regexMatch)) return int.Parse(regexMatch);
-      if (ip) {
-        Send("That's permanent DuckerZ");
-        return 0;
-      }
-      Send("Time unspecified, default to 1hr.");
-      return 1;
-    }
-
-    private static readonly List<string> Seconds = new List<string> { "s", "sec", "secs", "second", "seconds", };
-    private static readonly List<string> Minutes = new List<string> { "m", "min", "mins", "minute", "minutes", };
-    private static readonly List<string> Hours = new List<string> { "h", "hr", "hrs", "hour", "hours", };
-    private static readonly List<string> Days = new List<string> { "d", "day", "days", };
-    private static readonly List<string> Perm = new List<string> { "p", "per", "perm", "permanent" };
-    private static readonly List<string> AllButPerm = new List<string>().Concat(Seconds).Concat(Minutes).Concat(Hours).Concat(Days).ToList();
-    private static readonly List<string> AllUnits = new List<string>().Concat(AllButPerm).Concat(Perm).ToList();
-
-    private static Regex GenerateRegex(string triggers, bool isNuke = false) {
-      var times = isNuke ? AllButPerm : AllUnits;
-      var user = isNuke ? "" : @" +(\S+)";
-      return Tools.CompiledIgnoreCaseRegex("^!(?:" + triggers + @") *(?:(\d*)(" + string.Join("|", times) + ")?)?" + user + " *(.*)");
-    }
-
-
     private static TimeSpan? BanTime(string stringInt, string s, bool ip = false) {
       var i = stringInt == "" ? 1 : int.Parse(stringInt);
-      if (Seconds.Any(x => x == s)) {
+      if (CompiledRegex.Seconds.Any(x => x == s)) {
         return TimeSpan.FromSeconds(i);
       }
-      if (Minutes.Any(x => x == s)) {
+      if (CompiledRegex.Minutes.Any(x => x == s)) {
         return TimeSpan.FromMinutes(i);
       }
-      if (Hours.Any(x => x == s)) {
+      if (CompiledRegex.Hours.Any(x => x == s)) {
         return TimeSpan.FromHours(i);
       }
-      if (Days.Any(x => x == s)) {
+      if (CompiledRegex.Days.Any(x => x == s)) {
         return TimeSpan.FromDays(i);
       }
-      if (Perm.Any(x => x == s) || (ip && s == "" && stringInt == "")) {
+      if (CompiledRegex.Perm.Any(x => x == s)) {
         return TimeSpan.Zero;
       }
       if (s == "") {
+        if (ip && stringInt == "") return TimeSpan.Zero;
         Send("No units specified, assuming hours.");
         return TimeSpan.FromHours(i);
       }
-      if (ip) return TimeSpan.Zero;
+      Tools.Log("Somehow an invalid time passed the regex. StringInt:" + stringInt + ", s:" + s + ", ip:" + ip, ConsoleColor.Red);
       return null;
     }
 
@@ -218,7 +199,7 @@ namespace Dbot.Processor {
 
     public void Run() {
       Debug.Assert(_message.Text[0] == '!' || _message.Text[0] == '<');
-      foreach (var x in _regexCommandDictionary) {
+      foreach (var x in RegexCommandDictionary) {
         var regex = x.Key.Match(_message.OriginalText);
         if (regex.Success) {
           x.Value.Invoke(regex.Groups, _context);

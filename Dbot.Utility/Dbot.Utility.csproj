@@ -112,6 +112,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompiledRegex.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="InitializeDatastore.cs" />
     <Compile Include="Make.cs" />
