@@ -12,7 +12,7 @@ using Dbot.Utility;
 namespace Dbot.UnitTest {
   [TestClass]
 
-#warning Keep Utility in the name to give us easy access to Tools
+  //Keep Utility in the name to give us easy access to Tools
   public class UtilityTools {
 
     [TestMethod]

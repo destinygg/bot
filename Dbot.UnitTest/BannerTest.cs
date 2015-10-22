@@ -39,8 +39,8 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public void TempBanWords() {
 
-      var nick = "simpleuser";
-      var bannedWord = "ban";
+      const string nick = "simpleuser";
+      const string bannedWord = "ban";
 
       InitializeDatastore.Run();
       Datastore.AddTempBanWord(bannedWord);

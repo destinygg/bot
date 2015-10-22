@@ -19,7 +19,6 @@ namespace Dbot.Processor {
       MessageProcessor.Sender.Post(Make.Message(message));
     }
 
-    //todo Why does <sing have utterly borked up System.Console.WriteLine();
     private readonly Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>> _regexCommandDictionary = new Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>>{
       { Tools.CompiledIgnoreCaseRegex(@"^!sing.*"), (g,c) => {
         Send("/me sings the body electric♪");
