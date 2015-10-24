@@ -17,7 +17,7 @@ namespace Dbot.Utility {
       ModabuseSemi = Tools.CompiledIgnoreCaseRegex(@"^!modabuse semi.*");
       ModabuseOff = Tools.CompiledIgnoreCaseRegex(@"^!modabuse off.*");
       Add = Tools.CompiledIgnoreCaseRegex(@"^!add (.*)");
-      Del = Tools.CompiledIgnoreCaseRegex(@"^!del (.*)");
+      Del = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)? (.*)");
       TempAdd = Tools.CompiledIgnoreCaseRegex(@"^!tempadd (.*)");
       TempDel = Tools.CompiledIgnoreCaseRegex(@"^!tempdel (.*)");
       AddEmote = Tools.CompiledIgnoreCaseRegex(@"^!addemote (.*)");
@@ -27,7 +27,8 @@ namespace Dbot.Utility {
       Ban = GenerateRegex("ban|b");
       Ipban = GenerateRegex("ipban|ip|i");
       Mute = GenerateRegex("mute|m");
-      Nuke = GenerateRegex("nuke", true);
+      Nuke = GenerateRegex("nuke|annihilate|obliterate", true);
+      RegexNuke = GenerateRegex("regexnuke|regexpnuke|nukeregex|nukeregexp", true);
       Aegis = Tools.CompiledIgnoreCaseRegex(@"^!aegis.*");
     }
 
@@ -50,6 +51,7 @@ namespace Dbot.Utility {
     public static Regex Ipban { get; private set; }
     public static Regex Mute { get; private set; }
     public static Regex Nuke { get; private set; }
+    public static Regex RegexNuke { get; private set; }
     public static Regex Aegis { get; private set; }
 
     public static readonly List<string> Seconds = new List<string> { "s", "sec", "secs", "second", "seconds", };

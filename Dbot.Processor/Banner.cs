@@ -84,15 +84,9 @@ namespace Dbot.Processor {
       var emoteUserSpam = EmoteUserSpam();
       if (emoteUserSpam != null) return emoteUserSpam;
 
-      foreach (var nukedWord in Nuke.ActiveDuration.Keys.Where(nukedWord => StringTools.Delta(nukedWord, _message.Text) > Settings.NukeStringDelta || _message.Text.Contains(nukedWord))) {
-        TimeSpan duration;
-        var success = Nuke.ActiveDuration.TryGetValue(nukedWord, out duration);
-        Debug.Assert(success);
-        Queue<string> nukeVictimsQueue;
-        Nuke.VictimQueue.TryGetValue(nukedWord, out nukeVictimsQueue);
-        //Debug.Assert(success); // this fails when the initial nuke has a bodycount of 0, because no one is on the queue or added to the dictionary
-        if (nukeVictimsQueue != null) nukeVictimsQueue.Enqueue(_message.Nick);
-        return Make.Mute(_message.Nick, duration);
+      foreach (var nuke in Nuke.Nukes.Where(x => x.Predicate(_message.Text))) {
+        nuke.VictimList.Add(_message.Nick);
+        return Make.Mute(_message.Nick, nuke.Duration);
       }
 
       return null;

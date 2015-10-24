@@ -10,41 +10,30 @@ namespace Dbot.Processor {
   public static class AntiNuke {
     public static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
-    public static async void Dissipate(string nukedWord, TimeSpan duration) {
-      await Task.Delay(duration);
-      Tools.Log(nukedWord + " dissipated.", ConsoleColor.Red);
+    public static async void Dissipate(Nuke nuke) {
+      await Task.Delay(nuke.Duration);
+      if (nuke.Word != null)
+        Tools.Log(nuke.Word + " dissipated.", ConsoleColor.Red);
+      else
+        Tools.Log(nuke.Regex + " dissipated.", ConsoleColor.Red);
       if (CancellationTokenSource.IsCancellationRequested) {
         CancellationTokenSource = new CancellationTokenSource();
         return;
       }
-      TimeSpan tempDuration;
-      var success = Nuke.ActiveDuration.TryRemove(nukedWord, out tempDuration);
-      Debug.Assert(success);
-
-      Queue<string> victimsQueue;
-      Nuke.VictimQueue.TryRemove(nukedWord, out victimsQueue);
-      //Debug.Assert(success); // This is sometimes invalid because the bot won't add when there are no victims.
-
-      Tools.Log("NukeDictionary " + Nuke.ActiveDuration.Count + ", NukeVictims " + Nuke.VictimQueue.Count, ConsoleColor.Red);
+      Nuke.Nukes.Remove(nuke);
+      Tools.Log("NukeDictionary " + Nuke.Nukes.Count + ", NukeVictims " + nuke.VictimList.Count, ConsoleColor.Red);
     }
 
     public static async void Aegis() {
+      var temp = new List<Nuke>(Nuke.Nukes);
+      Nuke.Nukes.Clear();
       CancellationTokenSource.Cancel();
-      MessageProcessor.Sender.Post(Make.Message("I immediately regret this decision."));
-      foreach (var nukedWord in Nuke.ActiveDuration.Keys) {
-        TimeSpan duration;
-        var success = Nuke.ActiveDuration.TryRemove(nukedWord, out duration);
-        Debug.Assert(success);
-      }
-      while (Nuke.VictimQueue.Count > 0) {
-        Queue<string> victimQueue;
-        var success = Nuke.VictimQueue.TryGetValue(Nuke.VictimQueue.First().Key, out victimQueue);
-        Debug.Assert(success);
-        if (victimQueue.Count == 0) {
-          success = Nuke.VictimQueue.TryRemove(Nuke.VictimQueue.First().Key, out victimQueue);
-          Debug.Assert(success);
-        } else {
-          MessageProcessor.Sender.Post(Make.Unban(victimQueue.Dequeue()));
+      MessageProcessor.Sender.Post(Make.Message("Arise, my children. You are forgiven."));
+      foreach (var nuke in temp) {
+        while (nuke.VictimList.Count > 0) {
+          var beneficiary = nuke.VictimList.First();
+          MessageProcessor.Sender.Post(Make.Unban(beneficiary));
+          nuke.VictimList.Remove(beneficiary);
           await Task.Delay(Settings.AegisLoopWait);
         }
       }

@@ -155,10 +155,19 @@ namespace Dbot.Processor {
         var banTime = BanTime(number, unit);
         if (banTime == null) {
           Send("Invalid time.");
-        } else {
-          if (Nuke.ActiveDuration.Keys.FirstOrDefault(x => x == phrase) == null) {
-            Nuke.Launcher(phrase, (TimeSpan) banTime, c);
-          }
+        } else if (Nuke.Nukes.All(x => x.Word != phrase)) {
+          new Nuke(phrase, (TimeSpan) banTime, c);
+        }
+      } },
+      { CompiledRegex.RegexNuke, (g,c) => {
+        var number = g[1].Value;
+        var unit = g[2].Value;
+        var regex = Tools.CompiledRegex(g[3].Value);
+        var banTime = BanTime(number, unit);
+        if (banTime == null) {
+          Send("Invalid time.");
+        } else if (Nuke.Nukes.All(x => x.Regex.ToString() != regex.ToString())) {
+          new Nuke(regex, (TimeSpan) banTime, c);
         }
       } },
       { CompiledRegex.Aegis, (g,c) => {

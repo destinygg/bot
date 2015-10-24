@@ -170,9 +170,9 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task NukeAndAegisTest() {
-      var firstBufferSize = 25;
-      var secondBufferSize = 25;
-      var thirdBufferSize = 225;
+      const int firstBufferSize = 5;
+      const int secondBufferSize = 5;
+      const int thirdBufferSize = 5;
       var messageList = new List<Message>{
         Make.Message("red1", "red"),
         Make.Message("red2", "red"),
@@ -396,11 +396,11 @@ namespace Dbot.UnitTest {
       SpamAndUserAssert(r, 4);
     }
 
-    private static void SpamAndUserAssert(IList<string> r, int spamMax) {
+    private static void SpamAndUserAssert(IList<string> returns, int spamMax) {
       foreach (var i in Enumerable.Range(1, spamMax)) {
-        Assert.IsTrue(r.Count(x => x.Contains("Muted " + i + "spam")) == 1);
+        Assert.IsTrue(returns.Count(x => x.Contains("Muted " + i + "spam")) == 1);
       }
-      Assert.IsTrue(r.Count(x => x.Contains("Muted user")) == 0);
+      Assert.IsTrue(returns.Count(x => x.Contains("Muted user")) == 0);
     }
   }
 }
