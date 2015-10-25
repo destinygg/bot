@@ -39,14 +39,19 @@ namespace Dbot.Processor {
       PreordainedVictims = context.Where(c => !c.IsMod).Where(s => Predicate(s.Text)).Select(x => x.Nick).Distinct().ToList();
       Tools.Log(string.Join(",", PreordainedVictims), ConsoleColor.Cyan);
 
-      await Task.Run(() => AntiNuke.Dissipate(this), AntiNuke.CancellationTokenSource.Token);
-      Nukes.Add(this);
-      MessageProcessor.Sender.Post(Make.Message("Fire ze " + Duration.Minutes + " missiles!"));
+      try {
+        await Task.Run(() => AntiNuke.Dissipate(this), AntiNuke.CancellationTokenSource.Token);
+      } catch (TaskCanceledException e) {
+        Tools.Log("Cancelled!" + Word + Regex);
+        Tools.Log(e.Message);
+      }
 
-      var victimQueue = new Queue<string>();
+      Nukes.Add(this);
+      MessageProcessor.Sender.Post(Make.Message(Duration.TotalSeconds / 1000 + "kilosecond missiles away!"));
+
       while (PreordainedVictims.Except(VictimList).Any()) {
-        var victim = PreordainedVictims.Except(VictimList).First();
         if (!Cancel) {
+          var victim = PreordainedVictims.Except(VictimList).First();
           MessageProcessor.Sender.Post(Make.Mute(victim, Duration));
           VictimList.Add(victim);
           await Task.Delay(Settings.NukeLoopWait);
@@ -54,7 +59,7 @@ namespace Dbot.Processor {
           return;
         }
       }
-      MessageProcessor.Sender.Post(Make.Message("Bodycount of " + victimQueue.Count + ", but radiation lingers"));
+      MessageProcessor.Sender.Post(Make.Message(VictimList.Count + " souls were vaporized in a single blinding instant"));
     }
 
     public bool Predicate(string input) {

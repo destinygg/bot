@@ -25,6 +25,9 @@ namespace Dbot.Processor {
     }
 
     public static async void Aegis() {
+      foreach (var nuke in Nuke.Nukes) {
+        nuke.Cancel = true;
+      }
       var temp = new List<Nuke>(Nuke.Nukes);
       Nuke.Nukes.Clear();
       CancellationTokenSource.Cancel();

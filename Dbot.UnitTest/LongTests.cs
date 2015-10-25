@@ -170,9 +170,9 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task NukeAndAegisTest() {
-      const int firstBufferSize = 5;
-      const int secondBufferSize = 5;
-      const int thirdBufferSize = 5;
+      const int firstBufferSize = 5; // 5/25 Use NukeLoopWait/AegisLoopWait delays of 0/2000 for this
+      const int secondBufferSize = 5; // 5/25
+      const int thirdBufferSize = 5; // 5/225
       var messageList = new List<Message>{
         Make.Message("red1", "red"),
         Make.Message("red2", "red"),
@@ -182,8 +182,8 @@ namespace Dbot.UnitTest {
         Make.Message("yellow2", "yellow"),
         Make.Message("yellow3", "yellow"),
         
-        Make.Message(true, "!nuke red"),
-        Make.Message(true, "!nuke yellow"),
+        Make.Message(true, "!nuke10m red"),
+        Make.Message(true, "!nuke30m yellow"),
       };
       messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => Make.Message("User" + i, "test")));
       messageList.AddRange(new List<Message>{
@@ -201,6 +201,14 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!aegis"),
         Make.Message("red7", "red"),
         Make.Message("yellow7", "yellow7"),
+        Make.Message("transparent1", "transparent"),
+        Make.Message(true, "!NUKE transparent"),
+        Make.Message("transparent2", "transparent"),
+        Make.Message(true, "!aegis"),
+        Make.Message("transparent3", "transparent"),
+        Make.Message("transparent4", "transparent"),
+        Make.Message("transparent5", "transparent"),
+
       });
       messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => Make.Message("User" + i, "test")));
 
@@ -221,6 +229,11 @@ namespace Dbot.UnitTest {
       }
       Assert.IsTrue(!r.Any(x => x.Contains("Muted red7")));
       Assert.IsTrue(!r.Any(x => x.Contains("Muted yellow7")));
+      Assert.IsTrue(r.Count(x => x.Contains("Muted transparent1")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted transparent2")) == 1);
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent3")));
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent4")));
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent5")));
     }
 
     [TestMethod]
