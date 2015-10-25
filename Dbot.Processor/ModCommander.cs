@@ -63,28 +63,22 @@ namespace Dbot.Processor {
         Tools.RemoveBanWord(Ms.tempBanList, g[1].Value);
       } },
       { CompiledRegex.AddEmote, (g,c) => {
-        var newEmote = g[1].Value;
-        var oldEmotes= Datastore.GetStateString_JsonStringList(Ms.ThirdPartyEmotes);
-        if (oldEmotes.Count(x => x == newEmote) >= 1) {
-          Send(newEmote + " already in third party emotes list.");
-        } else {
-          oldEmotes.Add(newEmote);
-          Datastore.SetStateString_JsonStringList(Ms.ThirdPartyEmotes, oldEmotes, true);
-          Datastore.ThirdPartyEmotesList = oldEmotes;
-          Send(newEmote + " added to third party emotes list");
+        var emoteToAdd = g[1].Value;
+        if (Datastore.AddToStateString_JsonStringList(Ms.ThirdPartyEmotes, emoteToAdd, Datastore.ThirdPartyEmotesList)) {
+          Send(emoteToAdd + " added to third party emotes list");
+          Datastore.GenerateEmoteRegex();
         }
+        else
+          Send(emoteToAdd + " already in third party emotes list.");
       } },
       { CompiledRegex.DelEmote, (g,c) => {
-        var deletedEmote = g[1].Value;
-        var emotes= Datastore.GetStateString_JsonStringList(Ms.ThirdPartyEmotes);
-        if (emotes.Count(x => x == deletedEmote) >= 1) {
-          emotes.Remove(deletedEmote);
-          Datastore.SetStateString_JsonStringList(Ms.ThirdPartyEmotes, emotes, true);
-          Datastore.ThirdPartyEmotesList = emotes;
-          Send(deletedEmote + " deleted from third party emotes list");
-        } else {
-          Send(deletedEmote + " not in third party emotes list.");
+        var emoteToDelete = g[1].Value;
+        if (Datastore.DeleteFromStateString_JsonStringList(Ms.ThirdPartyEmotes, emoteToDelete, Datastore.ThirdPartyEmotesList)) {
+          Datastore.GenerateEmoteRegex();
+          Send(emoteToDelete + " deleted from third party emotes list");
         }
+        else
+          Send(emoteToDelete + " not in third party emotes list.");
       } },
       { CompiledRegex.ListEmote, (g,c) => {
         Send(string.Join(", ", Datastore.GetStateString_JsonStringList(MagicStrings.ThirdPartyEmotes)));

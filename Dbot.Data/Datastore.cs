@@ -19,27 +19,12 @@ namespace Dbot.Data {
       _bannedWords = _db.Table<BannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
     }
 
-    private static List<string> _emotesList = new List<string>();
+    public static List<string> EmotesList { get; set; }
 
-    public static List<string> EmotesList {
-      get { return _emotesList; }
-      set {
-        _emotesList = value;
-        GenerateEmoteRegex();
-      }
-    }
+    public static List<string> ThirdPartyEmotesList { get; set; }
 
-    private static List<string> _thirdPartyEmotesList = new List<string>();
-    public static List<string> ThirdPartyEmotesList {
-      get { return _thirdPartyEmotesList; }
-      set {
-        _thirdPartyEmotesList = value;
-        GenerateEmoteRegex();
-      }
-    }
-
-    private static void GenerateEmoteRegex() {
-      var bothLists = new List<string>().Concat(_thirdPartyEmotesList).Concat(_emotesList).ToList();
+    public static void GenerateEmoteRegex() {
+      var bothLists = new List<string>().Concat(ThirdPartyEmotesList).Concat(EmotesList).ToList();
       EmoteRegex = new Regex(string.Join("|", bothLists), RegexOptions.Compiled);
       EmoteWordRegex = new Regex(@"^(?:" + string.Join("|", bothLists) + @")\s*\S+$", RegexOptions.Compiled);
     }
@@ -140,6 +125,23 @@ namespace Dbot.Data {
 
     public static void SetStateString_JsonStringList(string key, List<string> value, bool wait = false) {
       UpdateStateString(key, JsonConvert.SerializeObject(value), wait);
+    }
+
+    public static bool AddToStateString_JsonStringList(string key, string stringToAdd, IList<string> list) {
+      var tempList = GetStateString_JsonStringList(key);
+      if (tempList.Contains(stringToAdd)) return false;
+      tempList.Add(stringToAdd);
+      list.Add(stringToAdd);
+      SetStateString_JsonStringList(key, tempList, true);
+      return true;
+    }
+
+    public static bool DeleteFromStateString_JsonStringList(string key, string stringToDelete, IList<string> list) {
+      var tempList = GetStateString_JsonStringList(key);
+      if (!tempList.Remove(stringToDelete)) return false;
+      list.Remove(stringToDelete);
+      SetStateString_JsonStringList(key, tempList, true);
+      return true;
     }
 
     public static void AddBanWord(string bannedPhrase) {
