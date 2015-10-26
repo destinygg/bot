@@ -209,22 +209,6 @@ namespace Dbot.Utility {
       return "Live check failed";
     }
 
-    public static void AddBanWord(string table, string bannedPhrase) {
-      if (table == "BannedWords") {
-        Datastore.AddBanWord(bannedPhrase);
-      } else if (table == "TempBannedWords") {
-        Datastore.AddTempBanWord(bannedPhrase);
-      } else Tools.ErrorLog("Unsupported Table: " + table);
-    }
-
-    public static void RemoveBanWord(string table, string bannedPhrase) {
-      if (table == "BannedWords") {
-        Datastore.RemoveBanWord(bannedPhrase);
-      } else if (table == "TempBannedWords") {
-        Datastore.RemoveTempBanWord(bannedPhrase);
-      } else Tools.ErrorLog("Unsupported Table: " + table);
-    }
-
     public static string Stalk(string user) {
       var msg = Datastore.Stalk(user.ToLower());
       if (msg == null) return user + " not found";

@@ -37,25 +37,22 @@ namespace Dbot.UnitTest {
     }
 
     [TestMethod]
-    public void TempBanWords() {
-
+    public void AutoMutedWordDatatbaseIncrementTest() {
       const string nick = "simpleuser";
-      const string bannedWord = "ban";
+      const string mutedWord = "mutephrase";
 
       InitializeDatastore.Run();
-      Datastore.AddTempBanWord(bannedWord);
+      Datastore.AddToStateString_JsonStringDictionary(MagicStrings.MutedWords, mutedWord, TimeSpan.FromMinutes(10).TotalSeconds, Datastore.MutedWords);
 
-      var banner = new Banner(Make.Message(nick, "banphrase"), new List<Message>());
+      var banner = new Banner(Make.Message(nick, mutedWord), new List<Message>());
 
-      var testList = new List<int> { 10, 20, 40, 80, 160, 320, 640, 1280, 2560, 5120, 10080, 10080, 10080, 10080, };
-      foreach (var i in testList) {
+      foreach (var i in Enumerable.Range(1, 10)) {
         banner.BanParser(true);
-        Assert.AreEqual(Datastore.UserHistory(nick).TempWordCount.FirstOrDefault(x => x.Word == bannedWord).Count, i);
+        Assert.AreEqual(i, Datastore.UserHistory(nick).History[MagicStrings.MutedWords][mutedWord]);
       }
 
-      var testMute = new Mute() { Duration = TimeSpan.FromDays(8) };
+      var testMute = new Mute { Duration = TimeSpan.FromDays(8) };
       Assert.AreEqual(testMute.Duration, TimeSpan.FromDays(7));
-
     }
 
     [TestMethod]

@@ -46,21 +46,22 @@ namespace Dbot.Processor {
         Send("Awaiting the call.");
         Datastore.UpdateStateVariable("modabuse", 0);
       } },
-      { CompiledRegex.Add, (g,c) => {
-        Send(g[1].Value + " added to banlist");
-        Tools.AddBanWord(Ms.banList, g[1].Value);
+      { CompiledRegex.AddMute, (g,c) => { 
+        var number = g[1].Value;
+        var unit = g[2].Value;
+        var wordToAdd = g[3].Value;
+        var duration = BanTime(number, unit);
+        if (Datastore.AddToStateString_JsonStringDictionary(Ms.MutedWords, wordToAdd, duration.TotalSeconds, Datastore.MutedWords))
+          Send(wordToAdd + " added to the automute list");
+        else 
+          Send(wordToAdd + " already in the automute list; its duration has been updated to " + Tools.PrettyDeltaTime(duration));
       } },
-      { CompiledRegex.Del, (g,c) => {
-        Send(g[1].Value + " removed from banlist");
-        Tools.RemoveBanWord(Ms.banList, g[1].Value);
-      } },
-      { CompiledRegex.TempAdd, (g,c) => {
-        Send(g[1].Value + " added to temp banlist");
-        Tools.AddBanWord(Ms.tempBanList, g[1].Value);
-      } },
-      { CompiledRegex.TempDel, (g,c) => {
-        Send(g[1].Value + " removed from temp banlist");
-        Tools.RemoveBanWord(Ms.tempBanList, g[1].Value);
+      { CompiledRegex.DelMute, (g,c) => {
+        var wordToDelete = g[1].Value;
+        if (Datastore.DeleteFromStateString_JsonStringDictionary(Ms.MutedWords, wordToDelete, Datastore.MutedWords))
+          Send(wordToDelete + " deleted from the automute list");
+        else
+          Send(wordToDelete + " not found in the automute list");
       } },
       { CompiledRegex.AddEmote, (g,c) => {
         var emoteToAdd = g[1].Value;
@@ -92,16 +93,12 @@ namespace Dbot.Processor {
         var nick = g[3].Value;
         var reason = g[4].Value;
         var banTime = BanTime(number, unit);
-        if (banTime == null) {
-          Send("Invalid time.");
-        } else {
-          MessageProcessor.Sender.Post(new Ban {
-            Duration = (TimeSpan) banTime,
-            Nick = nick,
-            Reason = reason,
-            SilentReason = true,
-          });
-        }
+        MessageProcessor.Sender.Post(new Ban {
+          Duration = banTime,
+          Nick = nick,
+          Reason = reason,
+          SilentReason = true,
+        });
       } },
       { CompiledRegex.Ipban, (g,c) => {
         var number = g[1].Value;
@@ -109,17 +106,13 @@ namespace Dbot.Processor {
         var nick = g[3].Value;
         var reason = g[4].Value;
         var banTime = BanTime(number, unit, true);
-        if (banTime == null) {
-          Send("Invalid time.");
-        } else {
-          MessageProcessor.Sender.Post(new Ban {
-            Duration = (TimeSpan) banTime,
-            Nick = nick,
-            Reason = reason,
-            SilentReason = true,
-            Ip = true,
-          });
-        }
+        MessageProcessor.Sender.Post(new Ban {
+          Duration = banTime,
+          Nick = nick,
+          Reason = reason,
+          SilentReason = true,
+          Ip = true,
+        });
       } },
       { CompiledRegex.Mute, (g,c) => {
         var number = g[1].Value;
@@ -127,30 +120,24 @@ namespace Dbot.Processor {
         var nick = g[3].Value;
         var reason = g[4].Value;
         var banTime = BanTime(number, unit);
-        if (banTime == null) {
-          Send("Invalid time.");
-        } else {
-          if (banTime > TimeSpan.FromDays(7) || banTime == TimeSpan.Zero) {
-            Send("Mutes have a maximum duration of 7d so this mute has been adjusted accordingly");
-            banTime = TimeSpan.FromDays(7);
-          }
-          MessageProcessor.Sender.Post(new Mute {
-            Duration = (TimeSpan) banTime,
-            Nick = nick,
-            Reason = reason,
-            SilentReason = true,
-          });
+        if (banTime > TimeSpan.FromDays(7) || banTime == TimeSpan.Zero) {
+          Send("Mutes have a maximum duration of 7d so this mute has been adjusted accordingly");
+          banTime = TimeSpan.FromDays(7);
         }
+        MessageProcessor.Sender.Post(new Mute {
+          Duration = banTime,
+          Nick = nick,
+          Reason = reason,
+          SilentReason = true,
+        });
       } },
       { CompiledRegex.Nuke, (g,c) => {
         var number = g[1].Value;
         var unit = g[2].Value;
         var phrase = g[3].Value;
         var banTime = BanTime(number, unit);
-        if (banTime == null) {
-          Send("Invalid time.");
-        } else if (Nuke.Nukes.All(x => x.Word != phrase)) {
-          new Nuke(phrase, (TimeSpan) banTime, c);
+        if (Nuke.Nukes.All(x => x.Word != phrase)) {
+          new Nuke(phrase, banTime, c);
         }
       } },
       { CompiledRegex.RegexNuke, (g,c) => {
@@ -158,18 +145,15 @@ namespace Dbot.Processor {
         var unit = g[2].Value;
         var regex = Tools.CompiledRegex(g[3].Value);
         var banTime = BanTime(number, unit);
-        if (banTime == null) {
-          Send("Invalid time.");
-        } else if (Nuke.Nukes.All(x => x.Regex.ToString() != regex.ToString())) {
-          new Nuke(regex, (TimeSpan) banTime, c);
-        }
+        if (Nuke.Nukes.All(x => x.Regex.ToString() != regex.ToString()))
+          new Nuke(regex, banTime, c);
       } },
       { CompiledRegex.Aegis, (g,c) => {
         AntiNuke.Aegis();
       } },
     };
 
-    private static TimeSpan? BanTime(string stringInt, string s, bool ip = false) {
+    private static TimeSpan BanTime(string stringInt, string s, bool ip = false) {
       var i = stringInt == "" ? 1 : int.Parse(stringInt);
       if (CompiledRegex.Seconds.Any(x => x == s)) {
         return TimeSpan.FromSeconds(i);
@@ -192,7 +176,7 @@ namespace Dbot.Processor {
         return TimeSpan.FromHours(i);
       }
       Tools.Log("Somehow an invalid time passed the regex. StringInt:" + stringInt + ", s:" + s + ", ip:" + ip, ConsoleColor.Red);
-      return null;
+      return TimeSpan.FromHours(1);
     }
 
     public ModCommander(Message message, IEnumerable<Message> context) {

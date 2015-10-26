@@ -26,6 +26,18 @@ namespace Dbot.Processor {
         this._context = context;
     }
 
+    private Mute MuteAndIncrementHardCoded(UserHistory userHistory, string sectionName, string reason, bool wait) {
+      if (!userHistory.History.ContainsKey(MagicStrings.HardCoded))
+        userHistory.History.Add(MagicStrings.HardCoded, new Dictionary<string, int>());
+      var hardcodedLogic = userHistory.History[MagicStrings.HardCoded];
+      if (!hardcodedLogic.ContainsKey(sectionName))
+        hardcodedLogic.Add(sectionName, 1);
+      var count = hardcodedLogic[sectionName];
+      hardcodedLogic[sectionName] = count + 1;
+      Datastore.SaveUserHistory(userHistory, wait);
+      return MuteIncreaser(TimeSpan.FromMinutes(10), count, reason);
+    }
+
     public HasVictim BanParser(bool wait = false) {
       var testList = new List<int>();
       for (var i = _message.Ordinal - Settings.MessageLogSize; i < _message.Ordinal; i++) {
@@ -33,46 +45,30 @@ namespace Dbot.Processor {
           testList.Add(i);
       }
 
-
-      if (Datastore.BannedWords.Any(x => _unnormalized.Contains(x) || _text.Contains(x)))
-        return Make.Mute(_message.Nick, TimeSpan.FromDays(7), "1 week, forbidden text.");
-
       var userHistory = Datastore.UserHistory(_message.Nick) ?? new UserHistory { Nick = _message.Nick };
 
       var fullWidthCharacters = new[] { 'ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｑ', 'ｘ', 'ｙ', 'ｚ', 'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ', 'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｑ', 'Ｘ', 'Ｙ', 'Ｚ' };
-      if (fullWidthCharacters.Count(x => _unnormalized.Contains(x)) > 5) {
-        var r = this.MuteIncreaser(userHistory.FullWidth, "fullwidth text");
-        userHistory.FullWidth = (int) r.Duration.TotalMinutes;
-        Datastore.SaveUserHistory(userHistory, wait);
-        return r;
-      }
+      if (fullWidthCharacters.Count(x => _unnormalized.Contains(x)) > 5)
+        return MuteAndIncrementHardCoded(userHistory, MagicStrings.FullWidth, "fullwidth text", wait);
 
       var unicode = new[] { '็', 'е', '' };
-      if (unicode.Count(x => _unnormalized.Contains(x)) > 1) {
-        var r = this.MuteIncreaser(userHistory.Unicode, "unicode idiocy");
-        userHistory.Unicode = (int) r.Duration.TotalMinutes;
-        Datastore.SaveUserHistory(userHistory, wait);
-        return r;
-      }
+      if (unicode.Count(x => _unnormalized.Contains(x)) > 1)
+        return MuteAndIncrementHardCoded(userHistory, MagicStrings.Unicode, "unicode idiocy", wait);
 
-      if (Datastore.EmoteRegex.Matches(_message.OriginalText).Count > 7) {
-        var r = this.MuteIncreaser(userHistory.FaceSpam, "face spam");
-        userHistory.FaceSpam = (int) r.Duration.TotalMinutes;
-        Datastore.SaveUserHistory(userHistory, wait);
-        return r;
-      }
+      if (Datastore.EmoteRegex.Matches(_message.OriginalText).Count > 7)
+        return MuteAndIncrementHardCoded(userHistory, MagicStrings.Facespam, "face spam", wait);
 
-      if (Datastore.TempBannedWords.Any(x => _unnormalized.Contains(x) || _text.Contains(x))) {
-        var tempBannedWord = Datastore.TempBannedWords.First(x => _unnormalized.Contains(x) || _text.Contains(x));
-        var tempBanWordCount = userHistory.TempWordCount.FirstOrDefault(x => x.Word == tempBannedWord) ?? new TempBanWordCount { Count = 0, Word = tempBannedWord };
-        var tempBanWordCountList = Datastore.UserHistory(_message.Nick).TempWordCount;
-        tempBanWordCountList.Remove(tempBanWordCountList.FirstOrDefault(x => x.Word == tempBannedWord));
-        var r = MuteIncreaser(tempBanWordCount.Count, "prohibited phrase");
-        tempBanWordCount.Count = (int) r.Duration.TotalMinutes;
-        tempBanWordCountList.Add(tempBanWordCount);
-        userHistory.TempWordCount = tempBanWordCountList;
+      if (Datastore.MutedWords.Select(x => x.Key).Any(x => _unnormalized.Contains(x) || _text.Contains(x))) {
+        var word = Datastore.MutedWords.Select(x => x.Key).First(x => _unnormalized.Contains(x) || _text.Contains(x));
+        var duration = TimeSpan.FromSeconds(Datastore.MutedWords[word]);
+        if (!userHistory.History.ContainsKey(MagicStrings.MutedWords))
+          userHistory.History.Add(MagicStrings.MutedWords, new Dictionary<string, int>());
+        var mutedWords = userHistory.History[MagicStrings.MutedWords];
+        if (!mutedWords.ContainsKey(word))
+          mutedWords.Add(word, 0);
+        mutedWords[word]++;
         Datastore.SaveUserHistory(userHistory, wait);
-        return r;
+        return MuteIncreaser(duration, mutedWords[word], "prohibited phrase");
       }
 
       var longSpam = LongSpam();
@@ -88,23 +84,23 @@ namespace Dbot.Processor {
         nuke.VictimList.Add(_message.Nick);
         return Make.Mute(_message.Nick, nuke.Duration);
       }
-
       return null;
     }
 
-    public Mute MuteIncreaser(int original, string custom) {
+    public Mute MuteIncreaser(TimeSpan baseDuration, int muteCount, string muteWord) {
       var r = new Mute();
-      switch (original) {
-        case 0:
-          r.Reason = "10m for " + custom + ".";
-          r.Duration = TimeSpan.FromMinutes(10);
+      switch (muteCount) {
+        case 1:
+          r.Reason = Tools.PrettyDeltaTime(baseDuration) + " for " + muteWord;
+          r.Duration = baseDuration;
           break;
-        case 10:
-          r.Reason = "20m for " + custom + "; your ban time has doubled. Future bans will not be explicitly justified.";
-          r.Duration = TimeSpan.FromMinutes(20);
+        case 2:
+          var duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * 2);
+          r.Reason = Tools.PrettyDeltaTime(duration) + " for " + muteWord + "; your time has doubled. Future sanctions will not be explicitly justified."; ;
+          r.Duration = duration;
           break;
         default:
-          r.Duration = TimeSpan.FromMinutes(original * 2);
+          r.Duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * Math.Pow(2, muteCount - 1));
           if (r.Duration >= TimeSpan.FromMinutes(10240))
             r.Duration = TimeSpan.FromDays(7); // max of 1 week for mutes
           break;

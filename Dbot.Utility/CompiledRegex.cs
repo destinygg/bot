@@ -16,19 +16,17 @@ namespace Dbot.Utility {
       ModabuseOn = Tools.CompiledIgnoreCaseRegex(@"^!modabuse on.*");
       ModabuseSemi = Tools.CompiledIgnoreCaseRegex(@"^!modabuse semi.*");
       ModabuseOff = Tools.CompiledIgnoreCaseRegex(@"^!modabuse off.*");
-      Add = Tools.CompiledIgnoreCaseRegex(@"^!add (.*)");
-      Del = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)? (.*)");
-      TempAdd = Tools.CompiledIgnoreCaseRegex(@"^!tempadd (.*)");
-      TempDel = Tools.CompiledIgnoreCaseRegex(@"^!tempdel (.*)");
-      AddEmote = Tools.CompiledIgnoreCaseRegex(@"^!addemote (.*)");
+      AddMute = GenerateRegex("addmute", true, false);
+      DelMute = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?mute (.+)");
+      AddEmote = Tools.CompiledIgnoreCaseRegex(@"^!addemote (.+)");
       DelEmote = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?emote (.+)");
       ListEmote = Tools.CompiledIgnoreCaseRegex(@"^!listemote");
-      Stalk = Tools.CompiledIgnoreCaseRegex(@"^!stalk (.*)");
-      Ban = GenerateRegex("ban|b");
-      Ipban = GenerateRegex("ipban|ip|i");
-      Mute = GenerateRegex("mute|m");
-      Nuke = GenerateRegex("nuke|annihilate|obliterate", true);
-      RegexNuke = GenerateRegex("regexnuke|regexpnuke|nukeregex|nukeregexp", true);
+      Stalk = Tools.CompiledIgnoreCaseRegex(@"^!stalk (.+)");
+      Ban = GenerateRegex("ban|b", true, true);
+      Ipban = GenerateRegex("ipban|ip|i", true, true);
+      Mute = GenerateRegex("mute|m", true, true);
+      Nuke = GenerateRegex("nuke|annihilate|obliterate", false, false);
+      RegexNuke = GenerateRegex("regexnuke|regexpnuke|nukeregex|nukeregexp", false, false);
       Aegis = Tools.CompiledIgnoreCaseRegex(@"^!aegis.*");
     }
 
@@ -39,10 +37,8 @@ namespace Dbot.Utility {
     public static Regex ModabuseOn { get; private set; }
     public static Regex ModabuseSemi { get; private set; }
     public static Regex ModabuseOff { get; private set; }
-    public static Regex Add { get; private set; }
-    public static Regex Del { get; private set; }
-    public static Regex TempAdd { get; private set; }
-    public static Regex TempDel { get; private set; }
+    public static Regex AddMute { get; private set; }
+    public static Regex DelMute { get; private set; }
     public static Regex AddEmote { get; private set; }
     public static Regex DelEmote { get; private set; }
     public static Regex ListEmote { get; private set; }
@@ -62,11 +58,10 @@ namespace Dbot.Utility {
     public static readonly List<string> AllButPerm = new List<string>().Concat(Seconds).Concat(Minutes).Concat(Hours).Concat(Days).ToList();
     public static readonly List<string> AllUnits = new List<string>().Concat(AllButPerm).Concat(Perm).ToList();
 
-    private static Regex GenerateRegex(string triggers, bool isNuke = false) {
-      var times = isNuke ? AllButPerm : AllUnits;
-      var user = isNuke ? " +" : @" +(\S+) *";
-      var s = Tools.CompiledIgnoreCaseRegex("^!(?:" + triggers + @") *(?:(\d*)(" + string.Join("|", times) + ")?)?" + user + "(.*)");
-      return s;
+    private static Regex GenerateRegex(string triggers, bool allowPerm, bool hasReason) {
+      var times = allowPerm ? AllUnits : AllButPerm;
+      var user = hasReason ? @" +(\S+) *" : " +";
+      return Tools.CompiledIgnoreCaseRegex("^!(?:" + triggers + @") *(?:(\d*)(" + string.Join("|", times) + ")?)?" + user + "(.*)");
     }
   }
 }

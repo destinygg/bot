@@ -15,8 +15,10 @@ namespace Dbot.Data {
     public static void Initialize() {
       _db = new SQLiteAsyncConnection("DbotDB.sqlite");
 
-      _tempBannedWords = _db.Table<TempBannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
-      _bannedWords = _db.Table<BannedWords>().ToListAsync().Result.Select(x => x.Word).ToList();
+      MutedWords = GetStateString_JsonStringDictionary(MagicStrings.MutedWords);
+      EmotesList = new List<string>();
+      ThirdPartyEmotesList = new List<string>();
+      GenerateEmoteRegex();
     }
 
     public static List<string> EmotesList { get; set; }
@@ -39,11 +41,7 @@ namespace Dbot.Data {
     //private static List<StateVariables> _stateVariables;
     //public static List<StateVariables> StateVariables { get { return _stateVariables ?? (_stateVariables = _db.Table<StateVariables>().ToListAsync().Result); } }
 
-    private static List<string> _bannedWords;
-    public static List<string> BannedWords { get { return _bannedWords; } }
-
-    private static List<string> _tempBannedWords;
-    public static List<string> TempBannedWords { get { return _tempBannedWords; } }
+    public static Dictionary<string, double> MutedWords { get; set; }
 
     public static int offTime() {
       return _db.Table<StateVariables>().Where(x => x.Key == MagicStrings.offTime).FirstAsync().Result.Value;
@@ -54,13 +52,12 @@ namespace Dbot.Data {
     }
 
     public static UserHistory UserHistory(string nick) {
-      var raw = _db.Table<RawUserHistory>().Where(x => x.Nick == nick).FirstOrDefaultAsync().Result;
-      if (raw == null) return new UserHistory() { Nick = nick };
-      return new UserHistory(raw);
+      var raw = _db.Table<JsonUserHistory>().Where(x => x.Nick == nick).FirstOrDefaultAsync().Result;
+      return raw == null ? new UserHistory { Nick = nick } : new UserHistory(raw);
     }
 
     public static void SaveUserHistory(UserHistory history, bool wait = false) {
-      var result = _db.Table<RawUserHistory>().Where(x => x.Nick == history.Nick).FirstOrDefaultAsync().Result;
+      var result = _db.Table<JsonUserHistory>().Where(x => x.Nick == history.Nick).FirstOrDefaultAsync().Result;
       var save = history.CopyTo();
       if (result == null) {
         if (wait)
@@ -74,7 +71,7 @@ namespace Dbot.Data {
         //} else
         //  _db.UpdateAsync(save); //todo why does Update/Async not work?
       }
-      Debug.Assert(_db.Table<RawUserHistory>().Where(x => x.Nick == history.Nick).CountAsync().Result == 1);
+      Debug.Assert(_db.Table<JsonUserHistory>().Where(x => x.Nick == history.Nick).CountAsync().Result == 1);
     }
 
     public static void UpdateStateVariable(string key, int value, bool wait = false) {
@@ -115,63 +112,61 @@ namespace Dbot.Data {
 
     public static string GetStateString(string key) {
       var temp = _db.Table<StateStrings>().Where(x => x.Key == key);
-      Debug.Assert(temp.CountAsync().Result == 1);
-      return temp.FirstAsync().Result.Value;
+      return temp.CountAsync().Result != 1 ? "" : temp.FirstAsync().Result.Value;
     }
 
     public static List<string> GetStateString_JsonStringList(string key) {
-      return JsonConvert.DeserializeObject<List<string>>(GetStateString(key));
+      return JsonConvert.DeserializeObject<List<string>>(GetStateString(key)) ?? new List<string>();
     }
 
     public static void SetStateString_JsonStringList(string key, List<string> value, bool wait = false) {
       UpdateStateString(key, JsonConvert.SerializeObject(value), wait);
     }
 
-    public static bool AddToStateString_JsonStringList(string key, string stringToAdd, IList<string> list) {
+    public static Dictionary<string, double> GetStateString_JsonStringDictionary(string key) {
+      return JsonConvert.DeserializeObject<Dictionary<string, double>>(GetStateString(key)) ?? new Dictionary<string, double>();
+    }
+
+    public static void SetStateString_JsonStringDictionary(string key, Dictionary<string, double> value, bool wait = false) {
+      UpdateStateString(key, JsonConvert.SerializeObject(value), wait);
+    }
+
+    public static bool AddToStateString_JsonStringDictionary(string key, string keyToAdd, double valueToAdd, IDictionary<string, double> externalDictionary) {
+      var tempDictionary = GetStateString_JsonStringDictionary(key);
+      if (tempDictionary.ContainsKey(keyToAdd)) {
+        DeleteFromStateString_JsonStringDictionary(key, keyToAdd, externalDictionary);
+        AddToStateString_JsonStringDictionary(key, keyToAdd, valueToAdd, externalDictionary);
+        return false;
+      }
+      tempDictionary.Add(keyToAdd, valueToAdd);
+      externalDictionary.Add(keyToAdd, valueToAdd);
+      SetStateString_JsonStringDictionary(key, tempDictionary, true);
+      return true;
+    }
+
+    public static bool DeleteFromStateString_JsonStringDictionary(string key, string keyToDelete, IDictionary<string, double> externalDictionary) {
+      var tempDictionary = GetStateString_JsonStringDictionary(key);
+      if (!tempDictionary.Remove(keyToDelete)) return false;
+      externalDictionary.Remove(keyToDelete);
+      SetStateString_JsonStringDictionary(key, tempDictionary, true);
+      return true;
+    }
+
+    public static bool AddToStateString_JsonStringList(string key, string stringToAdd, IList<string> externalList) {
       var tempList = GetStateString_JsonStringList(key);
       if (tempList.Contains(stringToAdd)) return false;
       tempList.Add(stringToAdd);
-      list.Add(stringToAdd);
+      externalList.Add(stringToAdd);
       SetStateString_JsonStringList(key, tempList, true);
       return true;
     }
 
-    public static bool DeleteFromStateString_JsonStringList(string key, string stringToDelete, IList<string> list) {
+    public static bool DeleteFromStateString_JsonStringList(string key, string stringToDelete, IList<string> externalList) {
       var tempList = GetStateString_JsonStringList(key);
       if (!tempList.Remove(stringToDelete)) return false;
-      list.Remove(stringToDelete);
+      externalList.Remove(stringToDelete);
       SetStateString_JsonStringList(key, tempList, true);
       return true;
-    }
-
-    public static void AddBanWord(string bannedPhrase) {
-      if (_db.Table<BannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
-        _db.InsertAsync(new BannedWords { Word = bannedPhrase });
-        _bannedWords.Add(bannedPhrase);
-      }
-    }
-
-    public static void AddTempBanWord(string bannedPhrase) {
-      if (_db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase).CountAsync().Result == 0) {
-        _db.InsertAsync(new TempBannedWords() { Word = bannedPhrase });
-        _tempBannedWords.Add(bannedPhrase);
-      }
-    }
-
-    public static void RemoveBanWord(string bannedPhrase) {
-      var bannedObject = _db.Table<BannedWords>().Where(x => x.Word == bannedPhrase);
-      if (bannedObject.CountAsync().Result > 0) {
-        _db.DeleteAsync(bannedObject.FirstAsync().Result);
-        _bannedWords.Remove(bannedPhrase);
-      }
-    }
-
-    public static void RemoveTempBanWord(string bannedPhrase) {
-      var bannedObject = _db.Table<TempBannedWords>().Where(x => x.Word == bannedPhrase);
-      if (bannedObject.CountAsync().Result > 0) {
-        _db.DeleteAsync(bannedObject.FirstAsync().Result);
-        _tempBannedWords.Remove(bannedPhrase);
-      }
     }
 
     public static Stalk Stalk(string user) {

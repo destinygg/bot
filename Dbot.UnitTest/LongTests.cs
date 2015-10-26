@@ -239,7 +239,7 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task EmotesTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message>() {
-        Make.Message("UserX","Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa"),
+        Make.Message("UserX","Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa"),
         Make.Message("UserX","OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle"),
         Make.Message("UserX","LUL LUL LUL LUL LUL LUL LUL LUL"),
       });
@@ -249,7 +249,7 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) > 0);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) > 0);
       Assert.IsTrue(r.Count(x => x.Contains("10m for face spam")) > 0);
-      Assert.IsTrue(r.Count(x => x.Contains("your ban time has doubled")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("your time has doubled. Future sanctions will not be explicitly justified")) > 0);
     }
 
     [TestMethod]
@@ -289,35 +289,66 @@ namespace Dbot.UnitTest {
     }
 
     [TestMethod]
-    public async Task BannedWordTest() {
+    public async Task AutoMuteTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message(true, "!add test"),
-        Make.Message(true, "!tempadd bork"),
-        Make.Message(true, "!tempadd herp"),
+        Make.Message(true, "!addmute9m test"),
+        Make.Message(true, "!addmute1m bork"),
+        Make.Message(true, "!addmutem herp"),
+        Make.Message("UserX", Tools.RandomString(20)),
         Make.Message("UserA", "test"),
+        Make.Message("UserX", Tools.RandomString(20)),
         Make.Message("UserB", "testing statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
         Make.Message("UserC", "bork"),
+        Make.Message("UserX", Tools.RandomString(20)),
         Make.Message("UserC", "borking statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
         Make.Message("UserC", "lorkborking statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
         Make.Message("UserC", "herp statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
         Make.Message("UserC", "herpderp statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
         Make.Message("UserC", "herpy derpy statement"),
-        Make.Message("UserX", "not a valid target"),
-        Make.Message("UserX", "not a valid target"),
-        Make.Message(true, "!del test"),
-        Make.Message(true, "!tempdel bork"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "somewhere a herp derps"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "close to home a derp herps"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "in a burrow hole the herp derped"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "the herp smiled as it derped quietly"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message(true, "!delmute test"),
+        Make.Message(true, "!delmute bork"),
         Make.Message("UserD", "test"),
         Make.Message("UserD", "bork"),
-        Make.Message("UserX", "Innocent as could be"),
-        Make.Message("UserX", "Innocent as could be"),
+        Make.Message(true, "!addmute13m repeat"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserE", "repeat"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message(true, "!addmute30m repeat"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserF", "repeat"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message(true, "!deletemute ghost"),
+        Make.Message("UserX", Tools.RandomString(20)),
       });
 
-      Assert.IsTrue(r.Count(x => x.Contains("Muted usera for 7 days")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userb for 7 days")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 10m")) == 2);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 20m")) == 2);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 40m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted usera for 9m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userb for 9m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 1m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 2m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 4m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 8m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 16m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 32m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 1h 4m")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userd")) == 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted usere for 13m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("repeat already in the automute list; its duration has been updated to 30m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userf for 30m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("ghost not found in the automute list")) == 1);
     }
 
     [TestMethod]

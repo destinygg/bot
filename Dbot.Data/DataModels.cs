@@ -23,20 +23,6 @@ namespace Dbot.Data {
     public string Value { get; set; }
   }
 
-  public class TempBannedWords {
-    [PrimaryKey, AutoIncrement, NotNull]
-    public int Id { get; set; }
-    [Unique, NotNull]
-    public string Word { get; set; }
-  }
-
-  public class BannedWords {
-    [PrimaryKey, AutoIncrement, NotNull]
-    public int Id { get; set; }
-    [Unique, NotNull]
-    public string Word { get; set; }
-  }
-
   public class Stalk {
     [PrimaryKey, AutoIncrement, NotNull]
     public int Id { get; set; }
@@ -48,69 +34,53 @@ namespace Dbot.Data {
     public string Text { get; set; }
   }
 
-  public class RawUserHistory {
+  public class JsonUserHistory {
     [PrimaryKey, AutoIncrement, NotNull]
     public int Id { get; set; }
     [NotNull, Unique]
     public string Nick { get; set; }
-    public int FullWidth { get; set; }
-    public int Unicode { get; set; }
-    public int FaceSpam { get; set; }
-    public string RawTempWordCount { get; set; }
+    public string RawHistory { get; set; }
   }
 
-  public class TempBanWordCount : IEquatable<TempBanWordCount> {
-    public string Word { get; set; }
-    public int Count { get; set; }
-    public bool Equals(TempBanWordCount other) {
-      return
-        this.Word == other.Word &&
-        this.Count == other.Count;
-    }
-  }
-
-  public class UserHistory : RawUserHistory, IEquatable<UserHistory> {
-    public UserHistory() { }
-    public UserHistory(RawUserHistory raw) {
-      this.Load(raw);
+  public class UserHistory : JsonUserHistory, IEquatable<UserHistory> {
+    public UserHistory() {
+      History = new Dictionary<string, Dictionary<string, int>>();
     }
 
-    private void Load(RawUserHistory raw) {
-      this.Id = raw.Id;
-      this.Nick = raw.Nick;
-      this.FullWidth = raw.FullWidth;
-      this.Unicode = raw.Unicode;
-      this.FaceSpam = raw.FaceSpam;
-      this.TempWordCount = JsonConvert.DeserializeObject<List<TempBanWordCount>>(raw.RawTempWordCount);
+    public UserHistory(JsonUserHistory json) {
+      Load(json);
     }
 
-    public RawUserHistory CopyTo() {
-      return new RawUserHistory() {
+    private void Load(JsonUserHistory json) {
+      Id = json.Id;
+      Nick = json.Nick;
+      History = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, int>>>(json.RawHistory);
+    }
+
+    public JsonUserHistory CopyTo() {
+      return new JsonUserHistory {
         Id = this.Id,
         Nick = this.Nick,
-        FullWidth = this.FullWidth,
-        Unicode = this.Unicode,
-        FaceSpam = this.FaceSpam,
-        RawTempWordCount = JsonConvert.SerializeObject(this.TempWordCount),
+        RawHistory = JsonConvert.SerializeObject(History),
       };
     }
 
-    private List<TempBanWordCount> _tempWordCount;
+    public Dictionary<string, Dictionary<string, int>> History { get; set; }
 
-    public List<TempBanWordCount> TempWordCount {
-      get { return _tempWordCount ?? new List<TempBanWordCount>(); }
-      set { _tempWordCount = value; }
-    }
-
-    public bool Equals(UserHistory other) {
-      var asdf = this.TempWordCount.SequenceEqual(other.TempWordCount);
-      var adsf = Unicode;
-      return
-        this.Nick == other.Nick &&
-        this.FullWidth == other.FullWidth &&
-        this.Unicode == other.Unicode &&
-        this.FaceSpam == other.FaceSpam &&
-        this.TempWordCount.SequenceEqual(other.TempWordCount);
+    public bool Equals(UserHistory other) { //todo Untested!
+      if (Nick != other.Nick) return false;
+      if (History.Count != other.History.Count) return false;
+      foreach (var section in History) {
+        var sectionName = section.Key;
+        var sectionHistory = section.Value;
+        if (History.Count != other.History.Count) return false;
+        foreach (var kvp in sectionHistory) {
+          var word = kvp.Key;
+          var count = kvp.Value;
+          if (count != other.History[sectionName][word]) return false;
+        }
+      }
+      return true;
     }
   }
 }

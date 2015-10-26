@@ -22,6 +22,7 @@ namespace Dbot.Utility {
     public static void UpdateEmotes() {
       Datastore.EmotesList = Tools.GetEmotes();
       Datastore.ThirdPartyEmotesList = Datastore.GetStateString_JsonStringList(MagicStrings.ThirdPartyEmotes);
+      Datastore.GenerateEmoteRegex();
     }
   }
 }
