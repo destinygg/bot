@@ -21,7 +21,7 @@ namespace Dbot.Data {
       GenerateEmoteRegex();
     }
 
-    public static List<string> EmotesList { get; set; }
+    public static List<string> EmotesList { get; set; } // todo figure out why making these ObservableCollections doesn't fire the CollectionChanged event from ModCommander
 
     public static List<string> ThirdPartyEmotesList { get; set; }
 
@@ -43,12 +43,12 @@ namespace Dbot.Data {
 
     public static Dictionary<string, double> MutedWords { get; set; }
 
-    public static int offTime() {
-      return _db.Table<StateVariables>().Where(x => x.Key == MagicStrings.offTime).FirstAsync().Result.Value;
+    public static int OffTime() {
+      return _db.Table<StateVariables>().Where(x => x.Key == MagicStrings.OffTime).FirstAsync().Result.Value;
     }
 
-    public static int onTime() {
-      return _db.Table<StateVariables>().Where(x => x.Key == MagicStrings.onTime).FirstAsync().Result.Value;
+    public static int OnTime() {
+      return _db.Table<StateVariables>().Where(x => x.Key == MagicStrings.OnTime).FirstAsync().Result.Value;
     }
 
     public static UserHistory UserHistory(string nick) {

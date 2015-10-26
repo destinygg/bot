@@ -159,6 +159,24 @@ namespace Dbot.UnitTest {
         messageList.Add(Make.Message("User" + i, i.ToString()));
       }
       messageList.Add(Make.Message("BanVictimA", "playing a longer game"));
+      messageList.AddRange(new List<Message> {
+        Make.Message("Innocent", "Sweetie240Belle why"), // todo fix people who talk to long names, then consider having a history for it.
+        Make.Message("Innocent2", "1"),
+        Make.Message("Innocent3", "2"),
+        Make.Message("Innocent4", "3"),
+        Make.Message("Innocent5", "4"),
+        Make.Message("Innocent6", "5"),
+        Make.Message("Innocent", "Sweetie240Belle is it?"),
+        Make.Message("Innocent7", "6"),
+        Make.Message("Innocent8", "7"),
+        Make.Message("Innocent9", "8"),
+        Make.Message("Innocent10", "9"),
+        Make.Message("Innocent11", "10"),
+        Make.Message("Innocent12", "11"),
+        Make.Message("Innocent13", "12"),
+        Make.Message("Innocent14", "13"),
+        Make.Message("Innocent", "Sweetie240Belle no"),
+      });
       var r = await new PrimaryLogic().TestRun(messageList);
 
       Assert.IsTrue(r.Any(x => x.Contains("Muted banvictima")));

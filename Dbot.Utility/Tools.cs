@@ -177,32 +177,32 @@ namespace Dbot.Utility {
     }
 
     public static string LiveStatus(bool liveStatus, DateTime compareTime, bool wait = false) {
-      var onTime = Tools.Epoch().AddSeconds(Datastore.onTime());
-      var offTime = Tools.Epoch().AddSeconds(Datastore.offTime());
+      var onTime = Tools.Epoch().AddSeconds(Datastore.OnTime());
+      var offTime = Tools.Epoch().AddSeconds(Datastore.OffTime());
 
       var onTimeDelta = compareTime - onTime;
       var offTimeDelta = compareTime - offTime;
 
       var time = (Int32) (compareTime - Tools.Epoch()).TotalSeconds;
 
-      if (liveStatus && Datastore.onTime() != 0) { //we've been live for some time
-        Datastore.UpdateStateVariable(MagicStrings.offTime, 0, wait);
+      if (liveStatus && Datastore.OnTime() != 0) { //we've been live for some time
+        Datastore.UpdateStateVariable(MagicStrings.OffTime, 0, wait);
         return "Live with " + Datastore.Viewers + " viewers for " + PrettyDeltaTime(onTimeDelta, "~");
       }
-      if (liveStatus && Datastore.onTime() == 0) { // we just went live
-        Datastore.UpdateStateVariable(MagicStrings.onTime, time, wait);
-        Datastore.UpdateStateVariable(MagicStrings.offTime, 0, wait);
+      if (liveStatus && Datastore.OnTime() == 0) { // we just went live
+        Datastore.UpdateStateVariable(MagicStrings.OnTime, time, wait);
+        Datastore.UpdateStateVariable(MagicStrings.OffTime, 0, wait);
         return "Destiny is live! With " + Datastore.Viewers + " viewers for ~0m";
       }
-      if (!liveStatus && Datastore.onTime() != 0 && Datastore.offTime() == 0) { //we've just gone offline
-        Datastore.UpdateStateVariable(MagicStrings.offTime, time, wait);
+      if (!liveStatus && Datastore.OnTime() != 0 && Datastore.OffTime() == 0) { //we've just gone offline
+        Datastore.UpdateStateVariable(MagicStrings.OffTime, time, wait);
         return "Stream went offline in the past ~10m";
       }
       if (!liveStatus && offTimeDelta < TimeSpan.FromMinutes(10)) {
         return "Stream went offline in the past ~10m";
       }
-      if (!liveStatus && Datastore.offTime() != 0) { //we've been not live for a while
-        Datastore.UpdateStateVariable(MagicStrings.onTime, 0, wait);
+      if (!liveStatus && Datastore.OffTime() != 0) { //we've been not live for a while
+        Datastore.UpdateStateVariable(MagicStrings.OnTime, 0, wait);
         return "Stream offline for " + PrettyDeltaTime(offTimeDelta, "~");
       }
       ErrorLog(String.Format("LiveStatus()'s ifs failed. LiveStatus: {0}. In minutes: OnTimeΔ {1}. OffTimeΔ {2}", liveStatus, onTimeDelta.TotalMinutes, offTimeDelta.TotalMinutes));

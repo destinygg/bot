@@ -1,8 +1,7 @@
 namespace Dbot.Data {
   public static class MagicStrings {
-    //public const string star = "*";
-    public const string onTime = "OnTime";
-    public const string offTime = "OffTime";
+    public const string OnTime = "OnTime";
+    public const string OffTime = "OffTime";
     public const string ThirdPartyEmotes = "ThirdPartyEmotes";
     public const string MutedWords = "MutedWords";
     public const string HardCoded = "HardCoded";

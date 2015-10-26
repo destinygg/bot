@@ -112,11 +112,11 @@ namespace Dbot.UnitTest {
       InitializeDatastore.Run();
       Datastore.Viewers = 0;
 
-      Datastore.UpdateStateVariable(MagicStrings.onTime, 0, true);
-      Datastore.UpdateStateVariable(MagicStrings.offTime, 300, true);
+      Datastore.UpdateStateVariable(MagicStrings.OnTime, 0, true);
+      Datastore.UpdateStateVariable(MagicStrings.OffTime, 300, true);
 
-      Assert.AreEqual(Datastore.onTime(), 0);
-      Assert.AreEqual(Datastore.offTime(), 300);
+      Assert.AreEqual(Datastore.OnTime(), 0);
+      Assert.AreEqual(Datastore.OffTime(), 300);
 
       var testList = new List<Tuple<int, int, int, bool, string>> {
         //minutes, asserted onTime, asserted offTime, livestatus, livestring
@@ -151,8 +151,8 @@ namespace Dbot.UnitTest {
 
       foreach (var x in testList) {
         var temp = Tools.LiveStatus(x.Item4, Tools.Epoch(TimeSpan.FromMinutes(x.Item1)), true);
-        Assert.AreEqual(Datastore.onTime(), x.Item2 * 60);
-        Assert.AreEqual(Datastore.offTime(), x.Item3 * 60);
+        Assert.AreEqual(Datastore.OnTime(), x.Item2 * 60);
+        Assert.AreEqual(Datastore.OffTime(), x.Item3 * 60);
         Assert.AreEqual(temp, x.Item5);
       }
     }
