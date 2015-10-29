@@ -8,7 +8,7 @@ using Dbot.CommonModels;
 namespace Dbot.Utility {
   public static class Make {
     public static Message Message(string text) {
-      return new Message { OriginalText = text };
+      return new Message { Nick = "MyNick", OriginalText = text };
     }
 
     public static Message Message(string nick, string text) {

@@ -57,12 +57,12 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!mute 7d UserX reason goes here"),
       });
 
-      Assert.IsTrue(r.Count(x => x == "Muted UserX for 1h") == 4);
+      Assert.IsTrue(r.Count(x => x == "Muted userx for 1h") == 4);
       foreach (var i in Enumerable.Range(2, 8)) {
-        Assert.IsTrue(r.Count(x => x == "Muted UserX for " + i + "h") == 1);
-        Assert.IsTrue(r.Count(x => x == "Muted UserX for " + i + "m") == 1);
+        Assert.IsTrue(r.Count(x => x == "Muted userx for " + i + "h") == 1);
+        Assert.IsTrue(r.Count(x => x == "Muted userx for " + i + "m") == 1);
       }
-      Assert.IsTrue(r.Count(x => x == "Muted UserX for 7 days") == 7);
+      Assert.IsTrue(r.Count(x => x == "Muted userx for 7 days") == 7);
     }
 
     [TestMethod]
@@ -93,12 +93,12 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!ban perm UserX"),
       });
 
-      Assert.IsTrue(r.Count(x => x == "Banned UserX for 1h") == 4);
+      Assert.IsTrue(r.Count(x => x == "Banned userx for 1h") == 4);
       foreach (var i in Enumerable.Range(2, 8)) {
-        Assert.IsTrue(r.Count(x => x == "Banned UserX for " + i + "h") == 1);
-        Assert.IsTrue(r.Count(x => x == "Banned UserX for " + i + "m") == 1);
+        Assert.IsTrue(r.Count(x => x == "Banned userx for " + i + "h") == 1);
+        Assert.IsTrue(r.Count(x => x == "Banned userx for " + i + "m") == 1);
       }
-      Assert.IsTrue(r.Count(x => x == "Banned UserX for 0m") == 3);
+      Assert.IsTrue(r.Count(x => x == "Banned userx for 0m") == 3);
     }
 
     [TestMethod]
@@ -129,11 +129,11 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!ipban perm UserX"),
       });
 
-      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned UserX for ") == 4);
-      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned UserX for reason goes here") == 3);
+      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned userx for ") == 4);
+      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned userx for reason goes here") == 3);
       foreach (var i in Enumerable.Range(2, 8)) {
-        Assert.IsTrue(r.Count(x => x == "Ipbanned UserX for " + i + "h") == 1);
-        Assert.IsTrue(r.Count(x => x == "Ipbanned UserX for " + i + "m") == 1);
+        Assert.IsTrue(r.Count(x => x == "Ipbanned userx for " + i + "h") == 1);
+        Assert.IsTrue(r.Count(x => x == "Ipbanned userx for " + i + "m") == 1);
       }
     }
 

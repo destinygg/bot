@@ -100,7 +100,6 @@ namespace Dbot.Processor {
 #if DEBUG
       Console.WriteLine(message.Ordinal + " " + message.Nick + ": " + message.OriginalText);
 #endif
-      message.Nick = message.Nick.ToLower();
       Datastore.InsertMessage(message);
     }
 
