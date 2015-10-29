@@ -35,7 +35,7 @@ namespace Dbot.Processor {
       var count = hardcodedLogic[sectionName];
       hardcodedLogic[sectionName] = count + 1;
       Datastore.SaveUserHistory(userHistory, wait);
-      return MuteIncreaser(TimeSpan.FromMinutes(10), count, reason);
+      return (Mute) HasVictimDurationIncreaser(TimeSpan.FromMinutes(10), count, reason, new Mute());
     }
 
     public HasVictim BanParser(bool wait = false) {
@@ -58,17 +58,24 @@ namespace Dbot.Processor {
       if (Datastore.EmoteRegex.Matches(_message.OriginalText).Count > 7)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.Facespam, "face spam", wait);
 
-      if (Datastore.MutedWords.Select(x => x.Key).Any(x => _unnormalized.Contains(x) || _text.Contains(x))) {
-        var word = Datastore.MutedWords.Select(x => x.Key).First(x => _unnormalized.Contains(x) || _text.Contains(x));
-        var duration = TimeSpan.FromSeconds(Datastore.MutedWords[word]);
-        if (!userHistory.History.ContainsKey(MagicStrings.MutedWords))
-          userHistory.History.Add(MagicStrings.MutedWords, new Dictionary<string, int>());
-        var mutedWords = userHistory.History[MagicStrings.MutedWords];
-        if (!mutedWords.ContainsKey(word))
-          mutedWords.Add(word, 0);
-        mutedWords[word]++;
-        Datastore.SaveUserHistory(userHistory, wait);
-        return MuteIncreaser(duration, mutedWords[word], "prohibited phrase");
+      var mutedWord = Datastore.MutedWords.Select(x => x.Key).FirstOrDefault(x => _unnormalized.Contains(x) || _text.Contains(x));
+      var mute = DeterminesHasVictim(mutedWord, userHistory, MagicStrings.MutedWords, Datastore.MutedWords, new Mute(), wait);
+      if (mute != null) return mute;
+
+      var bannedWord = Datastore.BannedWords.Select(x => x.Key).FirstOrDefault(x => _unnormalized.Contains(x) || _text.Contains(x));
+      var ban = DeterminesHasVictim(bannedWord, userHistory, MagicStrings.BannedWords, Datastore.BannedWords, new Ban(), wait);
+      if (ban != null) return ban;
+
+      var mutedRegex = Datastore.MutedRegex.Select(x => new Regex(x.Key)).FirstOrDefault(x => x.Match(_unnormalized).Success);
+      if (mutedRegex != null) {
+        var banR = DeterminesHasVictim(mutedRegex.ToString(), userHistory, MagicStrings.MutedRegex, Datastore.MutedRegex, new Mute(), wait);
+        if (banR != null) return banR;
+      }
+
+      var bannedRegex = Datastore.BannedRegex.Select(x => new Regex(x.Key)).FirstOrDefault(x => x.Match(_unnormalized).Success);
+      if (bannedRegex != null) {
+        var banR = DeterminesHasVictim(bannedRegex.ToString(), userHistory, MagicStrings.BannedRegex, Datastore.BannedRegex, new Ban(), wait);
+        if (banR != null) return banR;
       }
 
       var longSpam = LongSpam();
@@ -87,26 +94,36 @@ namespace Dbot.Processor {
       return null;
     }
 
-    public Mute MuteIncreaser(TimeSpan baseDuration, int muteCount, string muteWord) {
-      var r = new Mute();
-      switch (muteCount) {
+    private HasVictim DeterminesHasVictim(string word, UserHistory userHistory, string key, IDictionary<string, double> externalDictionary, HasVictim hasVictim, bool wait) {
+      if (word == null) return null;
+      var duration = TimeSpan.FromSeconds(externalDictionary[word]);
+      if (!userHistory.History.ContainsKey(key))
+        userHistory.History.Add(key, new Dictionary<string, int>());
+      var words = userHistory.History[key];
+      if (!words.ContainsKey(word))
+        words.Add(word, 0);
+      words[word]++;
+      Datastore.SaveUserHistory(userHistory, wait);
+      return HasVictimDurationIncreaser(duration, words[word], "prohibited phrase", hasVictim);
+    }
+
+    public HasVictim HasVictimDurationIncreaser(TimeSpan baseDuration, int count, string reason, HasVictim hasVictim) {
+      switch (count) {
         case 1:
-          r.Reason = Tools.PrettyDeltaTime(baseDuration) + " for " + muteWord;
-          r.Duration = baseDuration;
+          hasVictim.Reason = Tools.PrettyDeltaTime(baseDuration) + " for " + reason;
+          hasVictim.Duration = baseDuration;
           break;
         case 2:
           var duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * 2);
-          r.Reason = Tools.PrettyDeltaTime(duration) + " for " + muteWord + "; your time has doubled. Future sanctions will not be explicitly justified."; ;
-          r.Duration = duration;
+          hasVictim.Reason = Tools.PrettyDeltaTime(duration) + " for " + reason + "; your time has doubled. Future sanctions will not be explicitly justified."; ;
+          hasVictim.Duration = duration;
           break;
         default:
-          r.Duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * Math.Pow(2, muteCount - 1));
-          if (r.Duration >= TimeSpan.FromMinutes(10240))
-            r.Duration = TimeSpan.FromDays(7); // max of 1 week for mutes
+          hasVictim.Duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * Math.Pow(2, count - 1));
           break;
       }
-      r.Nick = _message.Nick;
-      return r;
+      hasVictim.Nick = _message.Nick;
+      return hasVictim;
     }
 
     public string Normalized { get { return _text; } }

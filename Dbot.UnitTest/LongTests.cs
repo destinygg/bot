@@ -308,65 +308,174 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task AutoMuteTest() {
+      await AutoMuteBanTest("mute", "Muted");
+    }
+
+    [TestMethod]
+    public async Task AutoBanTest() {
+      await AutoMuteBanTest("ban", "Banned");
+    }
+
+    [TestMethod]
+    public async Task AutoMuteRegexTest() {
+      await AutoMuteBanTest("muteregex", "Muted");
+      await AutoMuteBanRegexTest("muteregex", "Muted");
+    }
+
+    [TestMethod]
+    public async Task AutoBanRegexTest() {
+      await AutoMuteBanTest("banregex", "Banned");
+      await AutoMuteBanRegexTest("banregex", "Banned");
+    }
+
+    private async Task AutoMuteBanRegexTest(string normal, string capsPasttense) {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message(true, "!addmute9m test"),
-        Make.Message(true, "!addmute1m bork"),
-        Make.Message(true, "!addmutem herp"),
+        Make.Message(true, "!add" + normal + @"9m r(e|3)g\dx"),
+        Make.Message(true, "!add" + normal + @"1m ^begin *end$"),
+        Make.Message(true, "!add" + normal + @"m cAsEsEnSiTiViTy MaTtErS"),
+        Make.Message(true, "!add" + normal + @"m (?i:DOES NOT MATTER)"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserA", "test"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserB", "testing statement"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "bork"),
+        Make.Message("1spam", "word r3g1x space"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "borking statement"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "lorkborking statement"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "herp statement"),
+        Make.Message("UserX", "not r1gex work"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "herpderp statement"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "herpy derpy statement"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "somewhere a herp derps"),
+        Make.Message("2spam", "begin      end"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "close to home a derp herps"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "in a burrow hole the herp derped"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "the herp smiled as it derped quietly"),
+        Make.Message("UserX", "begin      endx"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message(true, "!delmute test"),
-        Make.Message(true, "!delmute bork"),
-        Make.Message("UserD", "test"),
-        Make.Message("UserD", "bork"),
-        Make.Message(true, "!addmute13m repeat"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserE", "repeat"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message(true, "!addmute30m repeat"),
+        Make.Message("3spam", "abc cAsEsEnSiTiViTy MaTtErS def"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserF", "repeat"),
         Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message(true, "!deletemute ghost"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", "casesensitivity matters"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("4spam", "xyz does not matter 123"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", "XOES NOT MATTER"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message(true, "!del" + normal + @" r(e|3)g\dx"),
+        Make.Message(true, "!del" + normal + @" ^begin *end$"),
+        Make.Message(true, "!del" + normal + @" cAsEsEnSiTiViTy MaTtErS"),
+        Make.Message(true, "!del" + normal + @" (?i:DOES NOT MATTER)"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", "word r3g1x space"),
+        Make.Message("UserX", "not r1gex work"),
+        Make.Message("UserX", "abc cAsEsEnSiTiViTy MaTtErS def"),
+        Make.Message("UserX", "does not matter"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
         Make.Message("UserX", Tools.RandomString(20)),
       });
 
-      Assert.IsTrue(r.Count(x => x.Contains("Muted usera for 9m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userb for 9m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 1m")) == 2);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 2m")) == 2);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 4m")) == 2);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 8m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 16m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 32m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userc for 1h 4m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userd")) == 0);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted usere for 13m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("repeat already in the automute list; its duration has been updated to 30m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userf for 30m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("ghost not found in the automute list")) == 1);
+      SpamAndUserAssert(r, 4);
+    }
+
+    private async Task AutoMuteBanTest(string normal, string capsPasttense) {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        Make.Message(true, "!add" + normal + "9m test"),
+        Make.Message(true, "!add" + normal + "1m bork"),
+        Make.Message(true, "!add" + normal + "m herp"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserA", "test"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserB", "testing statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "bork"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "borking statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "lorkborking statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "herp statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "herpderp statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "herpy derpy statement"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "somewhere a herp derps"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "close to home a derp herps"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "in a burrow hole the herp derped"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserC", "the herp smiled as it derped quietly"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message(true, "!del" + normal + " test"),
+        Make.Message(true, "!del" + normal + " bork"),
+        Make.Message(true, "!del" + normal + " herp"),
+        Make.Message("UserD", "test"),
+        Make.Message("UserD", "bork"),
+        Make.Message(true, "!add" + normal + "13m repeat"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserE", "repeat"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message(true, "!add" + normal + "30m repeat"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message("UserF", "repeat"),
+        Make.Message("UserX", Tools.RandomString(20)),
+        Make.Message(true, "!delete" + normal + " ghost"),
+        Make.Message(true, "!delete" + normal + " repeat"),
+        Make.Message("UserX", Tools.RandomString(20)),
+      });
+
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " usera for 9m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userb for 9m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 1m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 2m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 4m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 8m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 16m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 32m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 1h 4m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userd")) == 0);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " usere for 13m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("repeat already in the auto" + normal + " list; its duration has been updated to 30m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userf for 30m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("ghost not found in the auto" + normal + " list")) == 1);
     }
 
     [TestMethod]
@@ -460,9 +569,9 @@ namespace Dbot.UnitTest {
 
     private static void SpamAndUserAssert(IList<string> returns, int spamMax) {
       foreach (var i in Enumerable.Range(1, spamMax)) {
-        Assert.IsTrue(returns.Count(x => x.Contains("Muted " + i + "spam")) == 1);
+        Assert.IsTrue(returns.Count(x => x.Contains("Muted " + i + "spam")) == 1 || returns.Count(x => x.Contains("Banned " + i + "spam")) == 1);
       }
-      Assert.IsTrue(returns.Count(x => x.Contains("Muted user")) == 0);
+      Assert.IsTrue(returns.Count(x => x.Contains("Muted user")) == 0 && returns.Count(x => x.Contains("Banned user")) == 0);
     }
   }
 }
