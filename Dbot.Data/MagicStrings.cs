@@ -4,6 +4,9 @@ namespace Dbot.Data {
     public const string OffTime = "OffTime";
     public const string ThirdPartyEmotes = "ThirdPartyEmotes";
     public const string MutedWords = "MutedWords";
+    public const string BannedWords = "BannedWords";
+    public const string MutedRegex = "MutedRegex";
+    public const string BannedRegex = "BannedRegex";
     public const string HardCoded = "HardCoded";
     public const string FullWidth = "FullWidth";
     public const string Unicode = "Unicode";

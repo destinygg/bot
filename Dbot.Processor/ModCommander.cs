@@ -46,22 +46,29 @@ namespace Dbot.Processor {
         Send("Awaiting the call.");
         Datastore.UpdateStateVariable("modabuse", 0);
       } },
-      { CompiledRegex.AddMute, (g,c) => { 
-        var number = g[1].Value;
-        var unit = g[2].Value;
-        var wordToAdd = g[3].Value;
-        var duration = BanTime(number, unit);
-        if (Datastore.AddToStateString_JsonStringDictionary(Ms.MutedWords, wordToAdd, duration.TotalSeconds, Datastore.MutedWords))
-          Send(wordToAdd + " added to the automute list");
-        else 
-          Send(wordToAdd + " already in the automute list; its duration has been updated to " + Tools.PrettyDeltaTime(duration));
+      { CompiledRegex.AddMute, (g,c) => {
+        Add(g, Ms.MutedWords, Datastore.MutedWords, " added to the automute list", " already in the automute list; its duration has been updated to ");
+      } },
+      { CompiledRegex.AddBan, (g,c) => { 
+        Add(g, Ms.BannedWords, Datastore.BannedWords, " added to the autoBAN list. It is recommended that you use the autoMUTE list since banned people cannot load chat.", " already in the autoban list; its duration has been updated to ");
+      } },
+      { CompiledRegex.AddMuteRegex, (g,c) => { 
+        Add(g, Ms.MutedRegex, Datastore.MutedRegex, " added to the automute regex list", " already in the automuteregex list; its duration has been updated to ");
+      } },
+      { CompiledRegex.AddBanRegex, (g,c) => {
+        Add(g, Ms.BannedRegex, Datastore.BannedRegex, " added to the autoBANregex list. It is recommended that you use the autoMUTE regex list since banned people cannot load chat.", " already in the autobanregex list; its duration has been updated to ");
       } },
       { CompiledRegex.DelMute, (g,c) => {
-        var wordToDelete = g[1].Value;
-        if (Datastore.DeleteFromStateString_JsonStringDictionary(Ms.MutedWords, wordToDelete, Datastore.MutedWords))
-          Send(wordToDelete + " deleted from the automute list");
-        else
-          Send(wordToDelete + " not found in the automute list");
+        Delete(g, Ms.MutedWords, Datastore.MutedWords, "automute");
+      } },
+      { CompiledRegex.DelBan, (g,c) => {
+        Delete(g, Ms.BannedWords, Datastore.BannedWords, "autoban");
+      } },
+      { CompiledRegex.DelMuteRegex, (g,c) => {
+        Delete(g, Ms.MutedRegex, Datastore.MutedRegex, "automuteregex");
+      } },
+      { CompiledRegex.DelBanRegex, (g,c) => {
+        Delete(g, Ms.BannedRegex, Datastore.BannedRegex, "autobanregex");
       } },
       { CompiledRegex.AddEmote, (g,c) => {
         var emoteToAdd = g[1].Value;
@@ -152,6 +159,25 @@ namespace Dbot.Processor {
         AntiNuke.Aegis();
       } },
     };
+
+    private static void Add(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string success, string fail) {
+      var number = g[1].Value;
+      var unit = g[2].Value;
+      var wordToAdd = g[3].Value;
+      var duration = BanTime(number, unit);
+      if (Datastore.AddToStateString_JsonStringDictionary(category, wordToAdd, duration.TotalSeconds, externalDictionary))
+        Send(wordToAdd + success);
+      else
+        Send(wordToAdd + fail + Tools.PrettyDeltaTime(duration));
+    }
+
+    private static void Delete(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string name) {
+      var wordToDelete = g[1].Value;
+      if (Datastore.DeleteFromStateString_JsonStringDictionary(category, wordToDelete, externalDictionary))
+        Send(wordToDelete + " deleted from the " + name + " list");
+      else
+        Send(wordToDelete + " not found in the " + name + " list");
+    }
 
     private static TimeSpan BanTime(string stringInt, string s, bool ip = false) {
       var i = stringInt == "" ? 1 : int.Parse(stringInt);

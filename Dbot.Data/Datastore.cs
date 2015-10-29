@@ -16,6 +16,9 @@ namespace Dbot.Data {
       _db = new SQLiteAsyncConnection("DbotDB.sqlite");
 
       MutedWords = GetStateString_JsonStringDictionary(MagicStrings.MutedWords);
+      BannedWords = GetStateString_JsonStringDictionary(MagicStrings.BannedWords);
+      MutedRegex = GetStateString_JsonStringDictionary(MagicStrings.MutedRegex);
+      BannedRegex = GetStateString_JsonStringDictionary(MagicStrings.BannedRegex);
       EmotesList = new List<string>();
       ThirdPartyEmotesList = new List<string>();
       GenerateEmoteRegex();
@@ -42,6 +45,9 @@ namespace Dbot.Data {
     //public static List<StateVariables> StateVariables { get { return _stateVariables ?? (_stateVariables = _db.Table<StateVariables>().ToListAsync().Result); } }
 
     public static Dictionary<string, double> MutedWords { get; set; }
+    public static Dictionary<string, double> BannedWords { get; set; }
+    public static Dictionary<string, double> MutedRegex { get; set; }
+    public static Dictionary<string, double> BannedRegex { get; set; }
 
     public static int OffTime() {
       return _db.Table<StateVariables>().Where(x => x.Key == MagicStrings.OffTime).FirstAsync().Result.Value;

@@ -16,8 +16,14 @@ namespace Dbot.Utility {
       ModabuseOn = Tools.CompiledIgnoreCaseRegex(@"^!modabuse on.*");
       ModabuseSemi = Tools.CompiledIgnoreCaseRegex(@"^!modabuse semi.*");
       ModabuseOff = Tools.CompiledIgnoreCaseRegex(@"^!modabuse off.*");
-      AddMute = GenerateRegex("addmute", true, false);
-      DelMute = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?mute (.+)");
+      AddMute = GenerateRegex("add|addmute", true, false);
+      AddBan = GenerateRegex("addban", true, false);
+      AddMuteRegex = GenerateRegex("addregex|addmuteregex", true, false);
+      AddBanRegex = GenerateRegex("addbanregex", true, false);
+      DelMute = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?(?:mute)? (.+)");
+      DelBan = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?ban (.+)");
+      DelMuteRegex = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?(?:mute)?regex (.+)");
+      DelBanRegex = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?banregex (.+)");
       AddEmote = Tools.CompiledIgnoreCaseRegex(@"^!addemote (.+)");
       DelEmote = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?emote (.+)");
       ListEmote = Tools.CompiledIgnoreCaseRegex(@"^!listemote");
@@ -38,7 +44,13 @@ namespace Dbot.Utility {
     public static Regex ModabuseSemi { get; private set; }
     public static Regex ModabuseOff { get; private set; }
     public static Regex AddMute { get; private set; }
+    public static Regex AddBan { get; private set; }
+    public static Regex AddMuteRegex { get; private set; }
+    public static Regex AddBanRegex { get; private set; }
     public static Regex DelMute { get; private set; }
+    public static Regex DelBan { get; private set; }
+    public static Regex DelMuteRegex { get; private set; }
+    public static Regex DelBanRegex { get; private set; }
     public static Regex AddEmote { get; private set; }
     public static Regex DelEmote { get; private set; }
     public static Regex ListEmote { get; private set; }
