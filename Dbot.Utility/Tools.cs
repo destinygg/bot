@@ -44,7 +44,11 @@ namespace Dbot.Utility {
             log.Add("Ipbanned " + input.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
           }
         } else {
-          log.Add("Banned " + input.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
+          if (banInput.Duration.TotalSeconds == 0) {
+            log.Add("Permanently banned " + input.Nick + " for " + banInput.Reason);
+          } else {
+            log.Add("Banned " + input.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
+          }
         }
       } else {
         throw new Exception("Unsupported Sendable");

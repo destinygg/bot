@@ -98,7 +98,7 @@ namespace Dbot.UnitTest {
         Assert.IsTrue(r.Count(x => x == "Banned userx for " + i + "h") == 1);
         Assert.IsTrue(r.Count(x => x == "Banned userx for " + i + "m") == 1);
       }
-      Assert.IsTrue(r.Count(x => x == "Banned userx for 0m") == 3);
+      Assert.IsTrue(r.Count(x => x.Contains("Permanently banned userx for")) == 3);
     }
 
     [TestMethod]
@@ -384,7 +384,6 @@ namespace Dbot.UnitTest {
         Make.Message("UserX", Tools.RandomString(20)),
         Make.Message("UserX", Tools.RandomString(20)),
       });
-
       SpamAndUserAssert(r, 4);
     }
 
@@ -573,5 +572,94 @@ namespace Dbot.UnitTest {
       }
       Assert.IsTrue(returns.Count(x => x.Contains("Muted user")) == 0 && returns.Count(x => x.Contains("Banned user")) == 0);
     }
+
+    [TestMethod]
+    public async Task MuteIncreaserTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        Make.Message(true, "!add word"),
+        Make.Message("UserX", "word"),
+        Make.Message("UserX", "word"),
+        Make.Message("UserX", "word"),
+        Make.Message("UserX", "word"),
+        Make.Message("UserX", "word"),
+        Make.Message("UserX", "word"),
+        Make.Message("UserX", "word"),
+        Make.Message("UserX", "word"),
+        Make.Message("UserX", "word"),
+        Make.Message(true, "!delemote FaceA"),
+      });
+      await Task.Delay(100);
+
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 7 days")) == 1);
+    }
+
+    [TestMethod]
+    public async Task NukeRegexAndAegisTest() {
+      const int firstBufferSize = 5; // 5/25 Use NukeLoopWait/AegisLoopWait delays of 0/2000 for this
+      const int secondBufferSize = 5; // 5/25
+      const int thirdBufferSize = 5; // 5/225
+      var messageList = new List<Message>{
+        Make.Message("red1", "red1"),
+        Make.Message("red2", "red2"),
+        Make.Message("red3", "red3"),
+        
+        Make.Message("yellow1", "yellow1"),
+        Make.Message("yellow2", "yellow2"),
+        Make.Message("yellow3", "yellow3"),
+        
+        Make.Message(true, @"!nukeregex10m red\d"),
+        Make.Message(true, @"!nukeregex30m yell..\d"),
+      };
+      messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => Make.Message("User" + i, "test")));
+      messageList.AddRange(new List<Message>{
+        Make.Message("red4", "red4"),
+        Make.Message("red5", "red5"),
+        Make.Message("red6", "red6"),
+        
+        Make.Message("yellow4", "yellow4"),
+        Make.Message("yellow5", "yellow5"),
+        Make.Message("yellow6", "yellow6"),
+        //Make.Message(true, "!mute User26"),
+      });
+      messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => Make.Message("User" + i, "test")));
+      messageList.AddRange(new List<Message>{
+        Make.Message(true, "!aegis"),
+        Make.Message("red7", "red7"),
+        Make.Message("yellow7", "yellow7"),
+        Make.Message("transparent1", "transparent1"),
+        Make.Message(true, @"!NUKEregex transparent\d"),
+        Make.Message("transparent2", "transparent2"),
+        Make.Message(true, "!aegis"),
+        Make.Message("transparent3", "transparent3"),
+        Make.Message("transparent4", "transparent4"),
+        Make.Message("transparent5", "transparent5"),
+
+      });
+      messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => Make.Message("User" + i, "test")));
+
+      var r = await new PrimaryLogic().TestRun(messageList);
+
+      foreach (var i in Enumerable.Range(2, 4)) {
+        Assert.IsTrue(r.Count(x => x.Contains("Muted red" + i.ToString())) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains("Muted yellow" + i.ToString())) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains("Unbanned red" + i.ToString())) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains("Unbanned yellow" + i.ToString())) == 1);
+      }
+      Assert.IsTrue(r.Count(x => x.Contains("Muted red1")) >= 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted yellow1")) >= 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Unbanned red1")) >= 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Unbanned yellow1")) >= 1);
+      foreach (var i in Enumerable.Range(1, firstBufferSize + secondBufferSize + thirdBufferSize)) {
+        Assert.IsTrue(!r.Any(x => x.Contains("Muted user" + i.ToString())));
+      }
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted red7")));
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted yellow7")));
+      Assert.IsTrue(r.Count(x => x.Contains("Muted transparent1")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted transparent2")) == 1);
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent3")));
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent4")));
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent5")));
+    }
+
   }
 }
