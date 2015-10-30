@@ -15,6 +15,7 @@ using Message = Dbot.CommonModels.Message;
 namespace Dbot.Processor {
   public class Commander {
     private readonly string _text;
+    private readonly Message _message;
 
     private readonly Dictionary<List<string>, Func<string>> _commandDictionary = new Dictionary<List<string>, Func<string>> {
       { new List<string> { "playlist" }, 
@@ -46,13 +47,25 @@ namespace Dbot.Processor {
     };
 
     public Commander(Message message) {
+      _message = message;
       _text = message.Text.Substring(1);
     }
 
     public Message Run() {
-      MessageProcessor.LastCommandTime = DateTime.UtcNow;
+      //todo could clean this up a bit. Add _commandDictionary to some Datastore and add CustomCommands to it instead of this two tiered logic.
+      var customCommand = Datastore.CustomCommands.FirstOrDefault(y => _text.StartsWith(y.Key)).Value;
+      if (customCommand != null) {
+        if (!_message.IsMod)
+          MessageProcessor.LastCommandTime = DateTime.UtcNow;
+        return Make.Message(true, customCommand);
+      }
       var command = _commandDictionary.FirstOrDefault(y => y.Key.Any(x => _text.StartsWith(x))).Value;
-      return command == null ? null : Make.Message(true, command.Invoke());
+      if (command != null) {
+        if (!_message.IsMod)
+          MessageProcessor.LastCommandTime = DateTime.UtcNow;
+        return Make.Message(true, command.Invoke());
+      }
+      return null;
     }
 
     private static string Blog() {

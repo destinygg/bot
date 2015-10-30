@@ -19,6 +19,7 @@ namespace Dbot.Data {
       BannedWords = GetStateString_StringDoubleDictionary(MagicStrings.BannedWords);
       MutedRegex = GetStateString_StringDoubleDictionary(MagicStrings.MutedRegex);
       BannedRegex = GetStateString_StringDoubleDictionary(MagicStrings.BannedRegex);
+      CustomCommands = GetStateString_StringStringDictionary(MagicStrings.CustomCommands);
       EmotesList = new List<string>();
       ThirdPartyEmotesList = new List<string>();
       GenerateEmoteRegex();
@@ -48,6 +49,7 @@ namespace Dbot.Data {
     public static Dictionary<string, double> BannedWords { get; set; }
     public static Dictionary<string, double> MutedRegex { get; set; }
     public static Dictionary<string, double> BannedRegex { get; set; }
+    public static Dictionary<string, string> CustomCommands { get; set; }
 
     public static int OffTime() {
       return _db.Table<StateVariables>().Where(x => x.Key == MagicStrings.OffTime).FirstAsync().Result.Value;
@@ -136,6 +138,14 @@ namespace Dbot.Data {
     public static void SetStateString(string key, Dictionary<string, double> value, bool wait = false) {
       UpdateStateString(key, JsonConvert.SerializeObject(value), wait);
     }
+    
+    public static Dictionary<string, string> GetStateString_StringStringDictionary(string key) {
+      return JsonConvert.DeserializeObject<Dictionary<string, string>>(GetStateString(key)) ?? new Dictionary<string, string>();
+    }
+
+    public static void SetStateString(string key, Dictionary<string, string> value, bool wait = false) {
+      UpdateStateString(key, JsonConvert.SerializeObject(value), wait);
+    }
 
     public static bool AddToStateString(string key, string keyToAdd, double valueToAdd, IDictionary<string, double> externalDictionary) {
       var tempDictionary = GetStateString_StringDoubleDictionary(key);
@@ -152,6 +162,26 @@ namespace Dbot.Data {
 
     public static bool DeleteFromStateString(string key, string keyToDelete, IDictionary<string, double> externalDictionary) {
       var tempDictionary = GetStateString_StringDoubleDictionary(key);
+      if (!tempDictionary.Remove(keyToDelete)) return false;
+      externalDictionary.Remove(keyToDelete);
+      SetStateString(key, tempDictionary, true);
+      return true;
+    }
+    public static bool AddToStateString(string key, string keyToAdd, string valueToAdd, IDictionary<string, string> externalDictionary) {
+      var tempDictionary = GetStateString_StringStringDictionary(key);
+      if (tempDictionary.ContainsKey(keyToAdd)) {
+        DeleteFromStateString(key, keyToAdd, externalDictionary);
+        AddToStateString(key, keyToAdd, valueToAdd, externalDictionary);
+        return false;
+      }
+      tempDictionary.Add(keyToAdd, valueToAdd);
+      externalDictionary.Add(keyToAdd, valueToAdd);
+      SetStateString(key, tempDictionary, true);
+      return true;
+    }
+
+    public static bool DeleteFromStateString(string key, string keyToDelete, IDictionary<string, string> externalDictionary) {
+      var tempDictionary = GetStateString_StringStringDictionary(key);
       if (!tempDictionary.Remove(keyToDelete)) return false;
       externalDictionary.Remove(keyToDelete);
       SetStateString(key, tempDictionary, true);

@@ -34,6 +34,8 @@ namespace Dbot.Utility {
       Nuke = GenerateRegex("nuke|annihilate|obliterate", false, false);
       RegexNuke = GenerateRegex("regexnuke|regexpnuke|nukeregex|nukeregexp", false, false);
       Aegis = Tools.CompiledIgnoreCaseRegex(@"^!aegis.*");
+      AddCommand = Tools.CompiledIgnoreCaseRegex(@"^!addcommand !(\S+) (.+)");
+      DelCommand = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?command !?(.+)");
     }
 
     public static Regex Song { get; private set; }
@@ -61,6 +63,8 @@ namespace Dbot.Utility {
     public static Regex Nuke { get; private set; }
     public static Regex RegexNuke { get; private set; }
     public static Regex Aegis { get; private set; }
+    public static Regex AddCommand { get; private set; }
+    public static Regex DelCommand { get; private set; }
 
     public static readonly List<string> Seconds = new List<string> { "s", "sec", "secs", "second", "seconds", };
     public static readonly List<string> Minutes = new List<string> { "m", "min", "mins", "minute", "minutes", };

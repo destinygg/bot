@@ -586,7 +586,7 @@ namespace Dbot.UnitTest {
         Make.Message("UserX", "word"),
         Make.Message("UserX", "word"),
         Make.Message("UserX", "word"),
-        Make.Message(true, "!delemote FaceA"),
+        Make.Message(true, "!delete word"),
       });
       await Task.Delay(100);
 
@@ -661,5 +661,44 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent5")));
     }
 
+    [TestMethod]
+    public async Task CustomCommandTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        Make.Message(true, "!addcommand !burp bless you"),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, "!addcommand !burp herpaderp"),
+        Make.Message(true, "!addcommand !otherword otherside"),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message("UserX", "!burp" + Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message("UserX", "!otherword" + Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, "!otherword" + Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, Tools.RandomString(20)),
+        Make.Message(true, "!delcommand !word"),
+        Make.Message(true, "!delcommand !burp"),
+        Make.Message(true, "!delcommand !otherword"),
+      });
+      await Task.Delay(1000);
+
+      Assert.IsTrue(r.Count(x => x.Contains("!burp added")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("!burp already exists; its corresponding text has been updated")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("!otherword added")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("herpaderp")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("otherside")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("!word is not a recognized command")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("!burp deleted")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("!otherword deleted")) == 1);
+    }
   }
 }

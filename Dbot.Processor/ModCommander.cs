@@ -158,6 +158,21 @@ namespace Dbot.Processor {
       { CompiledRegex.Aegis, (g,c) => {
         AntiNuke.Aegis();
       } },
+      { CompiledRegex.AddCommand, (g,c) => {
+        var command = g[1].Value;
+        var text = g[2].Value;
+        if (Datastore.AddToStateString(MagicStrings.CustomCommands, command, text, Datastore.CustomCommands))
+          Send("!" + command + " added");
+        else
+          Send("!" + command + " already exists; its corresponding text has been updated");
+      } },
+      { CompiledRegex.DelCommand, (g,c) => {
+        var command = g[1].Value;
+        if (Datastore.DeleteFromStateString(MagicStrings.CustomCommands, command, Datastore.CustomCommands))
+          Send("!" + command + " deleted");
+        else
+          Send("!" + command + " is not a recognized command");
+      } },
     };
 
     private static void Add(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string success, string fail) {
