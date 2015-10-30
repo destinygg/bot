@@ -42,7 +42,7 @@ namespace Dbot.UnitTest {
       const string mutedWord = "mutephrase";
 
       InitializeDatastore.Run();
-      Datastore.AddToStateString_JsonStringDictionary(MagicStrings.MutedWords, mutedWord, TimeSpan.FromMinutes(10).TotalSeconds, Datastore.MutedWords);
+      Datastore.AddToStateString(MagicStrings.MutedWords, mutedWord, TimeSpan.FromMinutes(10).TotalSeconds, Datastore.MutedWords);
 
       var banner = new Banner(Make.Message(nick, mutedWord), new List<Message>());
 

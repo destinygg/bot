@@ -72,7 +72,7 @@ namespace Dbot.Processor {
       } },
       { CompiledRegex.AddEmote, (g,c) => {
         var emoteToAdd = g[1].Value;
-        if (Datastore.AddToStateString_JsonStringList(Ms.ThirdPartyEmotes, emoteToAdd, Datastore.ThirdPartyEmotesList)) {
+        if (Datastore.AddToStateString(Ms.ThirdPartyEmotes, emoteToAdd, Datastore.ThirdPartyEmotesList)) {
           Send(emoteToAdd + " added to third party emotes list");
           Datastore.GenerateEmoteRegex();
         }
@@ -81,7 +81,7 @@ namespace Dbot.Processor {
       } },
       { CompiledRegex.DelEmote, (g,c) => {
         var emoteToDelete = g[1].Value;
-        if (Datastore.DeleteFromStateString_JsonStringList(Ms.ThirdPartyEmotes, emoteToDelete, Datastore.ThirdPartyEmotesList)) {
+        if (Datastore.DeleteFromStateString(Ms.ThirdPartyEmotes, emoteToDelete, Datastore.ThirdPartyEmotesList)) {
           Datastore.GenerateEmoteRegex();
           Send(emoteToDelete + " deleted from third party emotes list");
         }
@@ -89,7 +89,7 @@ namespace Dbot.Processor {
           Send(emoteToDelete + " not in third party emotes list.");
       } },
       { CompiledRegex.ListEmote, (g,c) => {
-        Send(string.Join(", ", Datastore.GetStateString_JsonStringList(MagicStrings.ThirdPartyEmotes)));
+        Send(string.Join(", ", Datastore.GetStateString_StringList(MagicStrings.ThirdPartyEmotes)));
       } },
       { CompiledRegex.Stalk, (g,c) => {
         Send(Tools.Stalk(g[1].Value));
@@ -165,7 +165,7 @@ namespace Dbot.Processor {
       var unit = g[2].Value;
       var wordToAdd = g[3].Value;
       var duration = BanTime(number, unit);
-      if (Datastore.AddToStateString_JsonStringDictionary(category, wordToAdd, duration.TotalSeconds, externalDictionary))
+      if (Datastore.AddToStateString(category, wordToAdd, duration.TotalSeconds, externalDictionary))
         Send(wordToAdd + success);
       else
         Send(wordToAdd + fail + Tools.PrettyDeltaTime(duration));
@@ -173,7 +173,7 @@ namespace Dbot.Processor {
 
     private static void Delete(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string name) {
       var wordToDelete = g[1].Value;
-      if (Datastore.DeleteFromStateString_JsonStringDictionary(category, wordToDelete, externalDictionary))
+      if (Datastore.DeleteFromStateString(category, wordToDelete, externalDictionary))
         Send(wordToDelete + " deleted from the " + name + " list");
       else
         Send(wordToDelete + " not found in the " + name + " list");

@@ -15,10 +15,10 @@ namespace Dbot.Data {
     public static void Initialize() {
       _db = new SQLiteAsyncConnection("DbotDB.sqlite");
 
-      MutedWords = GetStateString_JsonStringDictionary(MagicStrings.MutedWords);
-      BannedWords = GetStateString_JsonStringDictionary(MagicStrings.BannedWords);
-      MutedRegex = GetStateString_JsonStringDictionary(MagicStrings.MutedRegex);
-      BannedRegex = GetStateString_JsonStringDictionary(MagicStrings.BannedRegex);
+      MutedWords = GetStateString_StringDoubleDictionary(MagicStrings.MutedWords);
+      BannedWords = GetStateString_StringDoubleDictionary(MagicStrings.BannedWords);
+      MutedRegex = GetStateString_StringDoubleDictionary(MagicStrings.MutedRegex);
+      BannedRegex = GetStateString_StringDoubleDictionary(MagicStrings.BannedRegex);
       EmotesList = new List<string>();
       ThirdPartyEmotesList = new List<string>();
       GenerateEmoteRegex();
@@ -116,62 +116,62 @@ namespace Dbot.Data {
       return temp.FirstAsync().Result.Value;
     }
 
-    public static string GetStateString(string key) {
+    private static string GetStateString(string key) {
       var temp = _db.Table<StateStrings>().Where(x => x.Key == key);
       return temp.CountAsync().Result != 1 ? "" : temp.FirstAsync().Result.Value;
     }
 
-    public static List<string> GetStateString_JsonStringList(string key) {
+    public static List<string> GetStateString_StringList(string key) {
       return JsonConvert.DeserializeObject<List<string>>(GetStateString(key)) ?? new List<string>();
     }
 
-    public static void SetStateString_JsonStringList(string key, List<string> value, bool wait = false) {
+    public static void SetStateString(string key, List<string> value, bool wait = false) {
       UpdateStateString(key, JsonConvert.SerializeObject(value), wait);
     }
 
-    public static Dictionary<string, double> GetStateString_JsonStringDictionary(string key) {
+    public static Dictionary<string, double> GetStateString_StringDoubleDictionary(string key) {
       return JsonConvert.DeserializeObject<Dictionary<string, double>>(GetStateString(key)) ?? new Dictionary<string, double>();
     }
 
-    public static void SetStateString_JsonStringDictionary(string key, Dictionary<string, double> value, bool wait = false) {
+    public static void SetStateString(string key, Dictionary<string, double> value, bool wait = false) {
       UpdateStateString(key, JsonConvert.SerializeObject(value), wait);
     }
 
-    public static bool AddToStateString_JsonStringDictionary(string key, string keyToAdd, double valueToAdd, IDictionary<string, double> externalDictionary) {
-      var tempDictionary = GetStateString_JsonStringDictionary(key);
+    public static bool AddToStateString(string key, string keyToAdd, double valueToAdd, IDictionary<string, double> externalDictionary) {
+      var tempDictionary = GetStateString_StringDoubleDictionary(key);
       if (tempDictionary.ContainsKey(keyToAdd)) {
-        DeleteFromStateString_JsonStringDictionary(key, keyToAdd, externalDictionary);
-        AddToStateString_JsonStringDictionary(key, keyToAdd, valueToAdd, externalDictionary);
+        DeleteFromStateString(key, keyToAdd, externalDictionary);
+        AddToStateString(key, keyToAdd, valueToAdd, externalDictionary);
         return false;
       }
       tempDictionary.Add(keyToAdd, valueToAdd);
       externalDictionary.Add(keyToAdd, valueToAdd);
-      SetStateString_JsonStringDictionary(key, tempDictionary, true);
+      SetStateString(key, tempDictionary, true);
       return true;
     }
 
-    public static bool DeleteFromStateString_JsonStringDictionary(string key, string keyToDelete, IDictionary<string, double> externalDictionary) {
-      var tempDictionary = GetStateString_JsonStringDictionary(key);
+    public static bool DeleteFromStateString(string key, string keyToDelete, IDictionary<string, double> externalDictionary) {
+      var tempDictionary = GetStateString_StringDoubleDictionary(key);
       if (!tempDictionary.Remove(keyToDelete)) return false;
       externalDictionary.Remove(keyToDelete);
-      SetStateString_JsonStringDictionary(key, tempDictionary, true);
+      SetStateString(key, tempDictionary, true);
       return true;
     }
 
-    public static bool AddToStateString_JsonStringList(string key, string stringToAdd, IList<string> externalList) {
-      var tempList = GetStateString_JsonStringList(key);
+    public static bool AddToStateString(string key, string stringToAdd, IList<string> externalList) {
+      var tempList = GetStateString_StringList(key);
       if (tempList.Contains(stringToAdd)) return false;
       tempList.Add(stringToAdd);
       externalList.Add(stringToAdd);
-      SetStateString_JsonStringList(key, tempList, true);
+      SetStateString(key, tempList, true);
       return true;
     }
 
-    public static bool DeleteFromStateString_JsonStringList(string key, string stringToDelete, IList<string> externalList) {
-      var tempList = GetStateString_JsonStringList(key);
+    public static bool DeleteFromStateString(string key, string stringToDelete, IList<string> externalList) {
+      var tempList = GetStateString_StringList(key);
       if (!tempList.Remove(stringToDelete)) return false;
       externalList.Remove(stringToDelete);
-      SetStateString_JsonStringList(key, tempList, true);
+      SetStateString(key, tempList, true);
       return true;
     }
 
