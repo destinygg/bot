@@ -11,12 +11,12 @@ using WebSocket4Net;
 namespace Dbot.Client {
   public class WebSocketListenerClient : IClient {
 
-    private readonly WebSocket _websocket;
+    protected readonly WebSocket _websocket;
     private IProcessor _processor;
 
-    public WebSocketListenerClient() {
+    public WebSocketListenerClient(string websocketAuth) {
       var header = new List<KeyValuePair<string, string>> {
-        new KeyValuePair<string, string>("Cookie", PrivateConstants.botWebsocketAuth)
+        new KeyValuePair<string, string>("Cookie", websocketAuth)
       };
       _websocket = new WebSocket("ws://www.destiny.gg:9998/ws", customHeaderItems: header);
       _websocket.Opened += websocket_Opened;
@@ -86,7 +86,7 @@ namespace Dbot.Client {
     }
 
 
-    public void Send(ISendable input) {
+    public virtual void Send(ISendable input) {
       Tools.Log(input, new List<string>());
     }
   }

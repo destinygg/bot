@@ -1,4 +1,6 @@
-﻿namespace Dbot.Client {
+﻿using System;
+
+namespace Dbot.Client {
   public class NamesReceiver {
     public User[] Users { get; set; }
     public string Connectioncount { get; set; }
@@ -28,6 +30,9 @@
   }
 
   public class MessageSender {
+    public MessageSender(string input) {
+      data = input;
+    }
     public string data { get; set; }
   }
   /*
