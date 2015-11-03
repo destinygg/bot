@@ -9,12 +9,12 @@ using SuperSocket.ClientEngine;
 using WebSocket4Net;
 
 namespace Dbot.Client {
-  public class WebSocketClient : IClient {
+  public class WebSocketListenerClient : IClient {
 
     private readonly WebSocket _websocket;
     private IProcessor _processor;
 
-    public WebSocketClient() {
+    public WebSocketListenerClient() {
       var header = new List<KeyValuePair<string, string>> {
         new KeyValuePair<string, string>("Cookie", PrivateConstants.botWebsocketAuth)
       };

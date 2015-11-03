@@ -15,8 +15,8 @@ using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Main {
   public class PrimaryLogic {
-    private static readonly IClient Client = new WebSocketClient();
-    //private static readonly IClient Client = new WebSocketClient();
+    private static readonly IClient Client = new WebSocketListenerClient();
+    //private static readonly IClient Client = new WebSocketListenerClient();
     private static readonly IProcessor Processor = new MessageProcessor(Client);
     private static bool _exit;
 
