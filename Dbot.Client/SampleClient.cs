@@ -24,7 +24,7 @@ namespace Dbot.Client {
       _processor.ProcessMessage(message);
     }
 
-    public void Send(Sendable input) {
+    public void Send(ISendable input) {
       Tools.Log(input, new List<string>());
     }
 

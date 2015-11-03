@@ -10,6 +10,6 @@ namespace Dbot.Common {
   public interface IClient {
     void Run(IProcessor processor);
     void Forward(Message message);
-    void Send(Sendable sendable);
+    void Send(ISendable sendable);
   }
 }

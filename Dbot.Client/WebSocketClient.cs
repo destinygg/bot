@@ -86,21 +86,8 @@ namespace Dbot.Client {
     }
 
 
-    public void Send(Sendable input) {
-      if (input is Message) {
-        var msg = new MessageSender { data = ((Message) input).Text };
-        var jsonMsg = JsonConvert.SerializeObject(msg);
-        Tools.Log("MSG " + jsonMsg, ConsoleColor.Red);
-        //_websocket.Send("MSG " + jsonMsg);
-      } else if (input is Mute) {
-        Tools.Log("Muted " + ((Mute) input).Nick);
-      } else if (input is Ban) {
-        if (((Ban) input).Duration.Minutes < 0) {
-          Tools.Log("Unbanned " + input.Nick);
-        } else {
-          Tools.Log("Banned " + input.Nick);
-        }
-      }
+    public void Send(ISendable input) {
+      Tools.Log(input, new List<string>());
     }
   }
 }

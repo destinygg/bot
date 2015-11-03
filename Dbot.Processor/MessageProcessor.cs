@@ -13,7 +13,7 @@ namespace Dbot.Processor {
 
     public static DateTime LastCommandTime = DateTime.MinValue;
     public static readonly ActionBlock<Message> Banner = new ActionBlock<Message>(m => Ban(m));
-    public static readonly ActionBlock<Sendable> Sender = new ActionBlock<Sendable>(m => Send(m));
+    public static readonly ActionBlock<ISendable> Sender = new ActionBlock<ISendable>(m => Send(m));
     private static readonly ActionBlock<Message> Logger = new ActionBlock<Message>(m => Log(m));
     private static readonly ActionBlock<Message> Commander = new ActionBlock<Message>(m => Command(m));
     private static readonly ActionBlock<Message> ModCommander = new ActionBlock<Message>(m => ModCommand(m));
@@ -66,8 +66,8 @@ namespace Dbot.Processor {
       DoneWithContext(message);
     }
 
-    private static void Send(Sendable input) {
-      if (input is Message && input.IsMod) {
+    private static void Send(ISendable input) {
+      if (input is Message && ((Message) input).IsMod) {
         var message = (Message) input;
         var s = message.OriginalText.Split('\n');
         foreach (var x in s) {

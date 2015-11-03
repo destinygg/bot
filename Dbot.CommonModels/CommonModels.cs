@@ -18,9 +18,15 @@ namespace Dbot.CommonModels {
     public bool IsMod { get; set; }
   }
 
-  public abstract class Sendable : User { }
+  public interface ISendable { }
 
-  public class Message : Sendable, IEquatable<Message> {
+  public class Broadcast : ISendable {
+    public string Message { get; set; }
+  }
+
+  public abstract class TargetedSendable : User, ISendable { }
+
+  public class Message : TargetedSendable, IEquatable<Message> {
     private string _originalText;
     public string OriginalText {
       get { return _originalText; }
@@ -46,7 +52,9 @@ namespace Dbot.CommonModels {
     }
   }
 
-  public abstract class HasVictim : Sendable {
+  public class PrivateMessage : Message { }
+
+  public abstract class HasVictim : TargetedSendable {
     public virtual TimeSpan Duration { get; set; }
     public string Reason { get; set; }
     public bool SilentReason { get; set; }

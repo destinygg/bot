@@ -26,7 +26,7 @@ namespace Dbot.Utility {
       Console.ResetColor();
     }
 
-    public static void Log(Sendable input, IList<string> log) {
+    public static void Log(ISendable input, IList<string> log) {
       if (input is Message) {
         var messageInput = (Message) input;
         log.Add("Messaged " + messageInput.OriginalText);
@@ -36,18 +36,18 @@ namespace Dbot.Utility {
       } else if (input is Ban) {
         var banInput = (Ban) input;
         if (banInput.Duration.TotalSeconds < 0) {
-          log.Add("Unbanned " + input.Nick);
+          log.Add("Unbanned " + banInput.Nick);
         } else if (banInput.Ip) {
           if (banInput.Duration.TotalSeconds == 0) {
-            log.Add("Permanently ipbanned " + input.Nick + " for " + banInput.Reason);
+            log.Add("Permanently ipbanned " + banInput.Nick + " for " + banInput.Reason);
           } else {
-            log.Add("Ipbanned " + input.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
+            log.Add("Ipbanned " + banInput.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
           }
         } else {
           if (banInput.Duration.TotalSeconds == 0) {
-            log.Add("Permanently banned " + input.Nick + " for " + banInput.Reason);
+            log.Add("Permanently banned " + banInput.Nick + " for " + banInput.Reason);
           } else {
-            log.Add("Banned " + input.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
+            log.Add("Banned " + banInput.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
           }
         }
       } else {
