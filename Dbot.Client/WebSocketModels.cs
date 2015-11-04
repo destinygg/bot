@@ -35,6 +35,15 @@ namespace Dbot.Client {
     }
     public string data { get; set; }
   }
+
+  public class MuteSender {
+    public MuteSender(string victim, TimeSpan duration) {
+      data = victim;
+      this.duration = ((ulong) duration.TotalMilliseconds) * 1000000UL;
+    }
+    public string data { get; set; }
+    public ulong duration { get; set; }
+  }
   /*
 BROADCAST {"timestamp":1426360863360,"data":"test"}
 

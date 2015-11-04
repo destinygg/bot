@@ -21,6 +21,12 @@ namespace Dbot.Client {
         var obj = new MessageSender(message.OriginalText);
         var payload = action + " " + JsonConvert.SerializeObject(obj);
         _websocket.Send(payload);
+      } else if (input is Mute) {
+        var action = "MUTE";
+        var message = (Mute) input;
+        var obj = new MuteSender(message.Nick, message.Duration);
+        var payload = action + " " + JsonConvert.SerializeObject(obj);
+        _websocket.Send(payload);
       }
     }
   }
