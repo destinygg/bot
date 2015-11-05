@@ -66,7 +66,28 @@ namespace Dbot.Client {
     public bool ispermanent { get; set; }
     public string reason { get; set; }
   }
+
+  public class UnMuteBanSender {
+    public UnMuteBanSender(string nick) {
+      data = nick;
+    }
+
+    public string data { get; set; }
+  }
+
   /*
+	dharmagg.send('MUTE {"data":"' + origin.strip().split(" ")[1] + '", "duration":' + str(int(origin.strip().split(" ")[2])*60000000000) + '}')
+elif origin.find("!unban") == 0:
+	dharmagg.send('UNBAN {"data":"' + origin.strip().split(" ")[1] + '"}')
+elif origin.find("!unmute") == 0:
+	dharmagg.send('UNMUTE {"data":"' + origin.strip().split(" ")[1] + '"}')
+elif origin.find("!ipban") == 0:
+	dharmagg.send('BAN {"nick":"' + origin.strip().split(" ")[1] + '", "duration":' + str(int(origin.strip().split(" ")[2])*60000000000) + ', "reason":"' + str(origin.strip().split(" ",3)[3:][0]) + '", "banip":true }')
+elif origin.find("!ban") == 0:
+	dharmagg.send('BAN {"nick":"' + origin.strip().split(" ")[1] + '", "duration":' + str(int(origin.strip().split(" ")[2])*60000000000) + ', "reason":"' + str(origin.strip().split(" ",3)[3:][0]) + '"}')
+else:
+	dharmagg.send('MSG {"data":"' + mystr + '"}')
+  
 BROADCAST {"timestamp":1426360863360,"data":"test"}
 
 elif command == "MUTE":

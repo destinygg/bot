@@ -33,6 +33,12 @@ namespace Dbot.Client {
         var obj = ban.Duration.TotalMilliseconds < 0 ? new BanSender(ban.Nick, ban.Ip, true, ban.Reason) : new BanSender(ban.Nick, ban.Ip, ban.Duration, ban.Reason);
         var payload = action + " " + JsonConvert.SerializeObject(obj);
         _websocket.Send(payload);
+      } else if (input is UnMuteBan) {
+        var action = "UNBAN";
+        var unMuteBan = (UnMuteBan) input;
+        var obj = new UnMuteBanSender(unMuteBan.Nick);
+        var payload = action + " " + JsonConvert.SerializeObject(obj);
+        _websocket.Send(payload);
       }
     }
   }

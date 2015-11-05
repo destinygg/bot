@@ -60,5 +60,14 @@ namespace Dbot.UnitTest {
         Reason = "test reason"
       });
     }
+
+    [TestMethod]
+    public async Task SendUnmutebanTest() {
+      InitializeDatastore.Run();
+      var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
+      client.Run(new MessageProcessor(client));
+      await Task.Delay(5000);
+      client.Send(Make.UnMuteBan("dharmatest"));
+    }
   }
 }
