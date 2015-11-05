@@ -37,6 +37,7 @@ namespace Dbot.Utility {
       Aegis = Tools.CompiledIgnoreCaseRegex(@"^!aegis.*");
       AddCommand = Tools.CompiledIgnoreCaseRegex(@"^!addcommand !(\S+) (.+)");
       DelCommand = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?command !?(.+)");
+      SubOnly = Tools.CompiledIgnoreCaseRegex(@"^!(?:sub.*) (on|off)$");
     }
 
     public static Regex Song { get; private set; }
@@ -67,6 +68,7 @@ namespace Dbot.Utility {
     public static Regex Aegis { get; private set; }
     public static Regex AddCommand { get; private set; }
     public static Regex DelCommand { get; private set; }
+    public static Regex SubOnly { get; private set; }
 
     public static readonly List<string> Seconds = new List<string> { "s", "sec", "secs", "second", "seconds", };
     public static readonly List<string> Minutes = new List<string> { "m", "min", "mins", "minute", "minutes", };

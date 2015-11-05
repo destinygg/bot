@@ -708,9 +708,21 @@ namespace Dbot.UnitTest {
         Make.Message(true, "!unmute userB"),
       });
       await Task.Delay(1000);
-      
+
       Assert.IsTrue(r.Count(x => x.Contains("Unbanned usera")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains("Unbanned userb")) == 1);
+    }
+
+    [TestMethod]
+    public async Task SubOnlyTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        Make.Message(true, "!subonly on"),
+        Make.Message(true, "!subonly off"),
+      });
+      await Task.Delay(1000);
+
+      Assert.IsTrue(r.Count(x => x.Contains("Subonly enabled")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Subonly disabled")) == 1);
     }
   }
 }

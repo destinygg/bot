@@ -20,8 +20,11 @@ namespace Dbot.CommonModels {
 
   public interface ISendable { }
 
-  public class Broadcast : ISendable {
-    public string Message { get; set; }
+  public class Subonly : ISendable {
+    public Subonly(bool enabled) {
+      Enabled = enabled;
+    }
+    public bool Enabled { get; set; }
   }
 
   public abstract class TargetedSendable : User, ISendable { }

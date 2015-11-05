@@ -36,6 +36,9 @@ namespace Dbot.Utility {
       } else if (input is UnMuteBan) {
         var unbanInput = (UnMuteBan) input;
         log.Add("Unbanned " + unbanInput.Nick);
+      } else if (input is Subonly) {
+        var subonly = (Subonly) input;
+        log.Add(subonly.Enabled ? "Subonly enabled" : "Subonly disabled");
       } else if (input is Ban) {
         var banInput = (Ban) input;
         if (banInput.Ip) {

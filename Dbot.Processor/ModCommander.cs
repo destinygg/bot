@@ -177,6 +177,10 @@ namespace Dbot.Processor {
         else
           Send("!" + command + " is not a recognized command");
       } },
+      { CompiledRegex.SubOnly, (g,c) => {
+        var enabled = g[1].Value;
+        MessageProcessor.Sender.Post(enabled == "on" ? new Subonly(true) : new Subonly(false));
+      } },
     };
 
     private static void Add(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string success, string fail) {
