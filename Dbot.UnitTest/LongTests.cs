@@ -700,5 +700,17 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("!burp deleted")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains("!otherword deleted")) == 1);
     }
+
+    [TestMethod]
+    public async Task UnMuteBanTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        Make.Message(true, "!unban userA"),
+        Make.Message(true, "!unmute userB"),
+      });
+      await Task.Delay(1000);
+      
+      Assert.IsTrue(r.Count(x => x.Contains("Unbanned usera")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Unbanned userb")) == 1);
+    }
   }
 }

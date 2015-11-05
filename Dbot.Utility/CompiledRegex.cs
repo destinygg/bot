@@ -31,6 +31,7 @@ namespace Dbot.Utility {
       Ban = GenerateRegex("ban|b", true, true);
       Ipban = GenerateRegex("ipban|ip|i", true, true);
       Mute = GenerateRegex("mute|m", true, true);
+      UnMuteBan = Tools.CompiledIgnoreCaseRegex(@"^!(?:unban|unmute) (.+)");
       Nuke = GenerateRegex("nuke|annihilate|obliterate", false, false);
       RegexNuke = GenerateRegex("regexnuke|regexpnuke|nukeregex|nukeregexp", false, false);
       Aegis = Tools.CompiledIgnoreCaseRegex(@"^!aegis.*");
@@ -60,6 +61,7 @@ namespace Dbot.Utility {
     public static Regex Ban { get; private set; }
     public static Regex Ipban { get; private set; }
     public static Regex Mute { get; private set; }
+    public static Regex UnMuteBan { get; private set; }
     public static Regex Nuke { get; private set; }
     public static Regex RegexNuke { get; private set; }
     public static Regex Aegis { get; private set; }

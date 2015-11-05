@@ -138,6 +138,10 @@ namespace Dbot.Processor {
           SilentReason = true,
         });
       } },
+      { CompiledRegex.UnMuteBan, (g,c) => {
+        var savedSoul = g[1].Value;
+        MessageProcessor.Sender.Post(Make.UnMuteBan(savedSoul));
+      } },
       { CompiledRegex.Nuke, (g,c) => {
         var number = g[1].Value;
         var unit = g[2].Value;
