@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Dbot.Client;
+using Dbot.CommonModels;
 using Dbot.Processor;
 using Dbot.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,6 +27,38 @@ namespace Dbot.UnitTest {
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
       client.Send(Make.Mute("dharmatest", TimeSpan.FromMinutes(3), "test reason"));
+    }
+
+    [TestMethod]
+    public async Task SendBanTest() {
+      InitializeDatastore.Run();
+      var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
+      client.Run(new MessageProcessor(client));
+      await Task.Delay(5000);
+      client.Send(Make.Ban("dharmatest", TimeSpan.FromMinutes(3), "test reason"));
+    }
+
+    [TestMethod]
+    public async Task SendPermBanTest() {
+      InitializeDatastore.Run();
+      var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
+      client.Run(new MessageProcessor(client));
+      await Task.Delay(5000);
+      client.Send(Make.Ban("dharmatest", TimeSpan.FromMinutes(-1), "perm reason"));
+    }
+
+    [TestMethod]
+    public async Task SendIpbanTest() {
+      InitializeDatastore.Run();
+      var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
+      client.Run(new MessageProcessor(client));
+      await Task.Delay(5000);
+      client.Send(new Ban {
+        Duration = TimeSpan.FromMinutes(3),
+        Ip = true,
+        Nick = "dharmatest",
+        Reason = "test reason"
+      });
     }
   }
 }

@@ -23,8 +23,14 @@ namespace Dbot.Client {
         _websocket.Send(payload);
       } else if (input is Mute) {
         var action = "MUTE";
-        var message = (Mute) input;
-        var obj = new MuteSender(message.Nick, message.Duration);
+        var mute = (Mute) input;
+        var obj = new MuteSender(mute.Nick, mute.Duration);
+        var payload = action + " " + JsonConvert.SerializeObject(obj);
+        _websocket.Send(payload);
+      } else if (input is Ban) {
+        var action = "BAN";
+        var ban = (Ban) input;
+        var obj = ban.Duration.TotalMilliseconds < 0 ? new BanSender(ban.Nick, ban.Ip, true, ban.Reason) : new BanSender(ban.Nick, ban.Ip, ban.Duration, ban.Reason);
         var payload = action + " " + JsonConvert.SerializeObject(obj);
         _websocket.Send(payload);
       }
