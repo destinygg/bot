@@ -26,8 +26,8 @@ namespace Dbot.Utility {
       return new Ban { Nick = nick, Duration = duration, Reason = reason };
     }
 
-    public static Ban Unban(string nick) {
-      return new Ban { Nick = nick, Duration = TimeSpan.FromMinutes(-1) };
+    public static UnMuteBan UnMuteBan(string nick) {
+      return new UnMuteBan(nick);
     }
 
   }

@@ -33,11 +33,12 @@ namespace Dbot.Utility {
       } else if (input is Mute) {
         var muteInput = (Mute) input;
         log.Add("Muted " + muteInput.Nick + " for " + Tools.PrettyDeltaTime(muteInput.Duration));
+      } else if (input is UnMuteBan) {
+        var unbanInput = (UnMuteBan) input;
+        log.Add("Unbanned " + unbanInput.Nick);
       } else if (input is Ban) {
         var banInput = (Ban) input;
-        if (banInput.Duration.TotalSeconds < 0) {
-          log.Add("Unbanned " + banInput.Nick);
-        } else if (banInput.Ip) {
+        if (banInput.Ip) {
           if (banInput.Duration.TotalSeconds == 0) {
             log.Add("Permanently ipbanned " + banInput.Nick + " for " + banInput.Reason);
           } else {
