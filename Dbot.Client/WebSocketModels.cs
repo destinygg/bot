@@ -75,6 +75,16 @@ namespace Dbot.Client {
     public string data { get; set; }
   }
 
+  public class PrivateMessageSender {
+    public PrivateMessageSender(string nick, string message) {
+      this.nick = nick;
+      data = message;
+    }
+
+    public string nick { get; set; }
+    public string data { get; set; }
+  }
+
   /*
 	dharmagg.send('MUTE {"data":"' + origin.strip().split(" ")[1] + '", "duration":' + str(int(origin.strip().split(" ")[2])*60000000000) + '}')
 elif origin.find("!unban") == 0:

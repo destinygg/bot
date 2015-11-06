@@ -27,7 +27,10 @@ namespace Dbot.Utility {
     }
 
     public static void Log(ISendable input, IList<string> log) {
-      if (input is Message) {
+      if (input is PrivateMessage) {
+        var privateMessage = (PrivateMessage) input;
+        log.Add("Private Messaged " + privateMessage.Nick + " with: " + privateMessage.OriginalText);
+      } else if (input is Message) {
         var messageInput = (Message) input;
         log.Add("Messaged " + messageInput.OriginalText);
       } else if (input is Mute) {

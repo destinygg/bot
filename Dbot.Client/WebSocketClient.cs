@@ -15,7 +15,13 @@ namespace Dbot.Client {
     }
 
     public override void Send(ISendable input) {
-      if (input is Message) {
+      if (input is PrivateMessage) {
+        var action = "PRIVMSG";
+        var privateMessage = (PrivateMessage) input;
+        var obj = new PrivateMessageSender(privateMessage.Nick, privateMessage.OriginalText);
+        var payload = action + " " + JsonConvert.SerializeObject(obj);
+        _websocket.Send(payload);
+      } else if (input is Message) {
         var action = "MSG";
         var message = (Message) input;
         var obj = new MessageSender(message.OriginalText);
@@ -40,6 +46,7 @@ namespace Dbot.Client {
         var payload = action + " " + JsonConvert.SerializeObject(obj);
         _websocket.Send(payload);
       }
+
     }
   }
 }
