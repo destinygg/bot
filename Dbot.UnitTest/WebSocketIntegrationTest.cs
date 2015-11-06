@@ -53,10 +53,8 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(new Ban {
-        Duration = TimeSpan.FromMinutes(3),
+      client.Send(new Ban(TimeSpan.FromMinutes(3), "dharmatest") {
         Ip = true,
-        Nick = "dharmatest",
         Reason = "test reason"
       });
     }

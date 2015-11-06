@@ -42,13 +42,13 @@ namespace Dbot.Utility {
       } else if (input is Ban) {
         var banInput = (Ban) input;
         if (banInput.Ip) {
-          if (banInput.Duration.TotalSeconds == 0) {
+          if (banInput.Perm) {
             log.Add("Permanently ipbanned " + banInput.Nick + " for " + banInput.Reason);
           } else {
             log.Add("Ipbanned " + banInput.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
           }
         } else {
-          if (banInput.Duration.TotalSeconds == 0) {
+          if (banInput.Perm) {
             log.Add("Permanently banned " + banInput.Nick + " for " + banInput.Reason);
           } else {
             log.Add("Banned " + banInput.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));

@@ -99,27 +99,14 @@ namespace Dbot.Processor {
         var unit = g[2].Value;
         var nick = g[3].Value;
         var reason = g[4].Value;
-        var banTime = BanTime(number, unit);
-        MessageProcessor.Sender.Post(new Ban {
-          Duration = banTime,
-          Nick = nick,
-          Reason = reason,
-          SilentReason = true,
-        });
+        BanBuilder(number, unit, nick, reason, false);
       } },
       { CompiledRegex.Ipban, (g,c) => {
         var number = g[1].Value;
         var unit = g[2].Value;
         var nick = g[3].Value;
         var reason = g[4].Value;
-        var banTime = BanTime(number, unit, true);
-        MessageProcessor.Sender.Post(new Ban {
-          Duration = banTime,
-          Nick = nick,
-          Reason = reason,
-          SilentReason = true,
-          Ip = true,
-        });
+        BanBuilder(number, unit, nick, reason, true);
       } },
       { CompiledRegex.Mute, (g,c) => {
         var number = g[1].Value;
@@ -182,6 +169,15 @@ namespace Dbot.Processor {
         MessageProcessor.Sender.Post(enabled == "on" ? new Subonly(true) : new Subonly(false));
       } },
     };
+
+    private static void BanBuilder(string number, string unit, string nick, string reason, bool ip) {
+      var banTime = BanTime(number, unit, ip);
+      var ban = banTime == TimeSpan.Zero ? new PermBan(nick) : new Ban(banTime, nick);
+      ban.Reason = reason;
+      ban.SilentReason = true;
+      ban.Ip = ip;
+      MessageProcessor.Sender.Post(ban);
+    }
 
     private static void Add(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string success, string fail) {
       var number = g[1].Value;

@@ -23,7 +23,7 @@ namespace Dbot.Utility {
     }
 
     public static Ban Ban(string nick, TimeSpan duration, string reason = null) {
-      return new Ban { Nick = nick, Duration = duration, Reason = reason };
+      return new Ban(duration, nick) { Reason = reason };
     }
 
     public static UnMuteBan UnMuteBan(string nick) {
