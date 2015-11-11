@@ -54,6 +54,13 @@ namespace Dbot.Processor {
         Banner.Post(message);
     }
 
+    public void ProcessMessage(PrivateMessage message) {
+      if (message.Text[0] == '!' && message.IsMod) {
+        Commander.Post(message);
+        ModCommander.Post(message);
+      }
+    }
+
     private static void Command(Message message) {
       var output = new Commander(message).Run();
       if (output != null)
@@ -67,7 +74,9 @@ namespace Dbot.Processor {
     }
 
     private static void Send(ISendable input) {
-      if (input is Message && ((Message) input).IsMod) {
+      if (input is PrivateMessage) {
+        _client.Send(input);
+      } else if (input is Message) {
         var message = (Message) input;
         var s = message.OriginalText.Split('\n');
         foreach (var x in s) {

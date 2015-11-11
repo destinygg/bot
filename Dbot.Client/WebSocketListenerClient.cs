@@ -57,6 +57,12 @@ namespace Dbot.Client {
             _processor.ProcessMessage(new Message { Nick = msg.Nick, Text = msg.Data, IsMod = isMod });
           }
           break;
+        case "PRIVMSG": {
+            var privmsg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
+            var isMod = _modList.Contains(privmsg.Nick);
+            _processor.ProcessMessage(new PrivateMessage(privmsg.Nick, privmsg.Data) { IsMod = isMod });
+          }
+          break;
         case "JOIN": {
             var join = JsonConvert.DeserializeObject<JoinReceiver>(jsonMessage);
           }
