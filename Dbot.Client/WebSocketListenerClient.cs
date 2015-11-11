@@ -50,7 +50,7 @@ namespace Dbot.Client {
           break;
         case "MSG": {
             var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
-            var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
+            var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator" || s == "protected");
             _processor.ProcessMessage(new Message { Nick = msg.Nick, Text = msg.Data, IsMod = isMod });
           }
           break;
