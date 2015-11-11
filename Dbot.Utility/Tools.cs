@@ -154,7 +154,7 @@ namespace Dbot.Utility {
       dynamic dyn = JsonConvert.DeserializeObject(answer);
       var streamState = (JObject) dyn.stream;
       if (streamState != null) {
-        var delayJvalue = (JValue) dyn.stream.channel.delay;
+        var delayJvalue = (JValue) dyn.stream.delay;
         var viewersJvalue = (JValue) dyn.stream.viewers;
         int delay;
         int viewers;
