@@ -15,11 +15,14 @@ namespace Dbot.Processor {
   public class ModCommander {
     private readonly Message _message;
     private readonly IEnumerable<Message> _context;
-    private static void Send(string message) {
+    
+    private void Send(string message) {
       MessageProcessor.Sender.Post(Make.Message(message));
     }
 
-    private static readonly Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>> RegexCommandDictionary = new Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>>{
+    private Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>> _commandDictionary;
+    private void LoadCommandDictionary() {
+      _commandDictionary = new Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>>{
       { CompiledRegex.Song, (g,c) => {
         Send("/me sings the body electric♪");
       } },
@@ -169,8 +172,9 @@ namespace Dbot.Processor {
         MessageProcessor.Sender.Post(enabled == "on" ? new Subonly(true) : new Subonly(false));
       } },
     };
+    }
 
-    private static void BanBuilder(string number, string unit, string nick, string reason, bool ip) {
+    private void BanBuilder(string number, string unit, string nick, string reason, bool ip) {
       var banTime = BanTime(number, unit, ip);
       var ban = banTime == TimeSpan.Zero ? new PermBan(nick) : new Ban(banTime, nick);
       ban.Reason = reason;
@@ -179,7 +183,7 @@ namespace Dbot.Processor {
       MessageProcessor.Sender.Post(ban);
     }
 
-    private static void Add(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string success, string fail) {
+    private void Add(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string success, string fail) {
       var number = g[1].Value;
       var unit = g[2].Value;
       var wordToAdd = g[3].Value;
@@ -190,7 +194,7 @@ namespace Dbot.Processor {
         Send(wordToAdd + fail + Tools.PrettyDeltaTime(duration));
     }
 
-    private static void Delete(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string name) {
+    private void Delete(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string name) {
       var wordToDelete = g[1].Value;
       if (Datastore.DeleteFromStateString(category, wordToDelete, externalDictionary))
         Send(wordToDelete + " deleted from the " + name + " list");
@@ -198,7 +202,7 @@ namespace Dbot.Processor {
         Send(wordToDelete + " not found in the " + name + " list");
     }
 
-    private static TimeSpan BanTime(string stringInt, string s, bool ip = false) {
+    private TimeSpan BanTime(string stringInt, string s, bool ip = false) {
       var i = stringInt == "" ? 1 : int.Parse(stringInt);
       if (CompiledRegex.Seconds.Any(x => x == s)) {
         return TimeSpan.FromSeconds(i);
@@ -225,13 +229,14 @@ namespace Dbot.Processor {
     }
 
     public ModCommander(Message message, IEnumerable<Message> context) {
+      LoadCommandDictionary();
       _message = message;
       _context = context;
     }
 
     public void Run() {
       Debug.Assert(_message.Text[0] == '!' || _message.Text[0] == '<');
-      foreach (var x in RegexCommandDictionary) {
+      foreach (var x in _commandDictionary) {
         var regex = x.Key.Match(_message.OriginalText);
         if (regex.Success) {
           x.Value.Invoke(regex.Groups, _context);
