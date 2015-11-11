@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Dbot.UnitTest {
   [TestClass]
+  [Ignore]
   public class WebSocketIntegrationTest {
     [TestMethod]
     public async Task SendMessageTest() {
