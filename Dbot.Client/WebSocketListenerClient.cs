@@ -13,8 +13,10 @@ namespace Dbot.Client {
 
     protected readonly WebSocket _websocket;
     private IProcessor _processor;
+    private readonly List<string> _modList;
 
     public WebSocketListenerClient(string websocketAuth) {
+      _modList = new List<string>();
       var header = new List<KeyValuePair<string, string>> {
         new KeyValuePair<string, string>("Cookie", websocketAuth)
       };
@@ -51,6 +53,7 @@ namespace Dbot.Client {
         case "MSG": {
             var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
             var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator" || s == "protected");
+            if (isMod && !_modList.Contains(msg.Nick)) _modList.Add(msg.Nick);
             _processor.ProcessMessage(new Message { Nick = msg.Nick, Text = msg.Data, IsMod = isMod });
           }
           break;
