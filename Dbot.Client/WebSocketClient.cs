@@ -14,39 +14,34 @@ namespace Dbot.Client {
 
     }
 
-    public override void Send(ISendable input) {
-      if (input is PrivateMessage) {
-        var action = "PRIVMSG";
-        var privateMessage = (PrivateMessage) input;
-        var obj = new PrivateMessageSender(privateMessage.Nick, privateMessage.OriginalText);
-        var payload = action + " " + JsonConvert.SerializeObject(obj);
-        _websocket.Send(payload);
-      } else if (input is Message) {
-        var action = "MSG";
-        var message = (Message) input;
-        var obj = new MessageSender(message.OriginalText);
-        var payload = action + " " + JsonConvert.SerializeObject(obj);
-        _websocket.Send(payload);
-      } else if (input is Mute) {
-        var action = "MUTE";
-        var mute = (Mute) input;
-        var obj = new MuteSender(mute.Nick, mute.Duration);
-        var payload = action + " " + JsonConvert.SerializeObject(obj);
-        _websocket.Send(payload);
-      } else if (input is Ban) {
-        var action = "BAN";
-        var ban = (Ban) input;
-        var obj = ban.Duration.TotalMilliseconds < 0 ? new BanSender(ban.Nick, ban.Ip, true, ban.Reason) : new BanSender(ban.Nick, ban.Ip, ban.Duration, ban.Reason);
-        var payload = action + " " + JsonConvert.SerializeObject(obj);
-        _websocket.Send(payload);
-      } else if (input is UnMuteBan) {
-        var action = "UNBAN";
-        var unMuteBan = (UnMuteBan) input;
-        var obj = new UnMuteBanSender(unMuteBan.Nick);
-        var payload = action + " " + JsonConvert.SerializeObject(obj);
-        _websocket.Send(payload);
-      }
+    public override void Send(PrivateMessage privateMessage) {
+      var obj = new PrivateMessageSender(privateMessage.Nick, privateMessage.OriginalText);
+      _websocket.Send("PRIVMSG " + JsonConvert.SerializeObject(obj));
+    }
 
+    public override void Send(PublicMessage publicMessage) {
+      var obj = new MessageSender(publicMessage.OriginalText);
+      _websocket.Send("MSG " + JsonConvert.SerializeObject(obj));
+    }
+
+    public override void Send(Mute mute) {
+      var obj = new MuteSender(mute.Nick, mute.Duration);
+      _websocket.Send("MUTE " + JsonConvert.SerializeObject(obj));
+    }
+
+    public override void Send(UnMuteBan unMuteBan) {
+      var obj = new UnMuteBanSender(unMuteBan.Nick);
+      _websocket.Send("UNBAN " + JsonConvert.SerializeObject(obj));
+    }
+
+    public override void Send(Subonly subonly) {
+      Tools.Log(subonly.Enabled ? "Subonly enabled" : "Subonly disabled"); //todo
+      throw new NotImplementedException("Todo");
+    }
+
+    public override void Send(Ban ban) {
+      var obj = ban.Duration.TotalMilliseconds < 0 ? new BanSender(ban.Nick, ban.Ip, true, ban.Reason) : new BanSender(ban.Nick, ban.Ip, ban.Duration, ban.Reason);
+      _websocket.Send("BAN " + JsonConvert.SerializeObject(obj));
     }
   }
 }

@@ -26,43 +26,6 @@ namespace Dbot.Utility {
       Console.ResetColor();
     }
 
-    public static void Log(ISendable input, IList<string> log) {
-      if (input is PrivateMessage) {
-        var privateMessage = (PrivateMessage) input;
-        log.Add("Private Messaged " + privateMessage.Nick + " with: " + privateMessage.OriginalText);
-      } else if (input is Message) {
-        var messageInput = (Message) input;
-        log.Add("Messaged " + messageInput.OriginalText);
-      } else if (input is Mute) {
-        var muteInput = (Mute) input;
-        log.Add("Muted " + muteInput.Nick + " for " + Tools.PrettyDeltaTime(muteInput.Duration));
-      } else if (input is UnMuteBan) {
-        var unbanInput = (UnMuteBan) input;
-        log.Add("Unbanned " + unbanInput.Nick);
-      } else if (input is Subonly) {
-        var subonly = (Subonly) input;
-        log.Add(subonly.Enabled ? "Subonly enabled" : "Subonly disabled");
-      } else if (input is Ban) {
-        var banInput = (Ban) input;
-        if (banInput.Ip) {
-          if (banInput.Perm) {
-            log.Add("Permanently ipbanned " + banInput.Nick + " for " + banInput.Reason);
-          } else {
-            log.Add("Ipbanned " + banInput.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
-          }
-        } else {
-          if (banInput.Perm) {
-            log.Add("Permanently banned " + banInput.Nick + " for " + banInput.Reason);
-          } else {
-            log.Add("Banned " + banInput.Nick + " for " + Tools.PrettyDeltaTime(banInput.Duration));
-          }
-        }
-      } else {
-        throw new Exception("Unsupported Sendable");
-      }
-      Tools.Log(log.Last());
-    }
-
     public static void ErrorLog(string text) {
       Log(text, ConsoleColor.Red);
 #if DEBUG

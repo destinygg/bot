@@ -9,7 +9,7 @@ using SuperSocket.ClientEngine;
 using WebSocket4Net;
 
 namespace Dbot.Client {
-  public class WebSocketListenerClient : IClient {
+  public class WebSocketListenerClient : ConsolePrintClient {
 
     protected readonly WebSocket _websocket;
     private IProcessor _processor;
@@ -27,12 +27,12 @@ namespace Dbot.Client {
       _websocket.MessageReceived += websocket_MessageReceived;
     }
 
-    public void Run(IProcessor processor) {
+    public override void Run(IProcessor processor) {
       this._processor = processor;
       this._websocket.Open();
     }
 
-    public void Forward(Message message) {
+    public override void Forward(Message message) {
       _processor.ProcessMessage(message);
     }
 
@@ -92,11 +92,6 @@ namespace Dbot.Client {
 
     private void websocket_Opened(object sender, EventArgs e) {
       Tools.Log("Connected!", ConsoleColor.Green);
-    }
-
-
-    public virtual void Send(ISendable input) {
-      Tools.Log(input, new List<string>());
     }
   }
 }

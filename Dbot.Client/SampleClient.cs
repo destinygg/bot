@@ -9,10 +9,10 @@ using Dbot.CommonModels;
 using Dbot.Utility;
 
 namespace Dbot.Client {
-  public class SampleClient : IClient {
+  public class SampleClient : ConsolePrintClient {
     private IProcessor _processor;
 
-    public async void Run(IProcessor processor) {
+    public override async void Run(IProcessor processor) {
       _processor = processor;
       foreach (var message in _messageList) {
         processor.ProcessMessage(message);
@@ -20,12 +20,8 @@ namespace Dbot.Client {
       }
     }
 
-    public void Forward(Message message) {
+    public override void Forward(Message message) {
       _processor.ProcessMessage(message);
-    }
-
-    public void Send(ISendable input) {
-      Tools.Log(input, new List<string>());
     }
 
     private readonly List<Message> _messageList = new List<Message> {
