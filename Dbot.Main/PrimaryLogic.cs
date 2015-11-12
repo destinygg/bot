@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Dbot.Client;
 using Dbot.Common;
+using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Processor;
 using Dbot.Utility;
@@ -44,9 +45,9 @@ namespace Dbot.Main {
           if (input == "exit") {
             _exit = true;
           } else if (input[0] == '~') {
-            Client.Send(Make.Message(input.Substring(1)));
+            Client.Send(new PublicMessage(input.Substring(1)));
           } else if (input[0] == '!') {
-            Client.Forward(new Message { Text = input, IsMod = true, Nick = "SYSTEM CONSOLE" });
+            Client.Forward(new PublicMessage("SYSTEM CONSOLE", input) { IsMod = true });
           }
         }
       }
@@ -61,7 +62,7 @@ namespace Dbot.Main {
     }
 
     private static void TweetDetected(ITweet tweet) {
-      MessageProcessor.Sender.Post(Make.Message(true, "twitter.com/steven_bonnell just tweeted: \n" + Tools.TweetPrettier(tweet)));
+      MessageProcessor.Sender.Post(new PublicMessage(true, "twitter.com/steven_bonnell just tweeted: \n" + Tools.TweetPrettier(tweet)));
     }
 
     static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {

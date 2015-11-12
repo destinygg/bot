@@ -21,7 +21,7 @@ namespace Dbot.Processor {
         var pm = (PrivateMessage) _message;
         MessageProcessor.Sender.Post(new PrivateMessage(pm.Nick, message));
       } else {
-        MessageProcessor.Sender.Post(Make.Message(message));
+        MessageProcessor.Sender.Post(new PublicMessage(message));
       }
     }
 

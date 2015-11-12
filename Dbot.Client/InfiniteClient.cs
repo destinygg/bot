@@ -14,7 +14,7 @@ namespace Dbot.Client {
       while (true) {
         //this.CoreMsg = new Message { Text = (DateTime.Now.Ticks - i).ToString(), Nick = "Bot", IsMod = true };
         //i = DateTime.Now.Ticks;
-        processor.ProcessMessage(new Message { Text = i.ToString(), Nick = "notBot", IsMod = false });
+        processor.ProcessMessage(new PublicMessage("notBot", i.ToString()));
         await Task.Run(() => Thread.Sleep(0));
         i++;
       }

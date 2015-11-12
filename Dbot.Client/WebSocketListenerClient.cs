@@ -54,7 +54,7 @@ namespace Dbot.Client {
             var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
             var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator" || s == "protected");
             if (isMod && !_modList.Contains(msg.Nick)) _modList.Add(msg.Nick);
-            _processor.ProcessMessage(new Message { Nick = msg.Nick, Text = msg.Data, IsMod = isMod });
+            _processor.ProcessMessage(new PublicMessage(msg.Nick, msg.Data) { IsMod = isMod });
           }
           break;
         case "PRIVMSG": {
@@ -81,7 +81,7 @@ namespace Dbot.Client {
       }
     }
 
-    private void websocket_Closed(object sender, EventArgs e) { 
+    private void websocket_Closed(object sender, EventArgs e) {
       Tools.Log("Connection lost!", ConsoleColor.Red);
       this._websocket.Open();
     }

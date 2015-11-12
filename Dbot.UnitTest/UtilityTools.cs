@@ -161,23 +161,23 @@ namespace Dbot.UnitTest {
     public void IgnoreFirstOccuranceOf_Test() {
 
       var testList = new List<Message> {
-        Make.Message("1"),
-        Make.Message("bork"),
-        Make.Message("longer message"),
-        Make.Message("bork"),
-        Make.Message("1"),
-        Make.Message("bork"),
+        new PublicMessage("1"),
+        new PublicMessage("bork"),
+        new PublicMessage("longer message"),
+        new PublicMessage("bork"),
+        new PublicMessage("1"),
+        new PublicMessage("bork"),
       };
 
       var expectedAnswer = new List<Message> {
-        Make.Message("1"),
-        Make.Message("longer message"),
-        Make.Message("bork"),
-        Make.Message("1"),
-        Make.Message("bork"),
+        new PublicMessage("1"),
+        new PublicMessage("longer message"),
+        new PublicMessage("bork"),
+        new PublicMessage("1"),
+        new PublicMessage("bork"),
       };
 
-      var actualAnswer = testList.IgnoreFirstOccuranceOf(Make.Message("bork")).ToList();
+      var actualAnswer = testList.IgnoreFirstOccuranceOf(new PublicMessage("bork")).ToList();
       Assert.IsTrue(actualAnswer.SequenceEqual(expectedAnswer));
     }
 

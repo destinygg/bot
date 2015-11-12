@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace Dbot.CommonModels {
 
   public abstract class TargetedSendable : User, ISendable { }
 
-  public class Message : TargetedSendable, IEquatable<Message> {
+  public abstract class Message : TargetedSendable, IEquatable<Message> {
     private string _originalText;
     public string OriginalText {
       get { return _originalText; }
@@ -52,6 +53,25 @@ namespace Dbot.CommonModels {
         this.Text == other.Text &&
         this.IsMod == other.IsMod &&
         this.Ordinal == other.Ordinal;
+    }
+  }
+
+  public class PublicMessage : Message {
+    public PublicMessage(string text) {
+      Nick = "MyNick";
+      OriginalText = text;
+    }
+
+    public PublicMessage(string nick, string text) {
+      Nick = nick;
+      OriginalText = text;
+    }
+
+    public PublicMessage(bool isMod, string text) {
+      Contract.Requires(isMod == true);
+      Nick = "AutoMod";
+      OriginalText = text;
+      IsMod = isMod;
     }
   }
 

@@ -30,7 +30,7 @@ namespace Dbot.UnitTest {
       };
 
       foreach (var text in testList) {
-        var actualAnswer = new Banner(Make.Message(text)).ImgurNsfw().Duration;
+        var actualAnswer = new Banner(new PublicMessage(text)).ImgurNsfw().Duration;
         var expectedAnswer = TimeSpan.FromMinutes(5);
         Assert.AreEqual(expectedAnswer, actualAnswer);
       }
@@ -44,7 +44,7 @@ namespace Dbot.UnitTest {
       InitializeDatastore.Run();
       Datastore.AddToStateString(MagicStrings.MutedWords, mutedWord, TimeSpan.FromMinutes(10).TotalSeconds, Datastore.MutedWords);
 
-      var banner = new Banner(Make.Message(nick, mutedWord), new List<Message>());
+      var banner = new Banner(new PublicMessage(nick, mutedWord), new List<Message>());
 
       foreach (var i in Enumerable.Range(1, 10)) {
         banner.BanParser(true);
@@ -69,7 +69,7 @@ namespace Dbot.UnitTest {
 
       var total = new List<Message>();
       foreach (var tuple in testList) {
-        total.Add(Make.Message(tuple.Item1));
+        total.Add(new PublicMessage(tuple.Item1));
         var op = total.First();
         var context = total.Skip(1).ToList();
         var testCase = new Banner(op, context).SelfSpam();

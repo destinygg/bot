@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Tweetinvi;
 using Tweetinvi.Core.Exceptions;
 using ExceptionHandler = Tweetinvi.ExceptionHandler;
 using Message = Dbot.CommonModels.Message;
+using User = Tweetinvi.User;
 
 namespace Dbot.Processor {
   public class Commander {
@@ -57,13 +58,13 @@ namespace Dbot.Processor {
       if (customCommand != null) {
         if (!_message.IsMod)
           MessageProcessor.LastCommandTime = DateTime.UtcNow;
-        return Make.Message(true, customCommand);
+        return new PublicMessage(true, customCommand);
       }
       var command = _commandDictionary.FirstOrDefault(y => y.Key.Any(x => _text.StartsWith(x))).Value;
       if (command != null) {
         if (!_message.IsMod)
           MessageProcessor.LastCommandTime = DateTime.UtcNow;
-        return Make.Message(true, command.Invoke());
+        return new PublicMessage(true, command.Invoke());
       }
       return null;
     }

@@ -80,13 +80,13 @@ namespace Dbot.Processor {
         var message = (Message) input;
         var s = message.OriginalText.Split('\n');
         foreach (var x in s) {
-          _client.Send(Make.Message(x));
+          _client.Send(new PublicMessage(x));
         }
       } else if (input is HasVictim) {
         var victimInput = (HasVictim) input;
         _client.Send(input);
         if (!victimInput.SilentReason && !string.IsNullOrWhiteSpace(victimInput.Reason)) {
-          _client.Send(Make.Message(victimInput.Reason));
+          _client.Send(new PublicMessage(victimInput.Reason));
         }
       } else {
         _client.Send(input);

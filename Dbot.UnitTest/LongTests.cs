@@ -15,10 +15,10 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task SimpleCommandsTest() {
       var messageList = new List<Message> {
-        Make.Message(true, "!sing"),
+        new PublicMessage(true, "!sing"),
       };
 
-      messageList.AddRange(Enumerable.Range(1, 0).Select(i => Make.Message("UserX", "Wait... " + Tools.RandomString(10))).ToList());
+      messageList.AddRange(Enumerable.Range(1, 0).Select(i => new PublicMessage("UserX", "Wait... " + Tools.RandomString(10))).ToList());
 
       var r = await new PrimaryLogic().TestRun(messageList);
 
@@ -28,33 +28,33 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task ManualMuteTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message>() {
-        Make.Message(true, "!mute UserX"),
-        Make.Message(true, "!m UserX"),
-        Make.Message(true, "!mute2 UserX"),
-        Make.Message(true, "!m3 UserX"),
-        Make.Message(true, "!mute 4 UserX"),
-        Make.Message(true, "!m 5 UserX"),
-        Make.Message(true, "!mute UserX reason goes here"),
-        Make.Message(true, "!m UserX reason goes here"),
-        Make.Message(true, "!mute6 UserX reason goes here"),
-        Make.Message(true, "!m7 UserX reason goes here"),
-        Make.Message(true, "!mute 8 UserX reason goes here"),
-        Make.Message(true, "!m 9 UserX reason goes here"),
-        Make.Message(true, "!mute2m UserX"),
-        Make.Message(true, "!m3m UserX"),
-        Make.Message(true, "!mute 4m UserX"),
-        Make.Message(true, "!m 5m UserX"),
-        Make.Message(true, "!mute6m UserX reason goes here"),
-        Make.Message(true, "!m7m UserX reason goes here"),
-        Make.Message(true, "!mute 8m UserX reason goes here"),
-        Make.Message(true, "!mute 9minutes UserX reason goes here"),
-        Make.Message(true, "!mute 10perm UserX reason goes here"),
-        Make.Message(true, "!mute 11perm UserX"),
-        Make.Message(true, "!mute perm UserX"),
-        Make.Message(true, "!mute 8d UserX"),
-        Make.Message(true, "!mute 8d UserX reason goes here"),
-        Make.Message(true, "!mute 7d UserX"),
-        Make.Message(true, "!mute 7d UserX reason goes here"),
+        new PublicMessage(true, "!mute UserX"),
+        new PublicMessage(true, "!m UserX"),
+        new PublicMessage(true, "!mute2 UserX"),
+        new PublicMessage(true, "!m3 UserX"),
+        new PublicMessage(true, "!mute 4 UserX"),
+        new PublicMessage(true, "!m 5 UserX"),
+        new PublicMessage(true, "!mute UserX reason goes here"),
+        new PublicMessage(true, "!m UserX reason goes here"),
+        new PublicMessage(true, "!mute6 UserX reason goes here"),
+        new PublicMessage(true, "!m7 UserX reason goes here"),
+        new PublicMessage(true, "!mute 8 UserX reason goes here"),
+        new PublicMessage(true, "!m 9 UserX reason goes here"),
+        new PublicMessage(true, "!mute2m UserX"),
+        new PublicMessage(true, "!m3m UserX"),
+        new PublicMessage(true, "!mute 4m UserX"),
+        new PublicMessage(true, "!m 5m UserX"),
+        new PublicMessage(true, "!mute6m UserX reason goes here"),
+        new PublicMessage(true, "!m7m UserX reason goes here"),
+        new PublicMessage(true, "!mute 8m UserX reason goes here"),
+        new PublicMessage(true, "!mute 9minutes UserX reason goes here"),
+        new PublicMessage(true, "!mute 10perm UserX reason goes here"),
+        new PublicMessage(true, "!mute 11perm UserX"),
+        new PublicMessage(true, "!mute perm UserX"),
+        new PublicMessage(true, "!mute 8d UserX"),
+        new PublicMessage(true, "!mute 8d UserX reason goes here"),
+        new PublicMessage(true, "!mute 7d UserX"),
+        new PublicMessage(true, "!mute 7d UserX reason goes here"),
       });
 
       Assert.IsTrue(r.Count(x => x == "Muted userx for 1h") == 4);
@@ -68,29 +68,29 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task ManualBanTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message>() {
-        Make.Message(true, "!ban UserX"),
-        Make.Message(true, "!b UserX"),
-        Make.Message(true, "!ban2 UserX"),
-        Make.Message(true, "!b3 UserX"),
-        Make.Message(true, "!Ban 4 UserX"),
-        Make.Message(true, "!b 5 UserX"),
-        Make.Message(true, "!ban UserX reason goes here"),
-        Make.Message(true, "!b UserX reason goes here"),
-        Make.Message(true, "!ban6 UserX reason goes here"),
-        Make.Message(true, "!b7 UserX reason goes here"),
-        Make.Message(true, "!ban 8 UserX reason goes here"),
-        Make.Message(true, "!b 9 UserX reason goes here"),
-        Make.Message(true, "!ban2m UserX"),
-        Make.Message(true, "!b3m UserX"),
-        Make.Message(true, "!Ban 4m UserX"),
-        Make.Message(true, "!b 5m UserX"),
-        Make.Message(true, "!ban6m UserX reason goes here"),
-        Make.Message(true, "!b7m UserX reason goes here"),
-        Make.Message(true, "!ban 8m UserX reason goes here"),
-        Make.Message(true, "!ban 9minutes UserX reason goes here"),
-        Make.Message(true, "!ban 10perm UserX reason goes here"),
-        Make.Message(true, "!ban 11perm UserX"),
-        Make.Message(true, "!ban perm UserX"),
+        new PublicMessage(true, "!ban UserX"),
+        new PublicMessage(true, "!b UserX"),
+        new PublicMessage(true, "!ban2 UserX"),
+        new PublicMessage(true, "!b3 UserX"),
+        new PublicMessage(true, "!Ban 4 UserX"),
+        new PublicMessage(true, "!b 5 UserX"),
+        new PublicMessage(true, "!ban UserX reason goes here"),
+        new PublicMessage(true, "!b UserX reason goes here"),
+        new PublicMessage(true, "!ban6 UserX reason goes here"),
+        new PublicMessage(true, "!b7 UserX reason goes here"),
+        new PublicMessage(true, "!ban 8 UserX reason goes here"),
+        new PublicMessage(true, "!b 9 UserX reason goes here"),
+        new PublicMessage(true, "!ban2m UserX"),
+        new PublicMessage(true, "!b3m UserX"),
+        new PublicMessage(true, "!Ban 4m UserX"),
+        new PublicMessage(true, "!b 5m UserX"),
+        new PublicMessage(true, "!ban6m UserX reason goes here"),
+        new PublicMessage(true, "!b7m UserX reason goes here"),
+        new PublicMessage(true, "!ban 8m UserX reason goes here"),
+        new PublicMessage(true, "!ban 9minutes UserX reason goes here"),
+        new PublicMessage(true, "!ban 10perm UserX reason goes here"),
+        new PublicMessage(true, "!ban 11perm UserX"),
+        new PublicMessage(true, "!ban perm UserX"),
       });
 
       Assert.IsTrue(r.Count(x => x == "Banned userx for 1h") == 4);
@@ -104,29 +104,29 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task ManualIpbanTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message>() {
-        Make.Message(true, "!ipban UserX"),
-        Make.Message(true, "!i UserX"),
-        Make.Message(true, "!ipban2 UserX"),
-        Make.Message(true, "!i3 UserX"),
-        Make.Message(true, "!ipban 4 UserX"),
-        Make.Message(true, "!i 5 UserX"),
-        Make.Message(true, "!ipban UserX reason goes here"),
-        Make.Message(true, "!i UserX reason goes here"),
-        Make.Message(true, "!ipban6 UserX reason goes here"),
-        Make.Message(true, "!i7 UserX reason goes here"),
-        Make.Message(true, "!ipban 8 UserX reason goes here"),
-        Make.Message(true, "!i 9 UserX reason goes here"),
-        Make.Message(true, "!ipban2m UserX"),
-        Make.Message(true, "!i3m UserX"),
-        Make.Message(true, "!ipban 4m UserX"),
-        Make.Message(true, "!i 5m UserX"),
-        Make.Message(true, "!ipban6m UserX reason goes here"),
-        Make.Message(true, "!i7m UserX reason goes here"),
-        Make.Message(true, "!ipban 8m UserX reason goes here"),
-        Make.Message(true, "!ipban 9minutes UserX reason goes here"),
-        Make.Message(true, "!ipban 10perm UserX reason goes here"),
-        Make.Message(true, "!ipban 11perm UserX"),
-        Make.Message(true, "!ipban perm UserX"),
+        new PublicMessage(true, "!ipban UserX"),
+        new PublicMessage(true, "!i UserX"),
+        new PublicMessage(true, "!ipban2 UserX"),
+        new PublicMessage(true, "!i3 UserX"),
+        new PublicMessage(true, "!ipban 4 UserX"),
+        new PublicMessage(true, "!i 5 UserX"),
+        new PublicMessage(true, "!ipban UserX reason goes here"),
+        new PublicMessage(true, "!i UserX reason goes here"),
+        new PublicMessage(true, "!ipban6 UserX reason goes here"),
+        new PublicMessage(true, "!i7 UserX reason goes here"),
+        new PublicMessage(true, "!ipban 8 UserX reason goes here"),
+        new PublicMessage(true, "!i 9 UserX reason goes here"),
+        new PublicMessage(true, "!ipban2m UserX"),
+        new PublicMessage(true, "!i3m UserX"),
+        new PublicMessage(true, "!ipban 4m UserX"),
+        new PublicMessage(true, "!i 5m UserX"),
+        new PublicMessage(true, "!ipban6m UserX reason goes here"),
+        new PublicMessage(true, "!i7m UserX reason goes here"),
+        new PublicMessage(true, "!ipban 8m UserX reason goes here"),
+        new PublicMessage(true, "!ipban 9minutes UserX reason goes here"),
+        new PublicMessage(true, "!ipban 10perm UserX reason goes here"),
+        new PublicMessage(true, "!ipban 11perm UserX"),
+        new PublicMessage(true, "!ipban perm UserX"),
       });
 
       Assert.IsTrue(r.Count(x => x == "Permanently ipbanned userx for ") == 4);
@@ -140,42 +140,42 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task SelfSpamTest() {
       var messageList = new List<Message> {
-        Make.Message("BanVictimA", "playing a longer game"),
-        Make.Message("BanVictimA", "playing a longer game"),
-        Make.Message("BanVictimB", "short spam"),
-        Make.Message("BanVictimB", "short spam"),
-        Make.Message("UserX", "Stuff"),
-        Make.Message("UserX", "Yet more stuff"),
-        Make.Message("UserX", "I like talking!"),
-        Make.Message("BanVictimB", "short spam"),
+        new PublicMessage("BanVictimA", "playing a longer game"),
+        new PublicMessage("BanVictimA", "playing a longer game"),
+        new PublicMessage("BanVictimB", "short spam"),
+        new PublicMessage("BanVictimB", "short spam"),
+        new PublicMessage("UserX", "Stuff"),
+        new PublicMessage("UserX", "Yet more stuff"),
+        new PublicMessage("UserX", "I like talking!"),
+        new PublicMessage("BanVictimB", "short spam"),
       };
 
       const int beginningBufferSize = 3;
       foreach (var i in Enumerable.Range(0, beginningBufferSize)) {
-        messageList.Insert(i, Make.Message("User" + i, i.ToString()));
+        messageList.Insert(i, new PublicMessage("User" + i, i.ToString()));
       }
       var endingBufferSize = Settings.SelfSpamContextLength - messageList.Count + 3;
       foreach (var i in Enumerable.Range(beginningBufferSize, endingBufferSize)) {
-        messageList.Add(Make.Message("User" + i, i.ToString()));
+        messageList.Add(new PublicMessage("User" + i, i.ToString()));
       }
-      messageList.Add(Make.Message("BanVictimA", "playing a longer game"));
+      messageList.Add(new PublicMessage("BanVictimA", "playing a longer game"));
       messageList.AddRange(new List<Message> {
-        Make.Message("Innocent", "Sweetie240Belle why"), // todo fix people who talk to long names, then consider having a history for it.
-        Make.Message("Innocent2", "1"),
-        Make.Message("Innocent3", "2"),
-        Make.Message("Innocent4", "3"),
-        Make.Message("Innocent5", "4"),
-        Make.Message("Innocent6", "5"),
-        Make.Message("Innocent", "Sweetie240Belle is it?"),
-        Make.Message("Innocent7", "6"),
-        Make.Message("Innocent8", "7"),
-        Make.Message("Innocent9", "8"),
-        Make.Message("Innocent10", "9"),
-        Make.Message("Innocent11", "10"),
-        Make.Message("Innocent12", "11"),
-        Make.Message("Innocent13", "12"),
-        Make.Message("Innocent14", "13"),
-        Make.Message("Innocent", "Sweetie240Belle no"),
+        new PublicMessage("Innocent", "Sweetie240Belle why"), // todo fix people who talk to long names, then consider having a history for it.
+        new PublicMessage("Innocent2", "1"),
+        new PublicMessage("Innocent3", "2"),
+        new PublicMessage("Innocent4", "3"),
+        new PublicMessage("Innocent5", "4"),
+        new PublicMessage("Innocent6", "5"),
+        new PublicMessage("Innocent", "Sweetie240Belle is it?"),
+        new PublicMessage("Innocent7", "6"),
+        new PublicMessage("Innocent8", "7"),
+        new PublicMessage("Innocent9", "8"),
+        new PublicMessage("Innocent10", "9"),
+        new PublicMessage("Innocent11", "10"),
+        new PublicMessage("Innocent12", "11"),
+        new PublicMessage("Innocent13", "12"),
+        new PublicMessage("Innocent14", "13"),
+        new PublicMessage("Innocent", "Sweetie240Belle no"),
       });
       var r = await new PrimaryLogic().TestRun(messageList);
 
@@ -192,43 +192,43 @@ namespace Dbot.UnitTest {
       const int secondBufferSize = 5; // 5/25
       const int thirdBufferSize = 5; // 5/225
       var messageList = new List<Message>{
-        Make.Message("red1", "red"),
-        Make.Message("red2", "red"),
-        Make.Message("red3", "red"),
+        new PublicMessage("red1", "red"),
+        new PublicMessage("red2", "red"),
+        new PublicMessage("red3", "red"),
         
-        Make.Message("yellow1", "yellow"),
-        Make.Message("yellow2", "yellow"),
-        Make.Message("yellow3", "yellow"),
+        new PublicMessage("yellow1", "yellow"),
+        new PublicMessage("yellow2", "yellow"),
+        new PublicMessage("yellow3", "yellow"),
         
-        Make.Message(true, "!nuke10m red"),
-        Make.Message(true, "!nuke30m yellow"),
+        new PublicMessage(true, "!nuke10m red"),
+        new PublicMessage(true, "!nuke30m yellow"),
       };
-      messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => Make.Message("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage("User" + i, "test")));
       messageList.AddRange(new List<Message>{
-        Make.Message("red4", "red"),
-        Make.Message("red5", "red"),
-        Make.Message("red6", "red"),
+        new PublicMessage("red4", "red"),
+        new PublicMessage("red5", "red"),
+        new PublicMessage("red6", "red"),
         
-        Make.Message("yellow4", "yellow"),
-        Make.Message("yellow5", "yellow"),
-        Make.Message("yellow6", "yellow"),
-        //Make.Message(true, "!mute User26"),
+        new PublicMessage("yellow4", "yellow"),
+        new PublicMessage("yellow5", "yellow"),
+        new PublicMessage("yellow6", "yellow"),
+        //new PublicMessage(true, "!mute User26"),
       });
-      messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => Make.Message("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => new PublicMessage("User" + i, "test")));
       messageList.AddRange(new List<Message>{
-        Make.Message(true, "!aegis"),
-        Make.Message("red7", "red"),
-        Make.Message("yellow7", "yellow7"),
-        Make.Message("transparent1", "transparent"),
-        Make.Message(true, "!NUKE transparent"),
-        Make.Message("transparent2", "transparent"),
-        Make.Message(true, "!aegis"),
-        Make.Message("transparent3", "transparent"),
-        Make.Message("transparent4", "transparent"),
-        Make.Message("transparent5", "transparent"),
+        new PublicMessage(true, "!aegis"),
+        new PublicMessage("red7", "red"),
+        new PublicMessage("yellow7", "yellow7"),
+        new PublicMessage("transparent1", "transparent"),
+        new PublicMessage(true, "!NUKE transparent"),
+        new PublicMessage("transparent2", "transparent"),
+        new PublicMessage(true, "!aegis"),
+        new PublicMessage("transparent3", "transparent"),
+        new PublicMessage("transparent4", "transparent"),
+        new PublicMessage("transparent5", "transparent"),
 
       });
-      messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => Make.Message("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => new PublicMessage("User" + i, "test")));
 
       var r = await new PrimaryLogic().TestRun(messageList);
 
@@ -257,9 +257,9 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task EmotesTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message>() {
-        Make.Message("UserX","Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa"),
-        Make.Message("UserX","OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle"),
-        Make.Message("UserX","LUL LUL LUL LUL LUL LUL LUL LUL"),
+        new PublicMessage("UserX","Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa"),
+        new PublicMessage("UserX","OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle"),
+        new PublicMessage("UserX","LUL LUL LUL LUL LUL LUL LUL LUL"),
       });
       await Task.Delay(1000);
 
@@ -286,17 +286,17 @@ namespace Dbot.UnitTest {
       var longerMessage = longerBuilder.ToString();
       var longestMessage = longestBuilder.ToString();
 
-      var messageList = Enumerable.Range(1, 40).Select(i => Make.Message("User" + i, Tools.RandomString(Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier + 1))).ToList();
+      var messageList = Enumerable.Range(1, 40).Select(i => new PublicMessage("User" + i, Tools.RandomString(Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier + 1))).ToList();
 
-      messageList.AddRange(new List<Message> {
-        Make.Message("UserA", longMessage),
-        Make.Message("SpamA", longMessage),
-        Make.Message("UserB", longMessage + "b"),
-        Make.Message("SpamB", longMessage + "b"),
-        Make.Message("UserX", longerMessage),
-        Make.Message("SpamX", longerMessage),
-        Make.Message("UserY", longestMessage + "y"),
-        Make.Message("SpamY", longestMessage + "y"),
+      messageList.AddRange(new List<PublicMessage> {
+        new PublicMessage("UserA", longMessage),
+        new PublicMessage("SpamA", longMessage),
+        new PublicMessage("UserB", longMessage + "b"),
+        new PublicMessage("SpamB", longMessage + "b"),
+        new PublicMessage("UserX", longerMessage),
+        new PublicMessage("SpamX", longerMessage),
+        new PublicMessage("UserY", longestMessage + "y"),
+        new PublicMessage("SpamY", longestMessage + "y"),
       });
       var r = await new PrimaryLogic().TestRun(messageList);
 
@@ -330,135 +330,135 @@ namespace Dbot.UnitTest {
 
     private async Task AutoMuteBanRegexTest(string normal, string capsPasttense) {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message(true, "!add" + normal + @"9m r(e|3)g\dx"),
-        Make.Message(true, "!add" + normal + @"1m ^begin *end$"),
-        Make.Message(true, "!add" + normal + @"m cAsEsEnSiTiViTy MaTtErS"),
-        Make.Message(true, "!add" + normal + @"m (?i:DOES NOT MATTER)"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("1spam", "word r3g1x space"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", "not r1gex work"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("2spam", "begin      end"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", "begin      endx"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("3spam", "abc cAsEsEnSiTiViTy MaTtErS def"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", "casesensitivity matters"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("4spam", "xyz does not matter 123"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", "XOES NOT MATTER"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message(true, "!del" + normal + @" r(e|3)g\dx"),
-        Make.Message(true, "!del" + normal + @" ^begin *end$"),
-        Make.Message(true, "!del" + normal + @" cAsEsEnSiTiViTy MaTtErS"),
-        Make.Message(true, "!del" + normal + @" (?i:DOES NOT MATTER)"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", "word r3g1x space"),
-        Make.Message("UserX", "not r1gex work"),
-        Make.Message("UserX", "abc cAsEsEnSiTiViTy MaTtErS def"),
-        Make.Message("UserX", "does not matter"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
+        new PublicMessage(true, "!add" + normal + @"9m r(e|3)g\dx"),
+        new PublicMessage(true, "!add" + normal + @"1m ^begin *end$"),
+        new PublicMessage(true, "!add" + normal + @"m cAsEsEnSiTiViTy MaTtErS"),
+        new PublicMessage(true, "!add" + normal + @"m (?i:DOES NOT MATTER)"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("1spam", "word r3g1x space"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", "not r1gex work"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("2spam", "begin      end"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", "begin      endx"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("3spam", "abc cAsEsEnSiTiViTy MaTtErS def"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", "casesensitivity matters"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("4spam", "xyz does not matter 123"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", "XOES NOT MATTER"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage(true, "!del" + normal + @" r(e|3)g\dx"),
+        new PublicMessage(true, "!del" + normal + @" ^begin *end$"),
+        new PublicMessage(true, "!del" + normal + @" cAsEsEnSiTiViTy MaTtErS"),
+        new PublicMessage(true, "!del" + normal + @" (?i:DOES NOT MATTER)"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", "word r3g1x space"),
+        new PublicMessage("UserX", "not r1gex work"),
+        new PublicMessage("UserX", "abc cAsEsEnSiTiViTy MaTtErS def"),
+        new PublicMessage("UserX", "does not matter"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
       });
       SpamAndUserAssert(r, 4);
     }
 
     private async Task AutoMuteBanTest(string normal, string capsPasttense) {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message(true, "!add" + normal + "9m test"),
-        Make.Message(true, "!add" + normal + "1m bork"),
-        Make.Message(true, "!add" + normal + "m herp"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserA", "test"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserB", "testing statement"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "bork"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "borking statement"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "lorkborking statement"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "herp statement"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "herpderp statement"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "herpy derpy statement"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "somewhere a herp derps"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "close to home a derp herps"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "in a burrow hole the herp derped"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserC", "the herp smiled as it derped quietly"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message(true, "!del" + normal + " test"),
-        Make.Message(true, "!del" + normal + " bork"),
-        Make.Message(true, "!del" + normal + " herp"),
-        Make.Message("UserD", "test"),
-        Make.Message("UserD", "bork"),
-        Make.Message(true, "!add" + normal + "13m repeat"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserE", "repeat"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message(true, "!add" + normal + "30m repeat"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message("UserF", "repeat"),
-        Make.Message("UserX", Tools.RandomString(20)),
-        Make.Message(true, "!delete" + normal + " ghost"),
-        Make.Message(true, "!delete" + normal + " repeat"),
-        Make.Message("UserX", Tools.RandomString(20)),
+        new PublicMessage(true, "!add" + normal + "9m test"),
+        new PublicMessage(true, "!add" + normal + "1m bork"),
+        new PublicMessage(true, "!add" + normal + "m herp"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserA", "test"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserB", "testing statement"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserC", "bork"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserC", "borking statement"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserC", "lorkborking statement"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserC", "herp statement"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserC", "herpderp statement"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserC", "herpy derpy statement"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserC", "somewhere a herp derps"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserC", "close to home a derp herps"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserC", "in a burrow hole the herp derped"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserC", "the herp smiled as it derped quietly"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage(true, "!del" + normal + " test"),
+        new PublicMessage(true, "!del" + normal + " bork"),
+        new PublicMessage(true, "!del" + normal + " herp"),
+        new PublicMessage("UserD", "test"),
+        new PublicMessage("UserD", "bork"),
+        new PublicMessage(true, "!add" + normal + "13m repeat"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserE", "repeat"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage(true, "!add" + normal + "30m repeat"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage("UserF", "repeat"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
+        new PublicMessage(true, "!delete" + normal + " ghost"),
+        new PublicMessage(true, "!delete" + normal + " repeat"),
+        new PublicMessage("UserX", Tools.RandomString(20)),
       });
 
       Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " usera for 9m")) == 1);
@@ -480,30 +480,30 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task NumberSpamTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message("UserX", "Buffer"),
-        Make.Message("UserY", "Buffer"),
-        Make.Message("UserZ", "Buffer"),
-        Make.Message("UserA", "1"),
-        Make.Message("UserA", "2"),
-        Make.Message("UserA", "3"),
-        Make.Message("UserA", "4"),
-        Make.Message("UserA", "5"),
-        Make.Message("UserA", "6"),
-        Make.Message("UserB", "#1."),
-        Make.Message("UserB", "#2."),
-        Make.Message("UserB", "#3."),
-        Make.Message("UserB", "#4."),
-        Make.Message("UserB", "#5."),
-        Make.Message("UserB", "#6."),
-        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
-        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
-        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
-        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
-        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
-        Make.Message("UserC", "#9inevolt " + Tools.RandomString(15)),
-        Make.Message("UserX", "Buffer"),
-        Make.Message("UserY", "Buffer"),
-        Make.Message("UserZ", "Buffer"),
+        new PublicMessage("UserX", "Buffer"),
+        new PublicMessage("UserY", "Buffer"),
+        new PublicMessage("UserZ", "Buffer"),
+        new PublicMessage("UserA", "1"),
+        new PublicMessage("UserA", "2"),
+        new PublicMessage("UserA", "3"),
+        new PublicMessage("UserA", "4"),
+        new PublicMessage("UserA", "5"),
+        new PublicMessage("UserA", "6"),
+        new PublicMessage("UserB", "#1."),
+        new PublicMessage("UserB", "#2."),
+        new PublicMessage("UserB", "#3."),
+        new PublicMessage("UserB", "#4."),
+        new PublicMessage("UserB", "#5."),
+        new PublicMessage("UserB", "#6."),
+        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
+        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
+        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
+        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
+        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
+        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
+        new PublicMessage("UserX", "Buffer"),
+        new PublicMessage("UserY", "Buffer"),
+        new PublicMessage("UserZ", "Buffer"),
       });
 
       Assert.IsTrue(r.Count(x => x.Contains("Muted usera")) == 1);
@@ -514,8 +514,8 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task StalkTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message("UniqueUserA", "Unique Message A"),
-        Make.Message(true, "!stalk UniqueUserA"),
+        new PublicMessage("UniqueUserA", "Unique Message A"),
+        new PublicMessage(true, "!stalk UniqueUserA"),
       });
       await Task.Delay(300);
 
@@ -525,14 +525,14 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task EmoteUserSpamTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message("UserA", "Buffer"),
-        Make.Message("User1", "Kappa UserA"),
-        Make.Message("User2", "Kappa UserA"),
-        Make.Message("User3", "Kappa UserA"),
-        Make.Message("User4", "Kappa UserA"),
-        Make.Message("User5", "Kappa UserA"),
-        Make.Message("UserA", "Buffer"),
-        Make.Message("User6", "Kappa UserA"),
+        new PublicMessage("UserA", "Buffer"),
+        new PublicMessage("User1", "Kappa UserA"),
+        new PublicMessage("User2", "Kappa UserA"),
+        new PublicMessage("User3", "Kappa UserA"),
+        new PublicMessage("User4", "Kappa UserA"),
+        new PublicMessage("User5", "Kappa UserA"),
+        new PublicMessage("UserA", "Buffer"),
+        new PublicMessage("User6", "Kappa UserA"),
       });
       await Task.Delay(300);
 
@@ -543,22 +543,22 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task ThirdPartyEmoteTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message(true, "!addEMOTE FaceA"),
-        Make.Message(true, "!ADDemote MyEmoteB"),
-        Make.Message(true, "!listemote"),
-        Make.Message("User1", "FaceA UserA"),
-        Make.Message("User2", "FaceA UserA"),
-        Make.Message("User3", "FaceA UserA"),
-        Make.Message("User4", "FaceA UserA"),
-        Make.Message("User5", "FaceA UserA"),
-        Make.Message("User6", "Buffer"),
-        Make.Message("1Spam", "FaceA UserA"),
-        Make.Message("2Spam", "FaceA UserA"),
-        Make.Message("3Spam", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
-        Make.Message("User7", "facea facea facea facea facea facea facea facea facea facea" + Tools.RandomString(20)),
-        Make.Message(true, "!delemote FaceA"),
-        Make.Message("User8", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
-        Make.Message("4Spam", "MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB " + Tools.RandomString(20)),
+        new PublicMessage(true, "!addEMOTE FaceA"),
+        new PublicMessage(true, "!ADDemote MyEmoteB"),
+        new PublicMessage(true, "!listemote"),
+        new PublicMessage("User1", "FaceA UserA"),
+        new PublicMessage("User2", "FaceA UserA"),
+        new PublicMessage("User3", "FaceA UserA"),
+        new PublicMessage("User4", "FaceA UserA"),
+        new PublicMessage("User5", "FaceA UserA"),
+        new PublicMessage("User6", "Buffer"),
+        new PublicMessage("1Spam", "FaceA UserA"),
+        new PublicMessage("2Spam", "FaceA UserA"),
+        new PublicMessage("3Spam", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
+        new PublicMessage("User7", "facea facea facea facea facea facea facea facea facea facea" + Tools.RandomString(20)),
+        new PublicMessage(true, "!delemote FaceA"),
+        new PublicMessage("User8", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
+        new PublicMessage("4Spam", "MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB " + Tools.RandomString(20)),
       });
       await Task.Delay(400);
 
@@ -576,17 +576,17 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task MuteIncreaserTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message(true, "!add word"),
-        Make.Message("UserX", "word"),
-        Make.Message("UserX", "word"),
-        Make.Message("UserX", "word"),
-        Make.Message("UserX", "word"),
-        Make.Message("UserX", "word"),
-        Make.Message("UserX", "word"),
-        Make.Message("UserX", "word"),
-        Make.Message("UserX", "word"),
-        Make.Message("UserX", "word"),
-        Make.Message(true, "!delete word"),
+        new PublicMessage(true, "!add word"),
+        new PublicMessage("UserX", "word"),
+        new PublicMessage("UserX", "word"),
+        new PublicMessage("UserX", "word"),
+        new PublicMessage("UserX", "word"),
+        new PublicMessage("UserX", "word"),
+        new PublicMessage("UserX", "word"),
+        new PublicMessage("UserX", "word"),
+        new PublicMessage("UserX", "word"),
+        new PublicMessage("UserX", "word"),
+        new PublicMessage(true, "!delete word"),
       });
       await Task.Delay(100);
 
@@ -599,43 +599,43 @@ namespace Dbot.UnitTest {
       const int secondBufferSize = 5; // 5/25
       const int thirdBufferSize = 5; // 5/225
       var messageList = new List<Message>{
-        Make.Message("red1", "red1"),
-        Make.Message("red2", "red2"),
-        Make.Message("red3", "red3"),
+        new PublicMessage("red1", "red1"),
+        new PublicMessage("red2", "red2"),
+        new PublicMessage("red3", "red3"),
         
-        Make.Message("yellow1", "yellow1"),
-        Make.Message("yellow2", "yellow2"),
-        Make.Message("yellow3", "yellow3"),
+        new PublicMessage("yellow1", "yellow1"),
+        new PublicMessage("yellow2", "yellow2"),
+        new PublicMessage("yellow3", "yellow3"),
         
-        Make.Message(true, @"!nukeregex10m red\d"),
-        Make.Message(true, @"!nukeregex30m yell..\d"),
+        new PublicMessage(true, @"!nukeregex10m red\d"),
+        new PublicMessage(true, @"!nukeregex30m yell..\d"),
       };
-      messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => Make.Message("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage("User" + i, "test")));
       messageList.AddRange(new List<Message>{
-        Make.Message("red4", "red4"),
-        Make.Message("red5", "red5"),
-        Make.Message("red6", "red6"),
+        new PublicMessage("red4", "red4"),
+        new PublicMessage("red5", "red5"),
+        new PublicMessage("red6", "red6"),
         
-        Make.Message("yellow4", "yellow4"),
-        Make.Message("yellow5", "yellow5"),
-        Make.Message("yellow6", "yellow6"),
-        //Make.Message(true, "!mute User26"),
+        new PublicMessage("yellow4", "yellow4"),
+        new PublicMessage("yellow5", "yellow5"),
+        new PublicMessage("yellow6", "yellow6"),
+        //new PublicMessage(true, "!mute User26"),
       });
-      messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => Make.Message("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => new PublicMessage("User" + i, "test")));
       messageList.AddRange(new List<Message>{
-        Make.Message(true, "!aegis"),
-        Make.Message("red7", "red7"),
-        Make.Message("yellow7", "yellow7"),
-        Make.Message("transparent1", "transparent1"),
-        Make.Message(true, @"!NUKEregex transparent\d"),
-        Make.Message("transparent2", "transparent2"),
-        Make.Message(true, "!aegis"),
-        Make.Message("transparent3", "transparent3"),
-        Make.Message("transparent4", "transparent4"),
-        Make.Message("transparent5", "transparent5"),
+        new PublicMessage(true, "!aegis"),
+        new PublicMessage("red7", "red7"),
+        new PublicMessage("yellow7", "yellow7"),
+        new PublicMessage("transparent1", "transparent1"),
+        new PublicMessage(true, @"!NUKEregex transparent\d"),
+        new PublicMessage("transparent2", "transparent2"),
+        new PublicMessage(true, "!aegis"),
+        new PublicMessage("transparent3", "transparent3"),
+        new PublicMessage("transparent4", "transparent4"),
+        new PublicMessage("transparent5", "transparent5"),
 
       });
-      messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => Make.Message("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => new PublicMessage("User" + i, "test")));
 
       var r = await new PrimaryLogic().TestRun(messageList);
 
@@ -664,30 +664,30 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task CustomCommandTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message(true, "!addcommand !burp bless you"),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, "!addcommand !burp herpaderp"),
-        Make.Message(true, "!addcommand !otherword otherside"),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message("UserX", "!burp" + Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message("UserX", "!otherword" + Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, "!otherword" + Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, Tools.RandomString(20)),
-        Make.Message(true, "!delcommand !word"),
-        Make.Message(true, "!delcommand !burp"),
-        Make.Message(true, "!delcommand !otherword"),
+        new PublicMessage(true, "!addcommand !burp bless you"),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, "!addcommand !burp herpaderp"),
+        new PublicMessage(true, "!addcommand !otherword otherside"),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage("UserX", "!burp" + Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage("UserX", "!otherword" + Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, "!otherword" + Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, Tools.RandomString(20)),
+        new PublicMessage(true, "!delcommand !word"),
+        new PublicMessage(true, "!delcommand !burp"),
+        new PublicMessage(true, "!delcommand !otherword"),
       });
       await Task.Delay(1000);
 
@@ -704,8 +704,8 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task UnMuteBanTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message(true, "!unban userA"),
-        Make.Message(true, "!unmute userB"),
+        new PublicMessage(true, "!unban userA"),
+        new PublicMessage(true, "!unmute userB"),
       });
       await Task.Delay(1000);
 
@@ -716,8 +716,8 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task SubOnlyTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        Make.Message(true, "!subonly on"),
-        Make.Message(true, "!subonly off"),
+        new PublicMessage(true, "!subonly on"),
+        new PublicMessage(true, "!subonly off"),
       });
       await Task.Delay(1000);
 

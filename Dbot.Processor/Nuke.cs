@@ -47,7 +47,7 @@ namespace Dbot.Processor {
       }
 
       Nukes.Add(this);
-      MessageProcessor.Sender.Post(Make.Message(Duration.TotalSeconds / 1000 + "kilosecond missiles away!"));
+      MessageProcessor.Sender.Post(new PublicMessage(Duration.TotalSeconds / 1000 + "kilosecond missiles away!"));
 
       while (PreordainedVictims.Except(VictimList).Any()) {
         if (!Cancel) {
@@ -59,7 +59,7 @@ namespace Dbot.Processor {
           return;
         }
       }
-      MessageProcessor.Sender.Post(Make.Message(VictimList.Count + " souls were vaporized in a single blinding instant"));
+      MessageProcessor.Sender.Post(new PublicMessage(VictimList.Count + " souls were vaporized in a single blinding instant"));
     }
 
     public bool Predicate(string input) {
