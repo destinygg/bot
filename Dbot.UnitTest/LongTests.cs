@@ -396,13 +396,11 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task AutoMuteRegexTest() {
-      await AutoMuteBanTest("muteregex", "Muted");
       await AutoMuteBanRegexTest("muteregex", "Muted");
     }
 
     [TestMethod]
     public async Task AutoBanRegexTest() {
-      await AutoMuteBanTest("banregex", "Banned");
       await AutoMuteBanRegexTest("banregex", "Banned");
     }
 
@@ -467,9 +465,9 @@ namespace Dbot.UnitTest {
 
     private async Task AutoMuteBanTest(string normal, string capsPasttense) {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        new PublicMessage(true, "!add" + normal + "9m test"),
-        new PublicMessage(true, "!add" + normal + "m bork"),
-        new PublicMessage(true, "!add" + normal + "1m herp"),
+        new PublicMessage(true, "!Add" + normal + "9m teST"),
+        new PublicMessage(true, "!aDd" + normal + "m boRK"),
+        new PublicMessage(true, "!adD" + normal + "1m heRP"),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
@@ -477,7 +475,7 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
-        new PublicMessage("UserB", "testing statement"),
+        new PublicMessage("UserB", "TEsting statement"),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
@@ -485,7 +483,7 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
-        new PublicMessage("UserC", "borking statement"),
+        new PublicMessage("UserC", "BOrking statement"),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
@@ -497,7 +495,7 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
-        new PublicMessage("UserC", "herpderp statement"),
+        new PublicMessage("UserC", "HErpderp statement"),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
@@ -747,16 +745,16 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task CustomCommandTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        new PublicMessage(true, "!addcommand !burp bless you"),
+        new PublicMessage(true, "!ADDcommand !burp bless you"),
         new PublicMessage(true, Tools.RandomString(20)),
         new PublicMessage(true, Tools.RandomString(20)),
         new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, "!addcommand !burp herpaderp"),
+        new PublicMessage(true, "!addCOMMAND !BURP herpaderp"),
         new PublicMessage(true, "!addcommand !otherword otherside"),
         new PublicMessage(true, Tools.RandomString(20)),
         new PublicMessage(true, Tools.RandomString(20)),
         new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage("UserX", "!burp" + Tools.RandomString(20)),
+        new PublicMessage("UserX", "!bUrP" + Tools.RandomString(20)),
         new PublicMessage(true, Tools.RandomString(20)),
         new PublicMessage(true, Tools.RandomString(20)),
         new PublicMessage(true, Tools.RandomString(20)),

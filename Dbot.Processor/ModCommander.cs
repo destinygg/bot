@@ -158,7 +158,7 @@ namespace Dbot.Processor {
           AntiNuke.Aegis();
         } },
         { CompiledRegex.AddCommand, (g,c) => {
-          var command = g[1].Value;
+          var command = g[1].Value.ToLower();
           var text = g[2].Value;
           if (Datastore.AddToStateString(MagicStrings.CustomCommands, command, text, Datastore.CustomCommands))
             Send("!" + command + " added");
@@ -193,6 +193,7 @@ namespace Dbot.Processor {
       var unit = g[2].Value;
       var wordToAdd = g[3].Value;
       var duration = BanTime(number, unit);
+      if (!category.Contains("Regex")) wordToAdd = wordToAdd.ToLower();
       if (Datastore.AddToStateString(category, wordToAdd, duration.TotalSeconds, externalDictionary))
         Send(wordToAdd + success);
       else
