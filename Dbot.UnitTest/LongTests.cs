@@ -40,14 +40,15 @@ namespace Dbot.UnitTest {
         new PublicMessage(true, "!m7 UserX reason goes here"),
         new PublicMessage(true, "!mute 8 UserX reason goes here"),
         new PublicMessage(true, "!m 9 UserX reason goes here"),
-        new PublicMessage(true, "!mute2m UserX"),
-        new PublicMessage(true, "!m3m UserX"),
-        new PublicMessage(true, "!mute 4m UserX"),
-        new PublicMessage(true, "!m 5m UserX"),
-        new PublicMessage(true, "!mute6m UserX reason goes here"),
-        new PublicMessage(true, "!m7m UserX reason goes here"),
-        new PublicMessage(true, "!mute 8m UserX reason goes here"),
-        new PublicMessage(true, "!mute 9minutes UserX reason goes here"),
+        new PublicMessage(true, "!mute2h UserX"),
+        new PublicMessage(true, "!m3h UserX"),
+        new PublicMessage(true, "!mute 4h UserX"),
+        new PublicMessage(true, "!m 5h UserX"),
+        new PublicMessage(true, "!mute6h UserX reason goes here"),
+        new PublicMessage(true, "!m7h UserX reason goes here"),
+        new PublicMessage(true, "!mute 8h UserX reason goes here"),
+        new PublicMessage(true, "!mute 9hours UserX reason goes here"),
+        new PublicMessage(true, "!muteh UserX reason goes here"),
         new PublicMessage(true, "!mute 10perm UserX reason goes here"),
         new PublicMessage(true, "!mute 11perm UserX"),
         new PublicMessage(true, "!mute perm UserX"),
@@ -57,12 +58,43 @@ namespace Dbot.UnitTest {
         new PublicMessage(true, "!mute 7d UserX reason goes here"),
       });
 
-      Assert.IsTrue(r.Count(x => x == "Muted userx for 1h") == 4);
-      foreach (var i in Enumerable.Range(2, 8)) {
-        Assert.IsTrue(r.Count(x => x == "Muted userx for " + i + "h") == 1);
-        Assert.IsTrue(r.Count(x => x == "Muted userx for " + i + "m") == 1);
-      }
-      Assert.IsTrue(r.Count(x => x == "Muted userx for 7 days") == 7);
+      var s = new List<string> {
+        "Muted userx for 10m",
+        "Muted userx for 10m",
+        "Muted userx for 2m",
+        "Muted userx for 3m",
+        "Muted userx for 4m",
+        "Muted userx for 5m",
+        "Muted userx for 10m",
+        "Muted userx for 10m",
+        "Muted userx for 6m",
+        "Muted userx for 7m",
+        "Muted userx for 8m",
+        "Muted userx for 9m",
+        "Muted userx for 2h",
+        "Muted userx for 3h",
+        "Muted userx for 4h",
+        "Muted userx for 5h",
+        "Muted userx for 6h",
+        "Muted userx for 7h",
+        "Muted userx for 8h",
+        "Muted userx for 9h",
+        "Muted userx for 10h",
+        "Messaged Mutes have a maximum duration of 7d so this mute has been adjusted accordingly",
+        "Muted userx for 7 days",
+        "Messaged Mutes have a maximum duration of 7d so this mute has been adjusted accordingly",
+        "Muted userx for 7 days",
+        "Messaged Mutes have a maximum duration of 7d so this mute has been adjusted accordingly",
+        "Muted userx for 7 days",
+        "Messaged Mutes have a maximum duration of 7d so this mute has been adjusted accordingly",
+        "Muted userx for 7 days",
+        "Messaged Mutes have a maximum duration of 7d so this mute has been adjusted accordingly",
+        "Muted userx for 7 days",
+        "Muted userx for 7 days",
+        "Muted userx for 7 days",
+      };
+
+      Assert.IsTrue(s.SequenceEqual(r));
     }
 
     [TestMethod]
@@ -80,25 +112,48 @@ namespace Dbot.UnitTest {
         new PublicMessage(true, "!b7 UserX reason goes here"),
         new PublicMessage(true, "!ban 8 UserX reason goes here"),
         new PublicMessage(true, "!b 9 UserX reason goes here"),
-        new PublicMessage(true, "!ban2m UserX"),
-        new PublicMessage(true, "!b3m UserX"),
-        new PublicMessage(true, "!Ban 4m UserX"),
-        new PublicMessage(true, "!b 5m UserX"),
-        new PublicMessage(true, "!ban6m UserX reason goes here"),
-        new PublicMessage(true, "!b7m UserX reason goes here"),
-        new PublicMessage(true, "!ban 8m UserX reason goes here"),
-        new PublicMessage(true, "!ban 9minutes UserX reason goes here"),
+        new PublicMessage(true, "!ban2h UserX"),
+        new PublicMessage(true, "!b3h UserX"),
+        new PublicMessage(true, "!Ban 4h UserX"),
+        new PublicMessage(true, "!b 5h UserX"),
+        new PublicMessage(true, "!ban6h UserX reason goes here"),
+        new PublicMessage(true, "!b7h UserX reason goes here"),
+        new PublicMessage(true, "!ban 8h UserX reason goes here"),
+        new PublicMessage(true, "!ban 9hours UserX reason goes here"),
+        new PublicMessage(true, "!banh UserX"),
         new PublicMessage(true, "!ban 10perm UserX reason goes here"),
         new PublicMessage(true, "!ban 11perm UserX"),
         new PublicMessage(true, "!ban perm UserX"),
       });
 
-      Assert.IsTrue(r.Count(x => x == "Banned userx for 1h") == 4);
-      foreach (var i in Enumerable.Range(2, 8)) {
-        Assert.IsTrue(r.Count(x => x == "Banned userx for " + i + "h") == 1);
-        Assert.IsTrue(r.Count(x => x == "Banned userx for " + i + "m") == 1);
-      }
-      Assert.IsTrue(r.Count(x => x.Contains("Permanently banned userx for")) == 3);
+      var s = new List<string> {
+        "Banned userx for 10m",
+        "Banned userx for 10m",
+        "Banned userx for 2m",
+        "Banned userx for 3m",
+        "Banned userx for 4m",
+        "Banned userx for 5m",
+        "Banned userx for 10m",
+        "Banned userx for 10m",
+        "Banned userx for 6m",
+        "Banned userx for 7m",
+        "Banned userx for 8m",
+        "Banned userx for 9m",
+        "Banned userx for 2h",
+        "Banned userx for 3h",
+        "Banned userx for 4h",
+        "Banned userx for 5h",
+        "Banned userx for 6h",
+        "Banned userx for 7h",
+        "Banned userx for 8h",
+        "Banned userx for 9h",
+        "Banned userx for 10h",
+        "Permanently banned userx for reason goes here",
+        "Permanently banned userx for ",
+        "Permanently banned userx for ",
+      };
+
+      Assert.IsTrue(s.SequenceEqual(r));
     }
 
     [TestMethod]
@@ -116,25 +171,48 @@ namespace Dbot.UnitTest {
         new PublicMessage(true, "!i7 UserX reason goes here"),
         new PublicMessage(true, "!ipban 8 UserX reason goes here"),
         new PublicMessage(true, "!i 9 UserX reason goes here"),
-        new PublicMessage(true, "!ipban2m UserX"),
-        new PublicMessage(true, "!i3m UserX"),
-        new PublicMessage(true, "!ipban 4m UserX"),
-        new PublicMessage(true, "!i 5m UserX"),
-        new PublicMessage(true, "!ipban6m UserX reason goes here"),
-        new PublicMessage(true, "!i7m UserX reason goes here"),
-        new PublicMessage(true, "!ipban 8m UserX reason goes here"),
-        new PublicMessage(true, "!ipban 9minutes UserX reason goes here"),
+        new PublicMessage(true, "!ipban2h UserX"),
+        new PublicMessage(true, "!i3h UserX"),
+        new PublicMessage(true, "!ipban 4h UserX"),
+        new PublicMessage(true, "!i 5h UserX"),
+        new PublicMessage(true, "!ipban6h UserX reason goes here"),
+        new PublicMessage(true, "!i7h UserX reason goes here"),
+        new PublicMessage(true, "!ipban 8h UserX reason goes here"),
+        new PublicMessage(true, "!ipban 9hours UserX reason goes here"),
+        new PublicMessage(true, "!ipbanh UserX"),
         new PublicMessage(true, "!ipban 10perm UserX reason goes here"),
         new PublicMessage(true, "!ipban 11perm UserX"),
         new PublicMessage(true, "!ipban perm UserX"),
       });
 
-      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned userx for ") == 4);
-      Assert.IsTrue(r.Count(x => x == "Permanently ipbanned userx for reason goes here") == 3);
-      foreach (var i in Enumerable.Range(2, 8)) {
-        Assert.IsTrue(r.Count(x => x == "Ipbanned userx for " + i + "h") == 1);
-        Assert.IsTrue(r.Count(x => x == "Ipbanned userx for " + i + "m") == 1);
-      }
+      var s = new List<string> {
+        "Permanently ipbanned userx for ",
+        "Permanently ipbanned userx for ",
+        "Ipbanned userx for 2m",
+        "Ipbanned userx for 3m",
+        "Ipbanned userx for 4m",
+        "Ipbanned userx for 5m",
+        "Permanently ipbanned userx for reason goes here",
+        "Permanently ipbanned userx for reason goes here",
+        "Ipbanned userx for 6m",
+        "Ipbanned userx for 7m",
+        "Ipbanned userx for 8m",
+        "Ipbanned userx for 9m",
+        "Ipbanned userx for 2h",
+        "Ipbanned userx for 3h",
+        "Ipbanned userx for 4h",
+        "Ipbanned userx for 5h",
+        "Ipbanned userx for 6h",
+        "Ipbanned userx for 7h",
+        "Ipbanned userx for 8h",
+        "Ipbanned userx for 9h",
+        "Ipbanned userx for 10h",
+        "Permanently ipbanned userx for reason goes here",
+        "Permanently ipbanned userx for ",
+        "Permanently ipbanned userx for ",
+      };
+
+      Assert.IsTrue(s.SequenceEqual(r));
     }
 
     [TestMethod]
@@ -390,8 +468,8 @@ namespace Dbot.UnitTest {
     private async Task AutoMuteBanTest(string normal, string capsPasttense) {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
         new PublicMessage(true, "!add" + normal + "9m test"),
-        new PublicMessage(true, "!add" + normal + "1m bork"),
-        new PublicMessage(true, "!add" + normal + "m herp"),
+        new PublicMessage(true, "!add" + normal + "m bork"),
+        new PublicMessage(true, "!add" + normal + "1m herp"),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
@@ -463,9 +541,12 @@ namespace Dbot.UnitTest {
 
       Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " usera for 9m")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userb for 9m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 1m")) == 2);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 2m")) == 2);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 4m")) == 2);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 10m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 20m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 40m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 1m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 2m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 4m")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 8m")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 16m")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 32m")) == 1);
@@ -577,6 +658,8 @@ namespace Dbot.UnitTest {
     public async Task MuteIncreaserTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
         new PublicMessage(true, "!add word"),
+        new PublicMessage("UserX", "word"),
+        new PublicMessage("UserX", "word"),
         new PublicMessage("UserX", "word"),
         new PublicMessage("UserX", "word"),
         new PublicMessage("UserX", "word"),

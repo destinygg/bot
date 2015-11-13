@@ -208,7 +208,7 @@ namespace Dbot.Processor {
     }
 
     private TimeSpan BanTime(string stringInt, string s, bool ip = false) {
-      var i = stringInt == "" ? 1 : int.Parse(stringInt);
+      var i = stringInt == "" ? 10 : int.Parse(stringInt);
       if (CompiledRegex.Seconds.Any(x => x == s)) {
         return TimeSpan.FromSeconds(i);
       }
@@ -226,11 +226,10 @@ namespace Dbot.Processor {
       }
       if (s == "") {
         if (ip && stringInt == "") return TimeSpan.Zero;
-        Send("No units specified, assuming hours.");
-        return TimeSpan.FromHours(i);
+        return TimeSpan.FromMinutes(i);
       }
       Tools.Log("Somehow an invalid time passed the regex. StringInt:" + stringInt + ", s:" + s + ", ip:" + ip, ConsoleColor.Red);
-      return TimeSpan.FromHours(1);
+      return TimeSpan.FromMinutes(10);
     }
 
     public ModCommander(Message message, IEnumerable<Message> context) {
