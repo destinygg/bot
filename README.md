@@ -1,3 +1,8 @@
+First Header  | Second Header
+------------- | -------------
+Content Cell  | Content Cell
+Content Cell  | Content Cell
+
 # Bot
 
 Source code for Bot of [Destiny.gg chat](http://www.destiny.gg/embed/chat)
@@ -14,7 +19,7 @@ Source code for Bot of [Destiny.gg chat](http://www.destiny.gg/embed/chat)
 
 ### Commands
 | Commands                                     | Result
-| ---------------------------------------------|-
+| ---------------------------------------------|----------
 | !playlist                                    | Outputs a link to Destiny's Last.fm
 | !rules                                       | Outputs a link to this page
 | !sponsor                                     | Outputs links to Destiny's sponsors
@@ -30,7 +35,7 @@ Source code for Bot of [Destiny.gg chat](http://www.destiny.gg/embed/chat)
 
 ### Moderator Only Commands
 | Mute/Ban Commands                            | Result
-| ---------------------------------------------|-
+| ---------------------------------------------|-----
 | !AddMute 10m any phrase                      | Automatically mutes users who say `any phrase` (case insensitive) for 10m\*†
 | !AddBan 10m any phrase                       | Automatically bans‡ users who say `any phrase` (case insensitive) for 10m\*†
 | !AddMuteRegex 10m \s                         | Automatically mutes users who say any whitespace character§ for 10m\*†
