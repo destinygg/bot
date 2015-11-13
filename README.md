@@ -1,8 +1,3 @@
-First Header  | Second Header
-------------- | -
-Content Cell  | Content Cell
-Content Cell  | Content Cell
-
 # Bot
 
 Source code for Bot of [Destiny.gg chat](http://www.destiny.gg/embed/chat)
@@ -19,7 +14,7 @@ Source code for Bot of [Destiny.gg chat](http://www.destiny.gg/embed/chat)
 
 ### Commands
 Commands                                     | Result
----------------------------------------------|--
+---------------------------------------------|---
 !playlist                                    | Outputs a link to Destiny's Last.fm
 !rules                                       | Outputs a link to this page
 !sponsor                                     | Outputs links to Destiny's sponsors
@@ -61,7 +56,7 @@ Mute/Ban Commands                            | Result
 § Regex has no options enabled; for case insensitivity use [modes](http://www.regular-expressions.info/modifiers.html) like `(?i:cAsE dOeSn'T mAtTeR)`. This makes Regex Mutes/Bans ideal for prohibiting things like YouTube or Imgur link IDs.
 
 Other Moderator Only Commands                | Result
----------------------------------------------|----
+---------------------------------------------|---
 !Sing                                        | I sing!
 !Dance                                       | I dance!
 !AddEmote MyEmote                            | Adds `MyEmote` to the third party emotes list, subjecting it to the same rules as native emotes
