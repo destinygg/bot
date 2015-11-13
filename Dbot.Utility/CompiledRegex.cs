@@ -9,7 +9,7 @@ using Dbot.Data;
 namespace Dbot.Utility {
   public static class CompiledRegex {
     public static void Load() {
-      Song = Tools.CompiledIgnoreCaseRegex(@"^!sing.*");
+      Sing = Tools.CompiledIgnoreCaseRegex(@"^!sing.*");
       Dance = Tools.CompiledIgnoreCaseRegex(@"^!dance.*");
       NinjaOn = Tools.CompiledIgnoreCaseRegex(@"^!ninja on.*");
       NinjaOff = Tools.CompiledIgnoreCaseRegex(@"^!ninja off.*");
@@ -40,7 +40,7 @@ namespace Dbot.Utility {
       SubOnly = Tools.CompiledIgnoreCaseRegex(@"^!(?:sub.*) (on|off)$");
     }
 
-    public static Regex Song { get; private set; }
+    public static Regex Sing { get; private set; }
     public static Regex Dance { get; private set; }
     public static Regex NinjaOn { get; private set; }
     public static Regex NinjaOff { get; private set; }

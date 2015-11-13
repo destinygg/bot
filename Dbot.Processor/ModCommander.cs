@@ -28,7 +28,7 @@ namespace Dbot.Processor {
     private Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>> _commandDictionary;
     private void LoadCommandDictionary() {
       _commandDictionary = new Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>>{
-        { CompiledRegex.Song, (g,c) => {
+        { CompiledRegex.Sing, (g,c) => {
           Send("/me sings the body electric♪");
         } },
         { CompiledRegex.Dance, (g,c) => {
