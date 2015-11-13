@@ -31,25 +31,25 @@ Commands                                     | Result
 ### Moderator Only Commands
 Mute/Ban Commands                            | Result
 ---------------------------------------------|---
-!AddMute 10m any phrase                      | Automatically mutes users who say `any phrase` (case insensitive) for 10m\*†
-!AddBan 10m any phrase                       | Automatically bans‡ users who say `any phrase` (case insensitive) for 10m\*†
-!AddMuteRegex 10m \s                         | Automatically mutes users who say any whitespace character§ for 10m\*†
-!AddBanRegex 10m \s                          | Automatically bans‡ users who say any whitespace character§ for 10m\*†
+!AddMute 1s any phrase                       | Automatically mutes users who say <br> `any phrase` (case insensitive) for 1s\*†
+!AddBan 1s any phrase                        | Automatically bans‡ users who say <br> `any phrase` (case insensitive) for 1s\*†
+!AddMuteRegex 1s \s                          | Automatically mutes users who say any whitespace character§ for 1s\*†
+!AddBanRegex 1s \s                           | Automatically bans‡ users who say any whitespace character§ for 1s\*†
 !DeleteMute any phrase                       | Removes the automatic mute on `any phrase`
 !DeleteBan any phrase                        | Removes the automatic ban on `any phrase`
-!DeleteMuteRegex 10m \s                      | Removes the automatic mute on any whitespace character
-!DeleteBanRegex 10m \s                       | Removes the automatic ban on any whitespace character
-!Mute MyUser 10m Reason                      | Mutes MyUser with the optional `Reason` for 10m\*
-!Ban MyUser 10m Reason                       | Bans MyUser with the optional `Reason` for 10m\*
-!Ipban MyUser 10m Reason                     | Ipbans MyUser with the optional `Reason` for 10m\*
+!DeleteMuteRegex 1s \s                       | Removes the automatic mute on any whitespace character
+!DeleteBanRegex 1s \s                        | Removes the automatic ban on any whitespace character
+!Mute MyUser 1s Reason                       | Mutes MyUser with the optional `Reason` for 1s\*
+!Ban MyUser 1s Reason                        | Bans MyUser with the optional `Reason` for 1s\*
+!Ipban MyUser 1s Reason                      | Ipbans MyUser with the optional `Reason` for 1s\*
 !Unmute MyUser <br> !Unban MyUser            | Unbans MyUser (this also removes mutes)
-!Nuke 10m any phrase                         | Mutes users who said `any phrase` before or after the nuke is launched for 10m\*
-!NukeRegex 10m \s                            | Mutes users who said any whitespace character§ before or after the nuke is launched for 10m\*
+!Nuke 1s any phrase                          | Mutes users who said `any phrase` <br> before or after the nuke is launched for 1s\*
+!NukeRegex 1s \s                             | Mutes users who said any whitespace character§ <br> before or after the nuke is launched for 1s\*
 !Aegis                                       | Cancels all nukes and unmutes everyone muted by a nuke
 
 \* All times are optional. In most cases, if a number is not given the Bot will assume 10, and if a unit is not given the Bot will assume minutes. In other words, `!ban1` yields a 1m ban, `!band` yields a 10 day ban, and `!ban` yields a 10m ban. The exception is `!ipban`, which defaults to permanent if a time is not given. Supported units include: s, sec, secs, second, seconds, m, min, mins, minute, minutes, h, hr, hrs, hour, hours, d, day, days, p, per, perm, and permanent.
 
-† The 10m only applies for the first infraction; the time will double for each subsequent infraction.
+† The 1s only applies for the first infraction; the time will double for each subsequent infraction.
 
 ‡ It is highly recommended that you use the automatic mutes instead of the automatic bans. Bans prevent users from seeing chat and should be reserved for the very worst offenses.
 
