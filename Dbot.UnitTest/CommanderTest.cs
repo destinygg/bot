@@ -23,11 +23,9 @@ namespace Dbot.UnitTest {
       message = new Commander(new PublicMessage("!rules")).Run();
       Assert.IsTrue(message.OriginalText == "reddit.com/1aufkc");
       message = new Commander(new PublicMessage("!refer")).Run();
-      Assert.IsTrue(message.OriginalText == "destiny.gg/amazon ☜(ﾟヮﾟ☜) Amazon referral ☜(⌒▽⌒)☞ 25$ off Sprint network (☞ﾟヮﾟ)☞ destiny.gg/ting\nIn space ༼ ◔◡◔༽ destiny.gg/eve \\(ﾟ◡ﾟ )/ Destiny awaits");
+      Assert.IsTrue(message.OriginalText == "destiny.gg/amazon ☜(ﾟヮﾟ☜) Amazon referral ☜(⌒▽⌒)☞ 25$ off Sprint network (☞ﾟヮﾟ)☞ destiny.gg/ting\nᕦ(ò_óˇ)ᕤ Carry things everyday! EverydayCarry.com ᕦ(ˇò_ó)ᕤ");
       message = new Commander(new PublicMessage("!irc")).Run();
-      Assert.IsTrue(message.OriginalText == "IRC will be implemented Soon™. For now, chat is echoed to Rizon IRC at http://qchat.rizon.net/?channels=#destinyecho . Forwarding of IRC chat to DestinyChat is available.");
-      message = new Commander(new PublicMessage("!bancount")).Run();
-      Assert.IsTrue(message.OriginalText.Contains(" souls reaped"));
+      Assert.IsTrue(message.OriginalText == "IRC will be implemented Soon™. For now, chat is echoed to Rizon IRC at qchat.rizon.net/?channels=#destinyecho . Forwarding of IRC chat to Destiny.gg Chat is available");
       message = new Commander(new PublicMessage("!time")).Run();
       Assert.IsTrue(message.OriginalText.Contains(" Central Steven Time"));
       message = new Commander(new PublicMessage("!live")).Run();
