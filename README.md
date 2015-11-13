@@ -33,8 +33,8 @@ Mute/Ban Commands                            | Result
 ---------------------------------------------|---
 !AddMute 1s any phrase                       | Automatically mutes users who say <br> `any phrase` (case insensitive) for 1s\*†
 !AddBan 1s any phrase                        | Automatically bans‡ users who say <br> `any phrase` (case insensitive) for 1s\*†
-!AddMuteRegex 1s \s                          | Automatically mutes users who say any whitespace character§ for 1s\*†
-!AddBanRegex 1s \s                           | Automatically bans‡ users who say any whitespace character§ for 1s\*†
+!AddMuteRegex 1s \s                          | Automatically mutes users who say <br> any whitespace character§ for 1s\*†
+!AddBanRegex 1s \s                           | Automatically bans‡ users who say <br> any whitespace character§ for 1s\*†
 !DeleteMute any phrase                       | Removes the automatic mute on `any phrase`
 !DeleteBan any phrase                        | Removes the automatic ban on `any phrase`
 !DeleteMuteRegex 1s \s                       | Removes the automatic mute on any whitespace character
