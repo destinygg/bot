@@ -18,7 +18,12 @@ namespace Dbot.Processor {
     private readonly string _text;
     private readonly Message _message;
 
-    private readonly Dictionary<List<string>, Func<string>> _commandDictionary = new Dictionary<List<string>, Func<string>> {
+    private readonly Dictionary<List<string>, Func<string>> _commandDictionary;
+
+    public Commander(Message message) {
+      _message = message;
+      _text = message.Text.Substring(1);
+      _commandDictionary = new Dictionary<List<string>, Func<string>> {
       { new List<string> { "playlist" }, 
         () => "Playlist at last.fm/user/StevenBonnellII" },
       { new List<string> { "rules", "unmoddharma" }, 
@@ -44,10 +49,6 @@ namespace Dbot.Processor {
       { new List<string> { "youtube", "yt" }, 
         () => Tools.FallibleCode(Youtube) },
     };
-
-    public Commander(Message message) {
-      _message = message;
-      _text = message.Text.Substring(1);
     }
 
     public Message Run() {
@@ -67,7 +68,7 @@ namespace Dbot.Processor {
       return null;
     }
 
-    private static string Blog() {
+    private string Blog() {
       var rawblog = Tools.DownloadData("http://blog.destiny.gg/feed/").Result;
       using (var reader = XmlReader.Create(new StringReader(rawblog))) {
         reader.ReadToFollowing("item");
@@ -82,7 +83,7 @@ namespace Dbot.Processor {
       }
     }
 
-    private static string Starcraft() {
+    private string Starcraft() {
       var json = Tools.DownloadData("http://us.battle.net/api/sc2/profile/310150/1/Destiny/matches");
       dynamic dyn = JsonConvert.DeserializeObject(json.Result);
       var date = (int) dyn.matches[0].date;
@@ -101,7 +102,7 @@ namespace Dbot.Processor {
       return "Destiny " + decision + " a " + type + " game on " + map + " " + delta + " ago sc2ranks.com/character/us/310150/Destiny";
     }
 
-    private static string Song() {
+    private string Song() {
       var json = Tools.DownloadData("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=stevenbonnellii&api_key=" + PrivateConstants.LastFMAPIKey + "&format=json");
       var dyn = (JObject) JsonConvert.DeserializeObject(json.Result);
       var artist = dyn.SelectToken("recenttracks.track[0].artist.#text");
@@ -116,7 +117,7 @@ namespace Dbot.Processor {
       return "No song played/scrobbled. Played " + prettyDelta + " ago: " + name + " - " + artist;
     }
 
-    private static string EarlierSong() {
+    private string EarlierSong() {
       var json = Tools.DownloadData("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=stevenbonnellii&api_key=" + PrivateConstants.LastFMAPIKey + "&format=json");
       var dyn = (JObject) JsonConvert.DeserializeObject(json.Result);
       var artist = dyn.SelectToken("recenttracks.track[0].artist.#text");
@@ -130,7 +131,7 @@ namespace Dbot.Processor {
       return name2 + " - " + artist2 + " played before " + name + " - " + artist + " ~" + prettyDelta + " ago";
     }
 
-    private static string Twitter() {
+    private string Twitter() {
       ExceptionHandler.SwallowWebExceptions = false;
       try {
         var user = User.GetUserFromScreenName("steven_bonnell");
@@ -145,7 +146,7 @@ namespace Dbot.Processor {
       }
     }
 
-    private static string Youtube() {
+    private string Youtube() {
       var json = Tools.DownloadData("https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=1&playlistId=UU554eY5jNUfDq3yDOJYirOQ&key=" + PrivateConstants.Youtube);
       var jObject = (JObject) JsonConvert.DeserializeObject(json.Result);
       var publishedAt = jObject.SelectToken("items[0].snippet.publishedAt").Value<DateTime>();
