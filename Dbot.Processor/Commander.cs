@@ -17,12 +17,13 @@ namespace Dbot.Processor {
   public class Commander {
     private readonly string _text;
     private readonly Message _message;
-
     private readonly Dictionary<List<string>, Func<string>> _commandDictionary;
+    private readonly MessageProcessor _messageProcessor;
 
-    public Commander(Message message) {
+    public Commander(Message message, MessageProcessor messageProcessor) {
       _message = message;
       _text = message.Text.Substring(1);
+      _messageProcessor = messageProcessor;
       _commandDictionary = new Dictionary<List<string>, Func<string>> {
       { new List<string> { "playlist" }, 
         () => "Playlist at last.fm/user/StevenBonnellII" },
@@ -56,13 +57,13 @@ namespace Dbot.Processor {
       var customCommand = Datastore.CustomCommands.FirstOrDefault(y => _text.StartsWith(y.Key)).Value;
       if (customCommand != null) {
         if (!_message.IsMod)
-          MessageProcessor.LastCommandTime = DateTime.UtcNow;
+          _messageProcessor.LastCommandTime = DateTime.UtcNow;
         return new ModPublicMessage(customCommand);
       }
       var command = _commandDictionary.FirstOrDefault(y => y.Key.Any(x => _text.StartsWith(x))).Value;
       if (command != null) {
         if (!_message.IsMod)
-          MessageProcessor.LastCommandTime = DateTime.UtcNow;
+          _messageProcessor.LastCommandTime = DateTime.UtcNow;
         return new ModPublicMessage(command.Invoke());
       }
       return null;

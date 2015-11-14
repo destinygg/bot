@@ -18,11 +18,11 @@ namespace Dbot.Main {
   public class PrimaryLogic {
     private readonly IClient _client = new WebSocketListenerClient(PrivateConstants.BotWebsocketAuth);
     //private readonly IClient _client = new WebSocketListenerClient();
-    private readonly IProcessor _processor;
+    private readonly MessageProcessor _messageProcessor;
     private bool _exit;
 
     public PrimaryLogic() {
-      _processor = new MessageProcessor(_client);
+      _messageProcessor = new MessageProcessor(_client);
     }
 
     public void Run() {
@@ -36,7 +36,7 @@ namespace Dbot.Main {
       Tools.LiveStatus();
       PeriodicTask.Run(InitializeDatastore.UpdateEmotes, TimeSpan.FromMinutes(5));
 
-      _client.Run(_processor);
+      _client.Run(_messageProcessor);
       Console.CancelKeyPress += Console_CancelKeyPress;
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
@@ -64,7 +64,7 @@ namespace Dbot.Main {
     }
 
     private void TweetDetected(ITweet tweet) {
-      MessageProcessor.Sender.Post(new ModPublicMessage("twitter.com/steven_bonnell just tweeted: \n" + Tools.TweetPrettier(tweet)));
+      _messageProcessor.Sender.Post(new ModPublicMessage("twitter.com/steven_bonnell just tweeted: \n" + Tools.TweetPrettier(tweet)));
     }
 
     private void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {

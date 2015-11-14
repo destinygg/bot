@@ -15,13 +15,21 @@ namespace Dbot.Processor {
   public class ModCommander {
     private readonly Message _message;
     private readonly IEnumerable<Message> _context;
+    private readonly MessageProcessor _messageProcessor;
+
+    public ModCommander(Message message, IEnumerable<Message> context, MessageProcessor messageProcessor) {
+      LoadCommandDictionary();
+      _message = message;
+      _context = context;
+      _messageProcessor = messageProcessor;
+    }
 
     private void Send(string message) {
       if (_message is PrivateMessage) {
         var pm = (PrivateMessage) _message;
-        MessageProcessor.Sender.Post(new PrivateMessage(pm.Nick, message));
+        _messageProcessor.Sender.Post(new PrivateMessage(pm.Nick, message));
       } else {
-        MessageProcessor.Sender.Post(new PublicMessage(message));
+        _messageProcessor.Sender.Post(new PublicMessage(message));
       }
     }
 
@@ -126,7 +134,7 @@ namespace Dbot.Processor {
             Send("Mutes have a maximum duration of 7d so this mute has been adjusted accordingly");
             banTime = TimeSpan.FromDays(7);
           }
-          MessageProcessor.Sender.Post(new Mute {
+          _messageProcessor.Sender.Post(new Mute {
             Duration = banTime,
             Nick = nick,
             Reason = reason,
@@ -135,7 +143,7 @@ namespace Dbot.Processor {
         } },
         { CompiledRegex.UnMuteBan, (g,c) => {
           var savedSoul = g[1].Value;
-          MessageProcessor.Sender.Post(Make.UnMuteBan(savedSoul));
+          _messageProcessor.Sender.Post(Make.UnMuteBan(savedSoul));
         } },
         { CompiledRegex.Nuke, (g,c) => {
           var number = g[1].Value;
@@ -143,7 +151,7 @@ namespace Dbot.Processor {
           var phrase = g[3].Value;
           var banTime = BanTime(number, unit);
           if (Nuke.Nukes.All(x => x.Word != phrase)) {
-            new Nuke(phrase, banTime, c);
+            new Nuke(phrase, banTime, c, _messageProcessor);
           }
         } },
         { CompiledRegex.RegexNuke, (g,c) => {
@@ -152,10 +160,10 @@ namespace Dbot.Processor {
           var regex = Tools.CompiledRegex(g[3].Value);
           var banTime = BanTime(number, unit);
           if (Nuke.Nukes.All(x => x.Regex.ToString() != regex.ToString()))
-            new Nuke(regex, banTime, c);
+            new Nuke(regex, banTime, c, _messageProcessor);
         } },
         { CompiledRegex.Aegis, (g,c) => {
-          AntiNuke.Aegis();
+          new AntiNuke(_messageProcessor).Aegis();
         } },
         { CompiledRegex.AddCommand, (g,c) => {
           var command = g[1].Value.ToLower();
@@ -174,7 +182,7 @@ namespace Dbot.Processor {
         } },
         { CompiledRegex.SubOnly, (g,c) => {
           var enabled = g[1].Value;
-          MessageProcessor.Sender.Post(enabled == "on" ? new Subonly(true) : new Subonly(false));
+          _messageProcessor.Sender.Post(enabled == "on" ? new Subonly(true) : new Subonly(false));
         } },
       };
     }
@@ -185,7 +193,7 @@ namespace Dbot.Processor {
       ban.Reason = reason;
       ban.SilentReason = true;
       ban.Ip = ip;
-      MessageProcessor.Sender.Post(ban);
+      _messageProcessor.Sender.Post(ban);
     }
 
     private void Add(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string success, string fail) {
@@ -231,12 +239,6 @@ namespace Dbot.Processor {
       }
       Tools.Log("Somehow an invalid time passed the regex. StringInt:" + stringInt + ", s:" + s + ", ip:" + ip, ConsoleColor.Red);
       return TimeSpan.FromMinutes(10);
-    }
-
-    public ModCommander(Message message, IEnumerable<Message> context) {
-      LoadCommandDictionary();
-      _message = message;
-      _context = context;
     }
 
     public void Run() {

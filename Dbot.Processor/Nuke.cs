@@ -13,6 +13,7 @@ using Dbot.Utility;
 namespace Dbot.Processor {
   public class Nuke {
     public static readonly List<Nuke> Nukes = new List<Nuke>();
+    private readonly MessageProcessor _messageProcessor;
 
     public string Word { get; set; }
     public Regex Regex { get; set; }
@@ -21,12 +22,14 @@ namespace Dbot.Processor {
     public List<string> PreordainedVictims { get; set; }
     public bool Cancel { get; set; }
 
-    public Nuke(string word, TimeSpan duration, IEnumerable<Message> context) {
+    public Nuke(string word, TimeSpan duration, IEnumerable<Message> context, MessageProcessor messageProcessor) {
+      _messageProcessor = messageProcessor;
       Word = word;
       Load(duration, context);
     }
 
-    public Nuke(Regex regex, TimeSpan duration, IEnumerable<Message> context) {
+    public Nuke(Regex regex, TimeSpan duration, IEnumerable<Message> context, MessageProcessor messageProcessor) {
+      _messageProcessor = messageProcessor;
       Regex = regex;
       Load(duration, context);
     }
@@ -47,19 +50,19 @@ namespace Dbot.Processor {
       }
 
       Nukes.Add(this);
-      MessageProcessor.Sender.Post(new PublicMessage(Duration.TotalSeconds / 1000 + "kilosecond missiles away!"));
+      _messageProcessor.Sender.Post(new PublicMessage(Duration.TotalSeconds / 1000 + "kilosecond missiles away!"));
 
       while (PreordainedVictims.Except(VictimList).Any()) {
         if (!Cancel) {
           var victim = PreordainedVictims.Except(VictimList).First();
-          MessageProcessor.Sender.Post(Make.Mute(victim, Duration));
+          _messageProcessor.Sender.Post(Make.Mute(victim, Duration));
           VictimList.Add(victim);
           await Task.Delay(Settings.NukeLoopWait);
         } else {
           return;
         }
       }
-      MessageProcessor.Sender.Post(new PublicMessage(VictimList.Count + " souls were vaporized in a single blinding instant"));
+      _messageProcessor.Sender.Post(new PublicMessage(VictimList.Count + " souls were vaporized in a single blinding instant"));
     }
 
     public bool Predicate(string input) {
