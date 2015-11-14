@@ -16,14 +16,17 @@ using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Main {
   public class PrimaryLogic {
-    private static readonly IClient Client = new WebSocketListenerClient(PrivateConstants.BotWebsocketAuth);
-    //private static readonly IClient Client = new WebSocketListenerClient();
-    private static readonly IProcessor Processor = new MessageProcessor(Client);
-    private static bool _exit;
+    private readonly IClient _client = new WebSocketListenerClient(PrivateConstants.BotWebsocketAuth);
+    //private readonly IClient _client = new WebSocketListenerClient();
+    private readonly IProcessor _processor;
+    private bool _exit;
+
+    public PrimaryLogic() {
+      _processor = new MessageProcessor(_client);
+    }
 
     public void Run() {
       InitializeDatastore.Run();
-
       Auth.SetCredentials(new TwitterCredentials(PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret, PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret));
       var stream = Stream.CreateUserStream();
       stream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet);
@@ -31,9 +34,9 @@ namespace Dbot.Main {
 
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
       Tools.LiveStatus();
-      PeriodicTask.Run(InitializeDatastore.UpdateEmotes, TimeSpan.FromHours(1));
+      PeriodicTask.Run(InitializeDatastore.UpdateEmotes, TimeSpan.FromMinutes(5));
 
-      Client.Run(Processor);
+      _client.Run(_processor);
       Console.CancelKeyPress += Console_CancelKeyPress;
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
@@ -41,17 +44,16 @@ namespace Dbot.Main {
       while (!_exit) {
         //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
         var input = Console.ReadLine();
-        if (!String.IsNullOrEmpty(input)) {
+        if (!string.IsNullOrEmpty(input)) {
           if (input == "exit") {
             _exit = true;
           } else if (input[0] == '~') {
-            Client.Send(new PublicMessage(input.Substring(1)));
+            _client.Send(new PublicMessage(input.Substring(1)));
           } else if (input[0] == '!') {
-            Client.Forward(new PublicMessage("SYSTEM CONSOLE", input) { IsMod = true });
+            _client.Forward(new PublicMessage("SYSTEM CONSOLE", input) { IsMod = true });
           }
         }
       }
-
       Exit();
     }
 
@@ -61,15 +63,15 @@ namespace Dbot.Main {
       return await testClient.Run(new MessageProcessor(testClient), testInput);
     }
 
-    private static void TweetDetected(ITweet tweet) {
+    private void TweetDetected(ITweet tweet) {
       MessageProcessor.Sender.Post(new ModPublicMessage("twitter.com/steven_bonnell just tweeted: \n" + Tools.TweetPrettier(tweet)));
     }
 
-    static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {
+    private void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {
       Exit();
     }
 
-    static void Exit() {
+    private void Exit() {
       Datastore.Terminate();
     }
   }
