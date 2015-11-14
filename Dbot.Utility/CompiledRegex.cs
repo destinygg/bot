@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using Dbot.Data;
 
 namespace Dbot.Utility {
-  public static class CompiledRegex {
-    public static void Load() {
+  public class CompiledRegex {
+    public CompiledRegex() {
+      AllButPerm = new List<string>().Concat(Seconds).Concat(Minutes).Concat(Hours).Concat(Days).ToList();
+      AllUnits = new List<string>().Concat(AllButPerm).Concat(Perm).ToList();
       Sing = Tools.CompiledIgnoreCaseRegex(@"^!sing.*");
       Dance = Tools.CompiledIgnoreCaseRegex(@"^!dance.*");
       NinjaOn = Tools.CompiledIgnoreCaseRegex(@"^!ninja on.*");
@@ -40,45 +42,45 @@ namespace Dbot.Utility {
       SubOnly = Tools.CompiledIgnoreCaseRegex(@"^!(?:sub.*) (on|off)$");
     }
 
-    public static Regex Sing { get; private set; }
-    public static Regex Dance { get; private set; }
-    public static Regex NinjaOn { get; private set; }
-    public static Regex NinjaOff { get; private set; }
-    public static Regex ModabuseOn { get; private set; }
-    public static Regex ModabuseSemi { get; private set; }
-    public static Regex ModabuseOff { get; private set; }
-    public static Regex AddMute { get; private set; }
-    public static Regex AddBan { get; private set; }
-    public static Regex AddMuteRegex { get; private set; }
-    public static Regex AddBanRegex { get; private set; }
-    public static Regex DelMute { get; private set; }
-    public static Regex DelBan { get; private set; }
-    public static Regex DelMuteRegex { get; private set; }
-    public static Regex DelBanRegex { get; private set; }
-    public static Regex AddEmote { get; private set; }
-    public static Regex DelEmote { get; private set; }
-    public static Regex ListEmote { get; private set; }
-    public static Regex Stalk { get; private set; }
-    public static Regex Ban { get; private set; }
-    public static Regex Ipban { get; private set; }
-    public static Regex Mute { get; private set; }
-    public static Regex UnMuteBan { get; private set; }
-    public static Regex Nuke { get; private set; }
-    public static Regex RegexNuke { get; private set; }
-    public static Regex Aegis { get; private set; }
-    public static Regex AddCommand { get; private set; }
-    public static Regex DelCommand { get; private set; }
-    public static Regex SubOnly { get; private set; }
+    public Regex Sing { get; private set; }
+    public Regex Dance { get; private set; }
+    public Regex NinjaOn { get; private set; }
+    public Regex NinjaOff { get; private set; }
+    public Regex ModabuseOn { get; private set; }
+    public Regex ModabuseSemi { get; private set; }
+    public Regex ModabuseOff { get; private set; }
+    public Regex AddMute { get; private set; }
+    public Regex AddBan { get; private set; }
+    public Regex AddMuteRegex { get; private set; }
+    public Regex AddBanRegex { get; private set; }
+    public Regex DelMute { get; private set; }
+    public Regex DelBan { get; private set; }
+    public Regex DelMuteRegex { get; private set; }
+    public Regex DelBanRegex { get; private set; }
+    public Regex AddEmote { get; private set; }
+    public Regex DelEmote { get; private set; }
+    public Regex ListEmote { get; private set; }
+    public Regex Stalk { get; private set; }
+    public Regex Ban { get; private set; }
+    public Regex Ipban { get; private set; }
+    public Regex Mute { get; private set; }
+    public Regex UnMuteBan { get; private set; }
+    public Regex Nuke { get; private set; }
+    public Regex RegexNuke { get; private set; }
+    public Regex Aegis { get; private set; }
+    public Regex AddCommand { get; private set; }
+    public Regex DelCommand { get; private set; }
+    public Regex SubOnly { get; private set; }
 
-    public static readonly List<string> Seconds = new List<string> { "s", "sec", "secs", "second", "seconds", };
-    public static readonly List<string> Minutes = new List<string> { "m", "min", "mins", "minute", "minutes", };
-    public static readonly List<string> Hours = new List<string> { "h", "hr", "hrs", "hour", "hours", };
-    public static readonly List<string> Days = new List<string> { "d", "day", "days", };
-    public static readonly List<string> Perm = new List<string> { "p", "per", "perm", "permanent" };
-    public static readonly List<string> AllButPerm = new List<string>().Concat(Seconds).Concat(Minutes).Concat(Hours).Concat(Days).ToList();
-    public static readonly List<string> AllUnits = new List<string>().Concat(AllButPerm).Concat(Perm).ToList();
+    public readonly List<string> AllUnits;
+    public readonly List<string> AllButPerm;
+    public readonly List<string> Seconds = new List<string> { "s", "sec", "secs", "second", "seconds", };
+    public readonly List<string> Minutes = new List<string> { "m", "min", "mins", "minute", "minutes", };
+    public readonly List<string> Hours = new List<string> { "h", "hr", "hrs", "hour", "hours", };
+    public readonly List<string> Days = new List<string> { "d", "day", "days", };
+    public readonly List<string> Perm = new List<string> { "p", "per", "perm", "permanent" };
 
-    private static Regex GenerateRegex(string triggers, bool allowPerm, bool hasReason) {
+    private Regex GenerateRegex(string triggers, bool allowPerm, bool hasReason) {
       var times = allowPerm ? AllUnits : AllButPerm;
       var user = hasReason ? @" +(\S+) *" : " +";
       return Tools.CompiledIgnoreCaseRegex("^!(?:" + triggers + @") *(?:(\d*)(" + string.Join("|", times) + ")?)?" + user + "(.*)");

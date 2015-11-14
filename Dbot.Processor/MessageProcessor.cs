@@ -17,7 +17,8 @@ namespace Dbot.Processor {
     private readonly ActionBlock<Message> _logger;
     private readonly ActionBlock<Message> _commander;
     private readonly ActionBlock<Message> _modCommander;
-    
+    public CompiledRegex CompiledRegex;
+
     public readonly List<Nuke> Nukes = new List<Nuke>();
     private readonly ConcurrentDictionary<int, Message> _contextDictionary = new ConcurrentDictionary<int, Message>();
     private readonly ConcurrentDictionary<int, Message> _dequeueDictionary = new ConcurrentDictionary<int, Message>();
@@ -27,6 +28,7 @@ namespace Dbot.Processor {
     private int _dequeueIndex;
 
     public MessageProcessor(IClient client) {
+      CompiledRegex = new CompiledRegex();
       _client = client;
       Banner = new ActionBlock<Message>(m => Ban(m));
       Sender = new ActionBlock<ISendable>(m => Send(m));

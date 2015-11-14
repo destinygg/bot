@@ -16,16 +16,17 @@ namespace Dbot.Processor {
     private readonly Message _message;
     private readonly IEnumerable<Message> _context;
     private readonly MessageProcessor _messageProcessor;
+    private readonly CompiledRegex _compiledRegex;
 
     public ModCommander(Message message, IEnumerable<Message> context, MessageProcessor messageProcessor) {
-      LoadCommandDictionary();
       _message = message;
       _context = context;
       _messageProcessor = messageProcessor;
+      _compiledRegex = messageProcessor.CompiledRegex;
+      LoadCommandDictionary();
     }
 
-    private void Send(string message) {
-      if (_message is PrivateMessage) {
+    private void Send(string message) {if (_message is PrivateMessage) {
         var pm = (PrivateMessage) _message;
         _messageProcessor.Sender.Post(new PrivateMessage(pm.Nick, message));
       } else {
@@ -36,57 +37,57 @@ namespace Dbot.Processor {
     private Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>> _commandDictionary;
     private void LoadCommandDictionary() {
       _commandDictionary = new Dictionary<Regex, Action<GroupCollection, IEnumerable<Message>>>{
-        { CompiledRegex.Sing, (g,c) => {
+        { _compiledRegex.Sing, (g,c) => {
           Send("/me sings the body electric♪");
         } },
-        { CompiledRegex.Dance, (g,c) => {
+        { _compiledRegex.Dance, (g,c) => {
           Send("/me roboboogies ¬[º-°¬] [¬º-°]¬");
         } },
-        { CompiledRegex.NinjaOn, (g,c) => {
+        { _compiledRegex.NinjaOn, (g,c) => {
           Send("I am the blade of Shakuras.");
           Datastore.UpdateStateVariable("ninja", 1);
         } },
-        { CompiledRegex.NinjaOff, (g,c) => {
+        { _compiledRegex.NinjaOff, (g,c) => {
           Send("The void claims its own.");
           Datastore.UpdateStateVariable("ninja", 0);
         } },
-        { CompiledRegex.ModabuseOn, (g,c) => {
+        { _compiledRegex.ModabuseOn, (g,c) => {
           Send("Justice has come!");
           Datastore.UpdateStateVariable("modabuse", 2);
         } },
-        { CompiledRegex.ModabuseSemi, (g,c) => {
+        { _compiledRegex.ModabuseSemi, (g,c) => {
           Send("Calibrating void lenses.");
           Datastore.UpdateStateVariable("modabuse", 1);
         } },
-        { CompiledRegex.ModabuseOff, (g,c) => {
+        { _compiledRegex.ModabuseOff, (g,c) => {
           Send("Awaiting the call.");
           Datastore.UpdateStateVariable("modabuse", 0);
         } },
-        { CompiledRegex.AddMute, (g,c) => {
+        { _compiledRegex.AddMute, (g,c) => {
           Add(g, Ms.MutedWords, Datastore.MutedWords, " added to the automute list", " already in the automute list; its duration has been updated to ");
         } },
-        { CompiledRegex.AddBan, (g,c) => { 
+        { _compiledRegex.AddBan, (g,c) => { 
           Add(g, Ms.BannedWords, Datastore.BannedWords, " added to the autoBAN list. It is recommended that you use the autoMUTE list since banned people cannot load chat.", " already in the autoban list; its duration has been updated to ");
         } },
-        { CompiledRegex.AddMuteRegex, (g,c) => { 
+        { _compiledRegex.AddMuteRegex, (g,c) => { 
           Add(g, Ms.MutedRegex, Datastore.MutedRegex, " added to the automute regex list", " already in the automuteregex list; its duration has been updated to ");
         } },
-        { CompiledRegex.AddBanRegex, (g,c) => {
+        { _compiledRegex.AddBanRegex, (g,c) => {
           Add(g, Ms.BannedRegex, Datastore.BannedRegex, " added to the autoBANregex list. It is recommended that you use the autoMUTE regex list since banned people cannot load chat.", " already in the autobanregex list; its duration has been updated to ");
         } },
-        { CompiledRegex.DelMute, (g,c) => {
+        { _compiledRegex.DelMute, (g,c) => {
           Delete(g, Ms.MutedWords, Datastore.MutedWords, "automute");
         } },
-        { CompiledRegex.DelBan, (g,c) => {
+        { _compiledRegex.DelBan, (g,c) => {
           Delete(g, Ms.BannedWords, Datastore.BannedWords, "autoban");
         } },
-        { CompiledRegex.DelMuteRegex, (g,c) => {
+        { _compiledRegex.DelMuteRegex, (g,c) => {
           Delete(g, Ms.MutedRegex, Datastore.MutedRegex, "automuteregex");
         } },
-        { CompiledRegex.DelBanRegex, (g,c) => {
+        { _compiledRegex.DelBanRegex, (g,c) => {
           Delete(g, Ms.BannedRegex, Datastore.BannedRegex, "autobanregex");
         } },
-        { CompiledRegex.AddEmote, (g,c) => {
+        { _compiledRegex.AddEmote, (g,c) => {
           var emoteToAdd = g[1].Value;
           if (Datastore.AddToStateString(Ms.ThirdPartyEmotes, emoteToAdd, Datastore.ThirdPartyEmotesList)) {
             Send(emoteToAdd + " added to third party emotes list");
@@ -95,7 +96,7 @@ namespace Dbot.Processor {
           else
             Send(emoteToAdd + " already in third party emotes list.");
         } },
-        { CompiledRegex.DelEmote, (g,c) => {
+        { _compiledRegex.DelEmote, (g,c) => {
           var emoteToDelete = g[1].Value;
           if (Datastore.DeleteFromStateString(Ms.ThirdPartyEmotes, emoteToDelete, Datastore.ThirdPartyEmotesList)) {
             Datastore.GenerateEmoteRegex();
@@ -104,27 +105,27 @@ namespace Dbot.Processor {
           else
             Send(emoteToDelete + " not in third party emotes list.");
         } },
-        { CompiledRegex.ListEmote, (g,c) => {
+        { _compiledRegex.ListEmote, (g,c) => {
           Send(string.Join(", ", Datastore.GetStateString_StringList(MagicStrings.ThirdPartyEmotes)));
         } },
-        { CompiledRegex.Stalk, (g,c) => {
+        { _compiledRegex.Stalk, (g,c) => {
           Send(Tools.Stalk(g[1].Value));
         } },
-        { CompiledRegex.Ban, (g,c) => {
+        { _compiledRegex.Ban, (g,c) => {
           var number = g[1].Value;
           var unit = g[2].Value;
           var nick = g[3].Value;
           var reason = g[4].Value;
           BanBuilder(number, unit, nick, reason, false);
         } },
-        { CompiledRegex.Ipban, (g,c) => {
+        { _compiledRegex.Ipban, (g,c) => {
           var number = g[1].Value;
           var unit = g[2].Value;
           var nick = g[3].Value;
           var reason = g[4].Value;
           BanBuilder(number, unit, nick, reason, true);
         } },
-        { CompiledRegex.Mute, (g,c) => {
+        { _compiledRegex.Mute, (g,c) => {
           var number = g[1].Value;
           var unit = g[2].Value;
           var nick = g[3].Value;
@@ -141,11 +142,11 @@ namespace Dbot.Processor {
             SilentReason = true,
           });
         } },
-        { CompiledRegex.UnMuteBan, (g,c) => {
+        { _compiledRegex.UnMuteBan, (g,c) => {
           var savedSoul = g[1].Value;
           _messageProcessor.Sender.Post(Make.UnMuteBan(savedSoul));
         } },
-        { CompiledRegex.Nuke, (g,c) => {
+        { _compiledRegex.Nuke, (g,c) => {
           var number = g[1].Value;
           var unit = g[2].Value;
           var phrase = g[3].Value;
@@ -154,7 +155,7 @@ namespace Dbot.Processor {
             new Nuke(phrase, banTime, c, _messageProcessor);
           }
         } },
-        { CompiledRegex.RegexNuke, (g,c) => {
+        { _compiledRegex.RegexNuke, (g,c) => {
           var number = g[1].Value;
           var unit = g[2].Value;
           var regex = Tools.CompiledRegex(g[3].Value);
@@ -162,10 +163,10 @@ namespace Dbot.Processor {
           if (_messageProcessor.Nukes.All(x => x.Regex.ToString() != regex.ToString()))
             new Nuke(regex, banTime, c, _messageProcessor);
         } },
-        { CompiledRegex.Aegis, (g,c) => {
+        { _compiledRegex.Aegis, (g,c) => {
           new AntiNuke(_messageProcessor).Aegis();
         } },
-        { CompiledRegex.AddCommand, (g,c) => {
+        { _compiledRegex.AddCommand, (g,c) => {
           var command = g[1].Value.ToLower();
           var text = g[2].Value;
           if (Datastore.AddToStateString(MagicStrings.CustomCommands, command, text, Datastore.CustomCommands))
@@ -173,14 +174,14 @@ namespace Dbot.Processor {
           else
             Send("!" + command + " already exists; its corresponding text has been updated");
         } },
-        { CompiledRegex.DelCommand, (g,c) => {
+        { _compiledRegex.DelCommand, (g,c) => {
           var command = g[1].Value;
           if (Datastore.DeleteFromStateString(MagicStrings.CustomCommands, command, Datastore.CustomCommands))
             Send("!" + command + " deleted");
           else
             Send("!" + command + " is not a recognized command");
         } },
-        { CompiledRegex.SubOnly, (g,c) => {
+        { _compiledRegex.SubOnly, (g,c) => {
           var enabled = g[1].Value;
           _messageProcessor.Sender.Post(enabled == "on" ? new Subonly(true) : new Subonly(false));
         } },
@@ -218,19 +219,19 @@ namespace Dbot.Processor {
 
     private TimeSpan BanTime(string stringInt, string s, bool ip = false) {
       var i = stringInt == "" ? 10 : int.Parse(stringInt);
-      if (CompiledRegex.Seconds.Any(x => x == s)) {
+      if (_compiledRegex.Seconds.Any(x => x == s)) {
         return TimeSpan.FromSeconds(i);
       }
-      if (CompiledRegex.Minutes.Any(x => x == s)) {
+      if (_compiledRegex.Minutes.Any(x => x == s)) {
         return TimeSpan.FromMinutes(i);
       }
-      if (CompiledRegex.Hours.Any(x => x == s)) {
+      if (_compiledRegex.Hours.Any(x => x == s)) {
         return TimeSpan.FromHours(i);
       }
-      if (CompiledRegex.Days.Any(x => x == s)) {
+      if (_compiledRegex.Days.Any(x => x == s)) {
         return TimeSpan.FromDays(i);
       }
-      if (CompiledRegex.Perm.Any(x => x == s)) {
+      if (_compiledRegex.Perm.Any(x => x == s)) {
         return TimeSpan.Zero;
       }
       if (s == "") {

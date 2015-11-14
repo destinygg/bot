@@ -9,7 +9,6 @@ namespace Dbot.Utility {
   public static class InitializeDatastore {
     public static void Run() {
       Datastore.Initialize();
-      CompiledRegex.Load();
       UpdateEmotes();
       UpdateSettings();
     }
