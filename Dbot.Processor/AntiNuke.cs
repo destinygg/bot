@@ -12,7 +12,7 @@ namespace Dbot.Processor {
     public static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
 
     public static async void Dissipate(Nuke nuke) {
-      await Task.Delay(nuke.Duration);
+      await Task.Delay(Settings.NukeDissipateTime);
       if (nuke.Word != null)
         Tools.Log(nuke.Word + " dissipated.", ConsoleColor.Red);
       else

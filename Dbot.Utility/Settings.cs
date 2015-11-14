@@ -14,15 +14,16 @@ namespace Dbot.Utility {
 
     public const int SelfSpamContextLength = 15;
     public const int LongSpamContextLength = 26;
-    public static int EmoteUserSpamContextLength = 6;
-    public static int NumberSpamContextLength = 20;
+    public const int EmoteUserSpamContextLength = 6;
+    public const int NumberSpamContextLength = 20;
 
-    public static int EmoteUserSpamTriggerLength = 6;
-    public static int NumberSpamTriggerLength = 6;
+    public const int EmoteUserSpamTriggerLength = 6;
+    public const int NumberSpamTriggerLength = 6;
 
     public const int LongSpamMinimumLength = 40;
     public const int LongSpamLongerBanMultiplier = 3;
 
+    public static readonly TimeSpan NukeDissipateTime = TimeSpan.FromMinutes(10);
     public const double NukeStringDelta = 0.7;
     public const int NukeLoopWait = 0;
     public const int AegisLoopWait = 0;
