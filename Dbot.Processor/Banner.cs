@@ -17,13 +17,15 @@ namespace Dbot.Processor {
     private readonly string _text;
     private readonly string _unnormalized;
     private readonly List<Message> _context;
+    private readonly MessageProcessor _messageProcessor;
 
-    public Banner(Message input, List<Message> context = null) {
-      this._message = input;
-      this._text = StringTools.RemoveDiacritics(input.Text);
-      this._unnormalized = input.OriginalText;
+    public Banner(Message input, MessageProcessor messageProcessor, List<Message> context = null) {
+      _messageProcessor = messageProcessor;
+      _message = input;
+      _text = StringTools.RemoveDiacritics(input.Text);
+      _unnormalized = input.OriginalText;
       if (context != null)
-        this._context = context;
+        _context = context;
     }
 
     private Mute MuteAndIncrementHardCoded(UserHistory userHistory, string sectionName, string reason, bool wait) {
@@ -81,7 +83,7 @@ namespace Dbot.Processor {
       var emoteUserSpam = EmoteUserSpam();
       if (emoteUserSpam != null) return emoteUserSpam;
 
-      foreach (var nuke in Nuke.Nukes.Where(x => x.Predicate(_message.Text))) {
+      foreach (var nuke in _messageProcessor.Nukes.Where(x => x.Predicate(_message.Text))) {
         nuke.VictimList.Add(_message.Nick);
         return Make.Mute(_message.Nick, nuke.Duration);
       }

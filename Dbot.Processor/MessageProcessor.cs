@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
@@ -16,7 +17,8 @@ namespace Dbot.Processor {
     private readonly ActionBlock<Message> _logger;
     private readonly ActionBlock<Message> _commander;
     private readonly ActionBlock<Message> _modCommander;
-
+    
+    public readonly List<Nuke> Nukes = new List<Nuke>();
     private readonly ConcurrentDictionary<int, Message> _contextDictionary = new ConcurrentDictionary<int, Message>();
     private readonly ConcurrentDictionary<int, Message> _dequeueDictionary = new ConcurrentDictionary<int, Message>();
 
@@ -109,7 +111,7 @@ namespace Dbot.Processor {
 
     private void Ban(Message message) {
       var recentMessages = _contextDictionary.Where(x => x.Key < message.Ordinal && x.Key >= message.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
-      var bantest = new Banner(message, recentMessages).BanParser();
+      var bantest = new Banner(message, this, recentMessages).BanParser();
       if (bantest == null) {
         if (message.Text[0] == '!' && (LastCommandTime.Add(Settings.UserCommandInterval) <= DateTime.UtcNow))
           _commander.Post(message);

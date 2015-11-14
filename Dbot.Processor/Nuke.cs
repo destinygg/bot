@@ -12,7 +12,6 @@ using Dbot.Utility;
 
 namespace Dbot.Processor {
   public class Nuke {
-    public static readonly List<Nuke> Nukes = new List<Nuke>();
     private readonly MessageProcessor _messageProcessor;
 
     public string Word { get; set; }
@@ -43,13 +42,13 @@ namespace Dbot.Processor {
       Tools.Log(string.Join(",", PreordainedVictims), ConsoleColor.Cyan);
 
       try {
-        await Task.Run(() => AntiNuke.Dissipate(this), AntiNuke.CancellationTokenSource.Token);
+        await Task.Run(() => new AntiNuke(_messageProcessor).Dissipate(this), AntiNuke.CancellationTokenSource.Token);
       } catch (TaskCanceledException e) {
         Tools.Log("Cancelled!" + Word + Regex);
         Tools.Log(e.Message);
       }
 
-      Nukes.Add(this);
+      _messageProcessor.Nukes.Add(this);
       _messageProcessor.Sender.Post(new PublicMessage(Duration.TotalSeconds / 1000 + "kilosecond missiles away!"));
 
       while (PreordainedVictims.Except(VictimList).Any()) {

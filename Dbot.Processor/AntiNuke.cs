@@ -16,7 +16,7 @@ namespace Dbot.Processor {
       _messageProcessor = messageProcessor;
     }
 
-    public static async void Dissipate(Nuke nuke) {
+    public async void Dissipate(Nuke nuke) {
       await Task.Delay(Settings.NukeDissipateTime);
       if (nuke.Word != null)
         Tools.Log(nuke.Word + " dissipated.", ConsoleColor.Red);
@@ -26,16 +26,16 @@ namespace Dbot.Processor {
         CancellationTokenSource = new CancellationTokenSource();
         return;
       }
-      Nuke.Nukes.Remove(nuke);
-      Tools.Log("NukeDictionary " + Nuke.Nukes.Count + ", NukeVictims " + nuke.VictimList.Count, ConsoleColor.Red);
+      _messageProcessor.Nukes.Remove(nuke);
+      Tools.Log("NukeDictionary " + _messageProcessor.Nukes.Count + ", NukeVictims " + nuke.VictimList.Count, ConsoleColor.Red);
     }
 
     public async void Aegis() {
-      foreach (var nuke in Nuke.Nukes) {
+      foreach (var nuke in _messageProcessor.Nukes) {
         nuke.Cancel = true;
       }
-      var temp = new List<Nuke>(Nuke.Nukes);
-      Nuke.Nukes.Clear();
+      var temp = new List<Nuke>(_messageProcessor.Nukes);
+      _messageProcessor.Nukes.Clear();
       CancellationTokenSource.Cancel();
       _messageProcessor.Sender.Post(new PublicMessage("Arise, my children. You are forgiven."));
       foreach (var nuke in temp) {

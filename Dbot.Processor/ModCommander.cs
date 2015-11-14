@@ -150,7 +150,7 @@ namespace Dbot.Processor {
           var unit = g[2].Value;
           var phrase = g[3].Value;
           var banTime = BanTime(number, unit);
-          if (Nuke.Nukes.All(x => x.Word != phrase)) {
+          if (_messageProcessor.Nukes.All(x => x.Word != phrase)) {
             new Nuke(phrase, banTime, c, _messageProcessor);
           }
         } },
@@ -159,7 +159,7 @@ namespace Dbot.Processor {
           var unit = g[2].Value;
           var regex = Tools.CompiledRegex(g[3].Value);
           var banTime = BanTime(number, unit);
-          if (Nuke.Nukes.All(x => x.Regex.ToString() != regex.ToString()))
+          if (_messageProcessor.Nukes.All(x => x.Regex.ToString() != regex.ToString()))
             new Nuke(regex, banTime, c, _messageProcessor);
         } },
         { CompiledRegex.Aegis, (g,c) => {
