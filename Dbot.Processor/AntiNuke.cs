@@ -9,7 +9,7 @@ using Dbot.Utility;
 
 namespace Dbot.Processor {
   public class AntiNuke {
-    public static CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+    public CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
     private readonly MessageProcessor _messageProcessor;
 
     public AntiNuke(MessageProcessor messageProcessor) {

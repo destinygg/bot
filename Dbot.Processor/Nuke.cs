@@ -42,7 +42,9 @@ namespace Dbot.Processor {
       Tools.Log(string.Join(",", PreordainedVictims), ConsoleColor.Cyan);
 
       try {
-        await Task.Run(() => new AntiNuke(_messageProcessor).Dissipate(this), AntiNuke.CancellationTokenSource.Token);
+        var nuke = new AntiNuke(_messageProcessor);
+        var cancelToken = nuke.CancellationTokenSource.Token;
+        await Task.Run(() => nuke.Dissipate(this), cancelToken);
       } catch (TaskCanceledException e) {
         Tools.Log("Cancelled!" + Word + Regex);
         Tools.Log(e.Message);
