@@ -144,7 +144,7 @@ namespace Dbot.Processor {
         } },
         { _compiledRegex.UnMuteBan, (g,c) => {
           var savedSoul = g[1].Value;
-          _messageProcessor.Sender.Post(Make.UnMuteBan(savedSoul));
+          _messageProcessor.Sender.Post(new UnMuteBan(savedSoul));
         } },
         { _compiledRegex.Nuke, (g,c) => {
           var number = g[1].Value;
@@ -190,8 +190,7 @@ namespace Dbot.Processor {
 
     private void BanBuilder(string number, string unit, string nick, string reason, bool ip) {
       var banTime = BanTime(number, unit, ip);
-      var ban = banTime == TimeSpan.Zero ? new PermBan(nick) : new Ban(banTime, nick);
-      ban.Reason = reason;
+      var ban = banTime == TimeSpan.Zero ? new PermBan(nick) : new Ban(nick, banTime, reason);
       ban.SilentReason = true;
       ban.Ip = ip;
       _messageProcessor.Sender.Post(ban);

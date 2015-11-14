@@ -108,9 +108,10 @@ namespace Dbot.CommonModels {
 
     public Ban() { }
 
-    public Ban(TimeSpan duration, string nick) {
+    public Ban(string nick, TimeSpan duration, string reason) {
       Duration = duration;
       Nick = nick;
+      Reason = reason;
     }
 
     protected Ban(bool perm, string nick) {
@@ -144,6 +145,13 @@ namespace Dbot.CommonModels {
   }
 
   public class Mute : HasVictim {
+    public Mute() { }
+
+    public Mute(string nick, TimeSpan duration, string reason) {
+      Duration = duration;
+      Nick = nick;
+      Reason = reason;
+    }
     private TimeSpan _duration;
 
     public override TimeSpan Duration {

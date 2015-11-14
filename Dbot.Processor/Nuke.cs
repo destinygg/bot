@@ -56,7 +56,7 @@ namespace Dbot.Processor {
       while (PreordainedVictims.Except(VictimList).Any()) {
         if (!Cancel) {
           var victim = PreordainedVictims.Except(VictimList).First();
-          _messageProcessor.Sender.Post(Make.Mute(victim, Duration));
+          _messageProcessor.Sender.Post(new Mute(victim, Duration, null));
           VictimList.Add(victim);
           await Task.Delay(Settings.NukeLoopWait);
         } else {

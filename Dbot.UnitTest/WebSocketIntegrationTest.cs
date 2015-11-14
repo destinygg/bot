@@ -27,7 +27,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(Make.Mute("dharmatest", TimeSpan.FromMinutes(3), "test reason"));
+      client.Send(new Mute("dharmatest", TimeSpan.FromMinutes(3), "test reason"));
     }
 
     [TestMethod]
@@ -36,7 +36,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(Make.Ban("dharmatest", TimeSpan.FromMinutes(3), "test reason"));
+      client.Send(new Ban("dharmatest", TimeSpan.FromMinutes(3), "test reason"));
     }
 
     [TestMethod]
@@ -45,7 +45,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(Make.Ban("dharmatest", TimeSpan.FromMinutes(-1), "perm reason"));
+      client.Send(new Ban("dharmatest", TimeSpan.FromMinutes(-1), "perm reason"));
     }
 
     [TestMethod]
@@ -54,9 +54,8 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(new Ban(TimeSpan.FromMinutes(3), "dharmatest") {
+      client.Send(new Ban("dharmatest", TimeSpan.FromMinutes(3), "test reason") {
         Ip = true,
-        Reason = "test reason"
       });
     }
 
@@ -66,7 +65,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(Make.UnMuteBan("dharmatest"));
+      client.Send(new UnMuteBan("dharmatest"));
     }
 
     [TestMethod]

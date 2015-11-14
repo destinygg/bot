@@ -41,7 +41,7 @@ namespace Dbot.Processor {
       foreach (var nuke in temp) {
         while (nuke.VictimList.Count > 0) {
           var savedSoul = nuke.VictimList.First();
-          _messageProcessor.Sender.Post(Make.UnMuteBan(savedSoul));
+          _messageProcessor.Sender.Post(new UnMuteBan(savedSoul));
           nuke.VictimList.Remove(savedSoul);
           await Task.Delay(Settings.AegisLoopWait);
         }

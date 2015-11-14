@@ -85,7 +85,7 @@ namespace Dbot.Processor {
 
       foreach (var nuke in _messageProcessor.Nukes.Where(x => x.Predicate(_message.Text))) {
         nuke.VictimList.Add(_message.Nick);
-        return Make.Mute(_message.Nick, nuke.Duration);
+        return new Mute(_message.Nick, nuke.Duration, null);
       }
       return null;
     }
@@ -135,7 +135,7 @@ namespace Dbot.Processor {
       if (match.Success) {
         var imgurId = match.Groups[1].Value;
         if (IsNsfw(imgurId))
-          return Make.Mute(_message.Nick, TimeSpan.FromMinutes(5), "5m, please label nsfw, ambiguous links as such");
+          return new Mute(_message.Nick, TimeSpan.FromMinutes(5), "5m, please label nsfw, ambiguous links as such");
       }
       return null;
     }
@@ -177,8 +177,8 @@ namespace Dbot.Processor {
         .Select(
           delta =>
             _message.Text.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier
-              ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + delta + "% = past text")
-              : Make.Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + delta + "% = past text"))
+              ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + delta + "% = past text")
+              : new Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + delta + "% = past text")) 
               ).FirstOrDefault();
     }
 
@@ -187,7 +187,7 @@ namespace Dbot.Processor {
       if (shortMessages.Count() < 2) return null;
       var percentList = shortMessages.Select(sm => StringTools.Delta(sm.Text, _text)).Select(delta => Convert.ToInt32(delta * 100)).Where(x => x >= Settings.SelfSpamSimilarity).ToList();
       return percentList.Count() >= 2
-        ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text")
+        ? new Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text")
         : null;
     }
 
@@ -195,13 +195,13 @@ namespace Dbot.Processor {
       var numberRegex = new Regex(@"^.{0,2}\d+.{0,5}$");
       if (!numberRegex.Match(_message.Text).Success) return null;
       var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(x => numberRegex.Match(_message.Text).Success && _message.Nick == x.Nick) + 1; // To include the latest message that isn't in context yet.
-      return numberMessages >= Settings.NumberSpamTriggerLength ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "Counting down to your ban?") : null;
+      return numberMessages >= Settings.NumberSpamTriggerLength ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Counting down to your ban?") : null;
     }
 
     public Mute EmoteUserSpam() {
       if (!Datastore.EmoteWordRegex.Match(_message.OriginalText).Success) return null;
       var emoteWordCount = _context.TakeLast(Settings.EmoteUserSpamContextLength).Count(x => Datastore.EmoteWordRegex.Match(x.OriginalText).Success) + 1; // To include the latest message that isn't in context yet.
-      return emoteWordCount >= Settings.EmoteUserSpamTriggerLength ? Make.Mute(_message.Nick, TimeSpan.FromMinutes(10), "Too many faces.") : null;
+      return emoteWordCount >= Settings.EmoteUserSpamTriggerLength ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Too many faces.") : null;
     }
   }
 }

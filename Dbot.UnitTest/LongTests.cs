@@ -148,7 +148,7 @@ namespace Dbot.UnitTest {
         "Banned userx for 8h",
         "Banned userx for 9h",
         "Banned userx for 10h",
-        "Permanently banned userx for reason goes here",
+        "Permanently banned userx for ",
         "Permanently banned userx for ",
         "Permanently banned userx for ",
       };
@@ -192,8 +192,8 @@ namespace Dbot.UnitTest {
         "Ipbanned userx for 3m",
         "Ipbanned userx for 4m",
         "Ipbanned userx for 5m",
-        "Permanently ipbanned userx for reason goes here",
-        "Permanently ipbanned userx for reason goes here",
+        "Permanently ipbanned userx for ",
+        "Permanently ipbanned userx for ",
         "Ipbanned userx for 6m",
         "Ipbanned userx for 7m",
         "Ipbanned userx for 8m",
@@ -207,7 +207,7 @@ namespace Dbot.UnitTest {
         "Ipbanned userx for 8h",
         "Ipbanned userx for 9h",
         "Ipbanned userx for 10h",
-        "Permanently ipbanned userx for reason goes here",
+        "Permanently ipbanned userx for ",
         "Permanently ipbanned userx for ",
         "Permanently ipbanned userx for ",
       };

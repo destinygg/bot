@@ -115,7 +115,6 @@
     <Compile Include="CompiledRegex.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="InitializeDatastore.cs" />
-    <Compile Include="Make.cs" />
     <Compile Include="PeriodicTask.cs" />
     <Compile Include="PrivateConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
