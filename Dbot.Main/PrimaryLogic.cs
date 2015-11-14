@@ -62,7 +62,7 @@ namespace Dbot.Main {
     }
 
     private static void TweetDetected(ITweet tweet) {
-      MessageProcessor.Sender.Post(new PublicMessage(true, "twitter.com/steven_bonnell just tweeted: \n" + Tools.TweetPrettier(tweet)));
+      MessageProcessor.Sender.Post(new ModPublicMessage("twitter.com/steven_bonnell just tweeted: \n" + Tools.TweetPrettier(tweet)));
     }
 
     static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {

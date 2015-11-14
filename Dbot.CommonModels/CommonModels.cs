@@ -57,6 +57,8 @@ namespace Dbot.CommonModels {
   }
 
   public class PublicMessage : Message {
+    protected PublicMessage() { }
+
     public PublicMessage(string text) {
       Nick = "MyNick";
       OriginalText = text;
@@ -66,12 +68,13 @@ namespace Dbot.CommonModels {
       Nick = nick;
       OriginalText = text;
     }
+  }
 
-    public PublicMessage(bool isMod, string text) {
-      Contract.Requires(isMod == true);
+  public class ModPublicMessage : PublicMessage {
+    public ModPublicMessage(string text) {
       Nick = "AutoMod";
       OriginalText = text;
-      IsMod = isMod;
+      IsMod = true;
     }
   }
 

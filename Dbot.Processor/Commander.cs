@@ -56,13 +56,13 @@ namespace Dbot.Processor {
       if (customCommand != null) {
         if (!_message.IsMod)
           MessageProcessor.LastCommandTime = DateTime.UtcNow;
-        return new PublicMessage(true, customCommand);
+        return new ModPublicMessage(customCommand);
       }
       var command = _commandDictionary.FirstOrDefault(y => y.Key.Any(x => _text.StartsWith(x))).Value;
       if (command != null) {
         if (!_message.IsMod)
           MessageProcessor.LastCommandTime = DateTime.UtcNow;
-        return new PublicMessage(true, command.Invoke());
+        return new ModPublicMessage(command.Invoke());
       }
       return null;
     }

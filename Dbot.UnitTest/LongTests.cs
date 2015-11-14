@@ -15,7 +15,7 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task SimpleCommandsTest() {
       var messageList = new List<Message> {
-        new PublicMessage(true, "!sing"),
+        new ModPublicMessage("!sing"),
       };
 
       messageList.AddRange(Enumerable.Range(1, 0).Select(i => new PublicMessage("UserX", "Wait... " + Tools.RandomString(10))).ToList());
@@ -28,34 +28,34 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task ManualMuteTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message>() {
-        new PublicMessage(true, "!mute UserX"),
-        new PublicMessage(true, "!m UserX"),
-        new PublicMessage(true, "!mute2 UserX"),
-        new PublicMessage(true, "!m3 UserX"),
-        new PublicMessage(true, "!mute 4 UserX"),
-        new PublicMessage(true, "!m 5 UserX"),
-        new PublicMessage(true, "!mute UserX reason goes here"),
-        new PublicMessage(true, "!m UserX reason goes here"),
-        new PublicMessage(true, "!mute6 UserX reason goes here"),
-        new PublicMessage(true, "!m7 UserX reason goes here"),
-        new PublicMessage(true, "!mute 8 UserX reason goes here"),
-        new PublicMessage(true, "!m 9 UserX reason goes here"),
-        new PublicMessage(true, "!mute2h UserX"),
-        new PublicMessage(true, "!m3h UserX"),
-        new PublicMessage(true, "!mute 4h UserX"),
-        new PublicMessage(true, "!m 5h UserX"),
-        new PublicMessage(true, "!mute6h UserX reason goes here"),
-        new PublicMessage(true, "!m7h UserX reason goes here"),
-        new PublicMessage(true, "!mute 8h UserX reason goes here"),
-        new PublicMessage(true, "!mute 9hours UserX reason goes here"),
-        new PublicMessage(true, "!muteh UserX reason goes here"),
-        new PublicMessage(true, "!mute 10perm UserX reason goes here"),
-        new PublicMessage(true, "!mute 11perm UserX"),
-        new PublicMessage(true, "!mute perm UserX"),
-        new PublicMessage(true, "!mute 8d UserX"),
-        new PublicMessage(true, "!mute 8d UserX reason goes here"),
-        new PublicMessage(true, "!mute 7d UserX"),
-        new PublicMessage(true, "!mute 7d UserX reason goes here"),
+        new ModPublicMessage("!mute UserX"),
+        new ModPublicMessage("!m UserX"),
+        new ModPublicMessage("!mute2 UserX"),
+        new ModPublicMessage("!m3 UserX"),
+        new ModPublicMessage("!mute 4 UserX"),
+        new ModPublicMessage("!m 5 UserX"),
+        new ModPublicMessage("!mute UserX reason goes here"),
+        new ModPublicMessage("!m UserX reason goes here"),
+        new ModPublicMessage("!mute6 UserX reason goes here"),
+        new ModPublicMessage("!m7 UserX reason goes here"),
+        new ModPublicMessage("!mute 8 UserX reason goes here"),
+        new ModPublicMessage("!m 9 UserX reason goes here"),
+        new ModPublicMessage("!mute2h UserX"),
+        new ModPublicMessage("!m3h UserX"),
+        new ModPublicMessage("!mute 4h UserX"),
+        new ModPublicMessage("!m 5h UserX"),
+        new ModPublicMessage("!mute6h UserX reason goes here"),
+        new ModPublicMessage("!m7h UserX reason goes here"),
+        new ModPublicMessage("!mute 8h UserX reason goes here"),
+        new ModPublicMessage("!mute 9hours UserX reason goes here"),
+        new ModPublicMessage("!muteh UserX reason goes here"),
+        new ModPublicMessage("!mute 10perm UserX reason goes here"),
+        new ModPublicMessage("!mute 11perm UserX"),
+        new ModPublicMessage("!mute perm UserX"),
+        new ModPublicMessage("!mute 8d UserX"),
+        new ModPublicMessage("!mute 8d UserX reason goes here"),
+        new ModPublicMessage("!mute 7d UserX"),
+        new ModPublicMessage("!mute 7d UserX reason goes here"),
       });
 
       var s = new List<string> {
@@ -100,30 +100,30 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task ManualBanTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message>() {
-        new PublicMessage(true, "!ban UserX"),
-        new PublicMessage(true, "!b UserX"),
-        new PublicMessage(true, "!ban2 UserX"),
-        new PublicMessage(true, "!b3 UserX"),
-        new PublicMessage(true, "!Ban 4 UserX"),
-        new PublicMessage(true, "!b 5 UserX"),
-        new PublicMessage(true, "!ban UserX reason goes here"),
-        new PublicMessage(true, "!b UserX reason goes here"),
-        new PublicMessage(true, "!ban6 UserX reason goes here"),
-        new PublicMessage(true, "!b7 UserX reason goes here"),
-        new PublicMessage(true, "!ban 8 UserX reason goes here"),
-        new PublicMessage(true, "!b 9 UserX reason goes here"),
-        new PublicMessage(true, "!ban2h UserX"),
-        new PublicMessage(true, "!b3h UserX"),
-        new PublicMessage(true, "!Ban 4h UserX"),
-        new PublicMessage(true, "!b 5h UserX"),
-        new PublicMessage(true, "!ban6h UserX reason goes here"),
-        new PublicMessage(true, "!b7h UserX reason goes here"),
-        new PublicMessage(true, "!ban 8h UserX reason goes here"),
-        new PublicMessage(true, "!ban 9hours UserX reason goes here"),
-        new PublicMessage(true, "!banh UserX"),
-        new PublicMessage(true, "!ban 10perm UserX reason goes here"),
-        new PublicMessage(true, "!ban 11perm UserX"),
-        new PublicMessage(true, "!ban perm UserX"),
+        new ModPublicMessage("!ban UserX"),
+        new ModPublicMessage("!b UserX"),
+        new ModPublicMessage("!ban2 UserX"),
+        new ModPublicMessage("!b3 UserX"),
+        new ModPublicMessage("!Ban 4 UserX"),
+        new ModPublicMessage("!b 5 UserX"),
+        new ModPublicMessage("!ban UserX reason goes here"),
+        new ModPublicMessage("!b UserX reason goes here"),
+        new ModPublicMessage("!ban6 UserX reason goes here"),
+        new ModPublicMessage("!b7 UserX reason goes here"),
+        new ModPublicMessage("!ban 8 UserX reason goes here"),
+        new ModPublicMessage("!b 9 UserX reason goes here"),
+        new ModPublicMessage("!ban2h UserX"),
+        new ModPublicMessage("!b3h UserX"),
+        new ModPublicMessage("!Ban 4h UserX"),
+        new ModPublicMessage("!b 5h UserX"),
+        new ModPublicMessage("!ban6h UserX reason goes here"),
+        new ModPublicMessage("!b7h UserX reason goes here"),
+        new ModPublicMessage("!ban 8h UserX reason goes here"),
+        new ModPublicMessage("!ban 9hours UserX reason goes here"),
+        new ModPublicMessage("!banh UserX"),
+        new ModPublicMessage("!ban 10perm UserX reason goes here"),
+        new ModPublicMessage("!ban 11perm UserX"),
+        new ModPublicMessage("!ban perm UserX"),
       });
 
       var s = new List<string> {
@@ -159,30 +159,30 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task ManualIpbanTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message>() {
-        new PublicMessage(true, "!ipban UserX"),
-        new PublicMessage(true, "!i UserX"),
-        new PublicMessage(true, "!ipban2 UserX"),
-        new PublicMessage(true, "!i3 UserX"),
-        new PublicMessage(true, "!ipban 4 UserX"),
-        new PublicMessage(true, "!i 5 UserX"),
-        new PublicMessage(true, "!ipban UserX reason goes here"),
-        new PublicMessage(true, "!i UserX reason goes here"),
-        new PublicMessage(true, "!ipban6 UserX reason goes here"),
-        new PublicMessage(true, "!i7 UserX reason goes here"),
-        new PublicMessage(true, "!ipban 8 UserX reason goes here"),
-        new PublicMessage(true, "!i 9 UserX reason goes here"),
-        new PublicMessage(true, "!ipban2h UserX"),
-        new PublicMessage(true, "!i3h UserX"),
-        new PublicMessage(true, "!ipban 4h UserX"),
-        new PublicMessage(true, "!i 5h UserX"),
-        new PublicMessage(true, "!ipban6h UserX reason goes here"),
-        new PublicMessage(true, "!i7h UserX reason goes here"),
-        new PublicMessage(true, "!ipban 8h UserX reason goes here"),
-        new PublicMessage(true, "!ipban 9hours UserX reason goes here"),
-        new PublicMessage(true, "!ipbanh UserX"),
-        new PublicMessage(true, "!ipban 10perm UserX reason goes here"),
-        new PublicMessage(true, "!ipban 11perm UserX"),
-        new PublicMessage(true, "!ipban perm UserX"),
+        new ModPublicMessage("!ipban UserX"),
+        new ModPublicMessage("!i UserX"),
+        new ModPublicMessage("!ipban2 UserX"),
+        new ModPublicMessage("!i3 UserX"),
+        new ModPublicMessage("!ipban 4 UserX"),
+        new ModPublicMessage("!i 5 UserX"),
+        new ModPublicMessage("!ipban UserX reason goes here"),
+        new ModPublicMessage("!i UserX reason goes here"),
+        new ModPublicMessage("!ipban6 UserX reason goes here"),
+        new ModPublicMessage("!i7 UserX reason goes here"),
+        new ModPublicMessage("!ipban 8 UserX reason goes here"),
+        new ModPublicMessage("!i 9 UserX reason goes here"),
+        new ModPublicMessage("!ipban2h UserX"),
+        new ModPublicMessage("!i3h UserX"),
+        new ModPublicMessage("!ipban 4h UserX"),
+        new ModPublicMessage("!i 5h UserX"),
+        new ModPublicMessage("!ipban6h UserX reason goes here"),
+        new ModPublicMessage("!i7h UserX reason goes here"),
+        new ModPublicMessage("!ipban 8h UserX reason goes here"),
+        new ModPublicMessage("!ipban 9hours UserX reason goes here"),
+        new ModPublicMessage("!ipbanh UserX"),
+        new ModPublicMessage("!ipban 10perm UserX reason goes here"),
+        new ModPublicMessage("!ipban 11perm UserX"),
+        new ModPublicMessage("!ipban perm UserX"),
       });
 
       var s = new List<string> {
@@ -278,8 +278,8 @@ namespace Dbot.UnitTest {
         new PublicMessage("yellow2", "yellow"),
         new PublicMessage("yellow3", "yellow"),
         
-        new PublicMessage(true, "!nuke10m red"),
-        new PublicMessage(true, "!nuke30m yellow"),
+        new ModPublicMessage("!nuke10m red"),
+        new ModPublicMessage("!nuke30m yellow"),
       };
       messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage("User" + i, "test")));
       messageList.AddRange(new List<Message>{
@@ -290,17 +290,17 @@ namespace Dbot.UnitTest {
         new PublicMessage("yellow4", "yellow"),
         new PublicMessage("yellow5", "yellow"),
         new PublicMessage("yellow6", "yellow"),
-        //new PublicMessage(true, "!mute User26"),
+        //new ModPublicMessage("!mute User26"),
       });
       messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => new PublicMessage("User" + i, "test")));
       messageList.AddRange(new List<Message>{
-        new PublicMessage(true, "!aegis"),
+        new ModPublicMessage("!aegis"),
         new PublicMessage("red7", "red"),
         new PublicMessage("yellow7", "yellow7"),
         new PublicMessage("transparent1", "transparent"),
-        new PublicMessage(true, "!NUKE transparent"),
+        new ModPublicMessage("!NUKE transparent"),
         new PublicMessage("transparent2", "transparent"),
-        new PublicMessage(true, "!aegis"),
+        new ModPublicMessage("!aegis"),
         new PublicMessage("transparent3", "transparent"),
         new PublicMessage("transparent4", "transparent"),
         new PublicMessage("transparent5", "transparent"),
@@ -406,10 +406,10 @@ namespace Dbot.UnitTest {
 
     private async Task AutoMuteBanRegexTest(string normal, string capsPasttense) {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        new PublicMessage(true, "!add" + normal + @"9m r(e|3)g\dx"),
-        new PublicMessage(true, "!add" + normal + @"1m ^begin *end$"),
-        new PublicMessage(true, "!add" + normal + @"m cAsEsEnSiTiViTy MaTtErS"),
-        new PublicMessage(true, "!add" + normal + @"m (?i:DOES NOT MATTER)"),
+        new ModPublicMessage("!add" + normal + @"9m r(e|3)g\dx"),
+        new ModPublicMessage("!add" + normal + @"1m ^begin *end$"),
+        new ModPublicMessage("!add" + normal + @"m cAsEsEnSiTiViTy MaTtErS"),
+        new ModPublicMessage("!add" + normal + @"m (?i:DOES NOT MATTER)"),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
@@ -445,10 +445,10 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
-        new PublicMessage(true, "!del" + normal + @" r(e|3)g\dx"),
-        new PublicMessage(true, "!del" + normal + @" ^begin *end$"),
-        new PublicMessage(true, "!del" + normal + @" cAsEsEnSiTiViTy MaTtErS"),
-        new PublicMessage(true, "!del" + normal + @" (?i:DOES NOT MATTER)"),
+        new ModPublicMessage("!del" + normal + @" r(e|3)g\dx"),
+        new ModPublicMessage("!del" + normal + @" ^begin *end$"),
+        new ModPublicMessage("!del" + normal + @" cAsEsEnSiTiViTy MaTtErS"),
+        new ModPublicMessage("!del" + normal + @" (?i:DOES NOT MATTER)"),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
@@ -465,9 +465,9 @@ namespace Dbot.UnitTest {
 
     private async Task AutoMuteBanTest(string normal, string capsPasttense) {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        new PublicMessage(true, "!Add" + normal + "9m teST"),
-        new PublicMessage(true, "!aDd" + normal + "m boRK"),
-        new PublicMessage(true, "!adD" + normal + "1m heRP"),
+        new ModPublicMessage("!Add" + normal + "9m teST"),
+        new ModPublicMessage("!aDd" + normal + "m boRK"),
+        new ModPublicMessage("!adD" + normal + "1m heRP"),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
@@ -519,21 +519,21 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserX", Tools.RandomString(20)),
-        new PublicMessage(true, "!del" + normal + " test"),
-        new PublicMessage(true, "!del" + normal + " bork"),
-        new PublicMessage(true, "!del" + normal + " herp"),
+        new ModPublicMessage("!del" + normal + " test"),
+        new ModPublicMessage("!del" + normal + " bork"),
+        new ModPublicMessage("!del" + normal + " herp"),
         new PublicMessage("UserD", "test"),
         new PublicMessage("UserD", "bork"),
-        new PublicMessage(true, "!add" + normal + "13m repeat"),
+        new ModPublicMessage("!add" + normal + "13m repeat"),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserE", "repeat"),
         new PublicMessage("UserX", Tools.RandomString(20)),
-        new PublicMessage(true, "!add" + normal + "30m repeat"),
+        new ModPublicMessage("!add" + normal + "30m repeat"),
         new PublicMessage("UserX", Tools.RandomString(20)),
         new PublicMessage("UserF", "repeat"),
         new PublicMessage("UserX", Tools.RandomString(20)),
-        new PublicMessage(true, "!delete" + normal + " ghost"),
-        new PublicMessage(true, "!delete" + normal + " repeat"),
+        new ModPublicMessage("!delete" + normal + " ghost"),
+        new ModPublicMessage("!delete" + normal + " repeat"),
         new PublicMessage("UserX", Tools.RandomString(20)),
       });
 
@@ -594,7 +594,7 @@ namespace Dbot.UnitTest {
     public async Task StalkTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
         new PublicMessage("UniqueUserA", "Unique Message A"),
-        new PublicMessage(true, "!stalk UniqueUserA"),
+        new ModPublicMessage("!stalk UniqueUserA"),
       });
       await Task.Delay(300);
 
@@ -622,9 +622,9 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task ThirdPartyEmoteTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        new PublicMessage(true, "!addEMOTE FaceA"),
-        new PublicMessage(true, "!ADDemote MyEmoteB"),
-        new PublicMessage(true, "!listemote"),
+        new ModPublicMessage("!addEMOTE FaceA"),
+        new ModPublicMessage("!ADDemote MyEmoteB"),
+        new ModPublicMessage("!listemote"),
         new PublicMessage("User1", "FaceA UserA"),
         new PublicMessage("User2", "FaceA UserA"),
         new PublicMessage("User3", "FaceA UserA"),
@@ -635,7 +635,7 @@ namespace Dbot.UnitTest {
         new PublicMessage("2Spam", "FaceA UserA"),
         new PublicMessage("3Spam", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
         new PublicMessage("User7", "facea facea facea facea facea facea facea facea facea facea" + Tools.RandomString(20)),
-        new PublicMessage(true, "!delemote FaceA"),
+        new ModPublicMessage("!delemote FaceA"),
         new PublicMessage("User8", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
         new PublicMessage("4Spam", "MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB " + Tools.RandomString(20)),
       });
@@ -655,7 +655,7 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task MuteIncreaserTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        new PublicMessage(true, "!add word"),
+        new ModPublicMessage("!add word"),
         new PublicMessage("UserX", "word"),
         new PublicMessage("UserX", "word"),
         new PublicMessage("UserX", "word"),
@@ -667,7 +667,7 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserX", "word"),
         new PublicMessage("UserX", "word"),
         new PublicMessage("UserX", "word"),
-        new PublicMessage(true, "!delete word"),
+        new ModPublicMessage("!delete word"),
       });
       await Task.Delay(100);
 
@@ -688,8 +688,8 @@ namespace Dbot.UnitTest {
         new PublicMessage("yellow2", "yellow2"),
         new PublicMessage("yellow3", "yellow3"),
         
-        new PublicMessage(true, @"!nukeregex10m red\d"),
-        new PublicMessage(true, @"!nukeregex30m yell..\d"),
+        new ModPublicMessage(@"!nukeregex10m red\d"),
+        new ModPublicMessage(@"!nukeregex30m yell..\d"),
       };
       messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage("User" + i, "test")));
       messageList.AddRange(new List<Message>{
@@ -700,17 +700,17 @@ namespace Dbot.UnitTest {
         new PublicMessage("yellow4", "yellow4"),
         new PublicMessage("yellow5", "yellow5"),
         new PublicMessage("yellow6", "yellow6"),
-        //new PublicMessage(true, "!mute User26"),
+        //new ModPublicMessage("!mute User26"),
       });
       messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => new PublicMessage("User" + i, "test")));
       messageList.AddRange(new List<Message>{
-        new PublicMessage(true, "!aegis"),
+        new ModPublicMessage("!aegis"),
         new PublicMessage("red7", "red7"),
         new PublicMessage("yellow7", "yellow7"),
         new PublicMessage("transparent1", "transparent1"),
-        new PublicMessage(true, @"!NUKEregex transparent\d"),
+        new ModPublicMessage(@"!NUKEregex transparent\d"),
         new PublicMessage("transparent2", "transparent2"),
-        new PublicMessage(true, "!aegis"),
+        new ModPublicMessage("!aegis"),
         new PublicMessage("transparent3", "transparent3"),
         new PublicMessage("transparent4", "transparent4"),
         new PublicMessage("transparent5", "transparent5"),
@@ -745,30 +745,30 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task CustomCommandTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        new PublicMessage(true, "!ADDcommand !burp bless you"),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, "!addCOMMAND !BURP herpaderp"),
-        new PublicMessage(true, "!addcommand !otherword otherside"),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
+        new ModPublicMessage("!ADDcommand !burp bless you"),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage("!addCOMMAND !BURP herpaderp"),
+        new ModPublicMessage("!addcommand !otherword otherside"),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
         new PublicMessage("UserX", "!bUrP" + Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
         new PublicMessage("UserX", "!otherword" + Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, "!otherword" + Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, Tools.RandomString(20)),
-        new PublicMessage(true, "!delcommand !word"),
-        new PublicMessage(true, "!delcommand !burp"),
-        new PublicMessage(true, "!delcommand !otherword"),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage("!otherword" + Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage(Tools.RandomString(20)),
+        new ModPublicMessage("!delcommand !word"),
+        new ModPublicMessage("!delcommand !burp"),
+        new ModPublicMessage("!delcommand !otherword"),
       });
       await Task.Delay(1000);
 
@@ -785,8 +785,8 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task UnMuteBanTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        new PublicMessage(true, "!unban userA"),
-        new PublicMessage(true, "!unmute userB"),
+        new ModPublicMessage("!unban userA"),
+        new ModPublicMessage("!unmute userB"),
       });
       await Task.Delay(1000);
 
@@ -797,8 +797,8 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task SubOnlyTest() {
       var r = await new PrimaryLogic().TestRun(new List<Message> {
-        new PublicMessage(true, "!subonly on"),
-        new PublicMessage(true, "!subonly off"),
+        new ModPublicMessage("!subonly on"),
+        new ModPublicMessage("!subonly off"),
       });
       await Task.Delay(1000);
 
