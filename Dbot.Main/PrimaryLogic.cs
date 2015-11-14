@@ -27,7 +27,7 @@ namespace Dbot.Main {
 
     public void Run() {
       InitializeDatastore.Run();
-      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret, PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret));
+      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret));
       var stream = Stream.CreateUserStream();
       stream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet);
       stream.StartStreamAsync();

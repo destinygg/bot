@@ -162,7 +162,7 @@ namespace Dbot.Processor {
     }
 
     private static bool IsNsfwApi(string x) {
-      var answer = Tools.DownloadData(x, PrivateConstants.imgurAuthHeader).Result;
+      var answer = Tools.DownloadData(x, PrivateConstants.ImgurAuthHeader).Result;
       dynamic dyn = JsonConvert.DeserializeObject(answer);
       return (bool) dyn.data.nsfw;
     }

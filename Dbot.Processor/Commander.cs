@@ -104,7 +104,7 @@ namespace Dbot.Processor {
     }
 
     private string Song() {
-      var json = Tools.DownloadData("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=stevenbonnellii&api_key=" + PrivateConstants.LastFMAPIKey + "&format=json");
+      var json = Tools.DownloadData("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=stevenbonnellii&api_key=" + PrivateConstants.LastFmApiKey + "&format=json");
       var dyn = (JObject) JsonConvert.DeserializeObject(json.Result);
       var artist = dyn.SelectToken("recenttracks.track[0].artist.#text");
       var name = dyn.SelectToken("recenttracks.track[0].name");
@@ -119,7 +119,7 @@ namespace Dbot.Processor {
     }
 
     private string EarlierSong() {
-      var json = Tools.DownloadData("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=stevenbonnellii&api_key=" + PrivateConstants.LastFMAPIKey + "&format=json");
+      var json = Tools.DownloadData("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=stevenbonnellii&api_key=" + PrivateConstants.LastFmApiKey + "&format=json");
       var dyn = (JObject) JsonConvert.DeserializeObject(json.Result);
       var artist = dyn.SelectToken("recenttracks.track[0].artist.#text");
       var name = dyn.SelectToken("recenttracks.track[0].name");

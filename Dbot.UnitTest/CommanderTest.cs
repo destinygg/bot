@@ -17,7 +17,7 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public void CommanderTests() {
       InitializeDatastore.Run();
-      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.Twitter_Consumer_Key, PrivateConstants.Twitter_Consumer_Secret, PrivateConstants.Twitter_Access_Token, PrivateConstants.Twitter_Access_Token_Secret));
+      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret));
 
       var message = new Commander(new PublicMessage("!playlist"), new MessageProcessor(null)).Run();
       Assert.IsTrue(message.OriginalText == "Playlist at last.fm/user/StevenBonnellII");
