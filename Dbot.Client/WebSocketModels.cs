@@ -28,6 +28,14 @@ namespace Dbot.Client {
   public class MuteReceiver : MessageReceiver {
     //MUTE {"nick":"Bot","features":["protected","bot"],"timestamp":1429322359451,"data ":"venat"}
   }
+  
+  public class BanReceiver : MessageReceiver {
+    //BAN {"nick":"Destiny","features":["protected","subscriber","moderator","admin","flair9"],"timestamp":1447626974443,"data":"RightToBearAss"}
+  }
+
+  public class BroadcastReceiver : MessageReceiver {
+    //BROADCAST {"timestamp":1447628780116,"data":"Testing... might as well shill this while I'm at it https://www.twitchalerts.com/donate/destiny"}
+  }
 
   public class MessageSender {
     public MessageSender(string input) {

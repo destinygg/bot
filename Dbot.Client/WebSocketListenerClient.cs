@@ -75,6 +75,14 @@ namespace Dbot.Client {
             var mute = JsonConvert.DeserializeObject<MuteReceiver>(jsonMessage);
           }
           break;
+        case "BAN": {
+            var ban = JsonConvert.DeserializeObject<BanReceiver>(jsonMessage);
+          }
+          break;
+        case "BROADCAST": {
+            var mute = JsonConvert.DeserializeObject<BroadcastReceiver>(jsonMessage);
+          }
+          break;
         default:
           Tools.Log(e.Message, ConsoleColor.Red);
           break;
