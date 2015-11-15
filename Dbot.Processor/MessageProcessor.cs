@@ -46,7 +46,9 @@ namespace Dbot.Processor {
       while (_dequeueDictionary.Count > Settings.MessageLogSize && _dequeueDictionary.TryRemove(_dequeueIndex, out removed)) {
         var contextTest = _contextDictionary.TryRemove(_dequeueIndex, out removed);
         Debug.Assert(contextTest);
+#if DEBUG
         Console.Write("d " + _dequeueIndex + ".");
+#endif
         _dequeueIndex++;
       }
 
