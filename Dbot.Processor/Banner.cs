@@ -15,15 +15,16 @@ namespace Dbot.Processor {
   public class Banner {
     private readonly Message _message;
     private readonly string _text;
-    private readonly string _unnormalized;
+    private readonly string _originalText;
     private readonly List<Message> _context;
     private readonly MessageProcessor _messageProcessor;
 
     public Banner(Message input, MessageProcessor messageProcessor, List<Message> context = null) {
       _messageProcessor = messageProcessor;
       _message = input;
-      _text = StringTools.RemoveDiacritics(input.Text);
-      _unnormalized = input.OriginalText;
+      //_text = StringTools.RemoveDiacritics(input.Text); //todo use this somehow. 
+      _text = input.Text;
+      _originalText = input.OriginalText;
       if (context != null)
         _context = context;
     }
@@ -44,31 +45,31 @@ namespace Dbot.Processor {
       var userHistory = Datastore.UserHistory(_message.Nick) ?? new UserHistory { Nick = _message.Nick }; // todo maKe this lazy
 
       var fullWidthCharacters = new[] { 'ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｑ', 'ｘ', 'ｙ', 'ｚ', 'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ', 'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｑ', 'Ｘ', 'Ｙ', 'Ｚ' };
-      if (fullWidthCharacters.Count(x => _unnormalized.Contains(x)) > 5)
+      if (fullWidthCharacters.Count(x => _originalText.Contains(x)) > 5)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.FullWidth, "fullwidth text", wait);
 
       var unicode = new[] { '็', 'е', '' };
-      if (unicode.Count(x => _unnormalized.Contains(x)) > 1)
+      if (unicode.Count(x => _originalText.Contains(x)) > 1)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.Unicode, "unicode idiocy", wait);
 
       if (Datastore.EmoteRegex.Matches(_message.OriginalText).Count > 7)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.Facespam, "face spam", wait);
 
-      var mutedWord = Datastore.MutedWords.Select(x => x.Key).FirstOrDefault(x => _unnormalized.Contains(x) || _text.Contains(x));
+      var mutedWord = Datastore.MutedWords.Select(x => x.Key).FirstOrDefault(x => _originalText.Contains(x) || _text.Contains(x));
       var mute = DeterminesHasVictim(mutedWord, userHistory, MagicStrings.MutedWords, Datastore.MutedWords, new Mute(), wait);
       if (mute != null) return mute;
 
-      var bannedWord = Datastore.BannedWords.Select(x => x.Key).FirstOrDefault(x => _unnormalized.Contains(x) || _text.Contains(x));
+      var bannedWord = Datastore.BannedWords.Select(x => x.Key).FirstOrDefault(x => _originalText.Contains(x) || _text.Contains(x));
       var ban = DeterminesHasVictim(bannedWord, userHistory, MagicStrings.BannedWords, Datastore.BannedWords, new Ban(), wait);
       if (ban != null) return ban;
 
-      var mutedRegex = Datastore.MutedRegex.Select(x => new Regex(x.Key)).FirstOrDefault(x => x.Match(_unnormalized).Success);
+      var mutedRegex = Datastore.MutedRegex.Select(x => new Regex(x.Key)).FirstOrDefault(x => x.Match(_originalText).Success);
       if (mutedRegex != null) {
         var banR = DeterminesHasVictim(mutedRegex.ToString(), userHistory, MagicStrings.MutedRegex, Datastore.MutedRegex, new Mute(), wait);
         if (banR != null) return banR;
       }
 
-      var bannedRegex = Datastore.BannedRegex.Select(x => new Regex(x.Key)).FirstOrDefault(x => x.Match(_unnormalized).Success);
+      var bannedRegex = Datastore.BannedRegex.Select(x => new Regex(x.Key)).FirstOrDefault(x => x.Match(_originalText).Success);
       if (bannedRegex != null) {
         var banR = DeterminesHasVictim(bannedRegex.ToString(), userHistory, MagicStrings.BannedRegex, Datastore.BannedRegex, new Ban(), wait);
         if (banR != null) return banR;
@@ -122,16 +123,13 @@ namespace Dbot.Processor {
       return hasVictim;
     }
 
-    public string Normalized { get { return _text; } }
-    public string Unnormalized { get { return _unnormalized; } }
-
     #region ImgurNsfw
     //todo this could be improved; check on an individual image link basis (more accurate regex); save safe/nsfw imgurIDs to DB
     public HasVictim ImgurNsfw() {
-      if ((_unnormalized.Contains("nsfw") || _unnormalized.Contains("nsfl")) && (!_unnormalized.Contains("not nsfw")))
+      if ((_originalText.Contains("nsfw") || _originalText.Contains("nsfl")) && (!_originalText.Contains("not nsfw")))
         return null;
 
-      var match = Regex.Match(_unnormalized, @".*imgur\.com/(\w+).*");
+      var match = Regex.Match(_originalText, @".*imgur\.com/(\w+).*");
       if (match.Success) {
         var imgurId = match.Groups[1].Value;
         if (IsNsfw(imgurId))
@@ -152,12 +150,11 @@ namespace Dbot.Processor {
       return IsNsfwApi("https://api.imgur.com/3/image/" + imgurId);
     }
 
-
     private string GetImgurId(string imgurId, string regex) {
-      var match = Regex.Match(_unnormalized, regex);
+      var match = Regex.Match(_originalText, regex);
       if (match.Success) return match.Groups[1].Value;
       Debug.Assert(match.Success);
-      Tools.ErrorLog("Imgur " + imgurId + " error on " + _message.Nick + " saying " + _unnormalized);
+      Tools.ErrorLog("Imgur " + imgurId + " error on " + _message.Nick + " saying " + _originalText);
       return "";
     }
 
@@ -173,7 +170,7 @@ namespace Dbot.Processor {
     public Mute LongSpam() {
       var longMessages = _context.TakeLast(Settings.LongSpamContextLength).Where(x => x.Text.Length > Settings.LongSpamMinimumLength);
       foreach (var longMessage in longMessages) {
-        var delta = Convert.ToInt32(StringTools.Delta(_unnormalized, longMessage.Text) * 100);
+        var delta = Convert.ToInt32(StringTools.Delta(_originalText, longMessage.Text) * 100);
         if (delta > Settings.LongSpamSimilarity) {
           if (_message.Text.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier) {
             return new Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + delta + "% = past text");
