@@ -175,7 +175,7 @@ namespace Dbot.Processor {
             Send("!" + command + " already exists; its corresponding text has been updated");
         } },
         { _compiledRegex.DelCommand, (g,c) => {
-          var command = g[1].Value;
+          var command = g[1].Value.ToLower();
           if (Datastore.DeleteFromStateString(MagicStrings.CustomCommands, command, Datastore.CustomCommands))
             Send("!" + command + " deleted");
           else
@@ -210,6 +210,7 @@ namespace Dbot.Processor {
 
     private void Delete(GroupCollection g, string category, IDictionary<string, double> externalDictionary, string name) {
       var wordToDelete = g[1].Value;
+      if (!category.Contains("Regex")) wordToDelete = wordToDelete.ToLower();
       if (Datastore.DeleteFromStateString(category, wordToDelete, externalDictionary))
         Send(wordToDelete + " deleted from the " + name + " list");
       else

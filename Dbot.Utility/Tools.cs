@@ -229,7 +229,7 @@ namespace Dbot.Utility {
 
     public static string TweetPrettier(ITweet tweet) {
       var text = HttpUtility.HtmlDecode(tweet.Text);
-      foreach (var x in tweet.Urls.ToDictionary(x => x.URL, y => y.DisplayedURL)) {
+      foreach (var x in tweet.Urls.ToDictionary(x => x.URL, y => y.ExpandedURL)) {
         text = text.Replace(x.Key, x.Value);
       }
       return text.Replace("\n\n", "\n");
