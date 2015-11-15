@@ -172,23 +172,27 @@ namespace Dbot.Processor {
     //todo: remove duplicate spaces and other characters with http://stackoverflow.com/questions/4429995/how-do-you-remove-repeated-characters-in-a-string
     public Mute LongSpam() {
       var longMessages = _context.TakeLast(Settings.LongSpamContextLength).Where(x => x.Text.Length > Settings.LongSpamMinimumLength);
-      return (longMessages.Select(longMessage => Convert.ToInt32(StringTools.Delta(_unnormalized, longMessage.Text) * 100))
-        .Where(delta => delta > Settings.LongSpamSimilarity)
-        .Select(
-          delta =>
-            _message.Text.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier
-              ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + delta + "% = past text")
-              : new Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + delta + "% = past text")) 
-              ).FirstOrDefault();
+      foreach (var longMessage in longMessages) {
+        var delta = Convert.ToInt32(StringTools.Delta(_unnormalized, longMessage.Text) * 100);
+        if (delta > Settings.LongSpamSimilarity) {
+          if (_message.Text.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier) {
+            return new Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + delta + "% = past text");
+          }
+          return new Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + delta + "% = past text");
+        }
+      }
+      return null;
     }
 
     public Mute SelfSpam() {
       var shortMessages = _context.TakeLast(Settings.SelfSpamContextLength).Where(x => x.Nick == _message.Nick).ToList();
-      if (shortMessages.Count() < 2) return null;
-      var percentList = shortMessages.Select(sm => StringTools.Delta(sm.Text, _text)).Select(delta => Convert.ToInt32(delta * 100)).Where(x => x >= Settings.SelfSpamSimilarity).ToList();
-      return percentList.Count() >= 2
-        ? new Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text")
-        : null;
+      if (shortMessages.Count >= 2) {
+        var percentList = shortMessages.Select(sm => Convert.ToInt32(StringTools.Delta(sm.Text, _text) * 100)).Where(x => x >= Settings.SelfSpamSimilarity).ToList();
+        if (percentList.Count >= 2) {
+          return new Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text");
+        }
+      }
+      return null;
     }
 
     public Mute NumberSpam() {
