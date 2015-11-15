@@ -83,7 +83,7 @@ namespace Dbot.Processor {
       var emoteUserSpam = EmoteUserSpam();
       if (emoteUserSpam != null) return emoteUserSpam;
 
-      foreach (var nuke in _messageProcessor.Nukes.Where(x => x.Predicate(_message.Text))) {
+      foreach (var nuke in _messageProcessor.Nukes.Where(x => x.Predicate(_message.Text) || x.Predicate(_message.OriginalText))) {
         nuke.VictimList.Add(_message.Nick);
         return new Mute(_message.Nick, nuke.Duration, null);
       }

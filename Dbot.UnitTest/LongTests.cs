@@ -688,11 +688,29 @@ namespace Dbot.UnitTest {
         new PublicMessage("yellow2", "yellow2"),
         new PublicMessage("yellow3", "yellow3"),
         
+        new PublicMessage("CAP1", "CAP1"),
+        new PublicMessage("CAP2", "CAP2"),
+        new PublicMessage("CAP3", "CAP3"),
+
+        new PublicMessage("nocap1", "nocap1"),
+        new PublicMessage("nocap2", "nocap2"),
+        new PublicMessage("nocap3", "nocap3"),
+
         new ModPublicMessage(@"!nukeregex10m red\d"),
         new ModPublicMessage(@"!nukeregex30m yell..\d"),
+        new ModPublicMessage(@"!nukeregex 20m CAP"),
       };
       messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage("User" + i, "test")));
       messageList.AddRange(new List<Message>{
+
+        new PublicMessage("CAP4", "CAP4"),
+        new PublicMessage("CAP5", "CAP5"),
+        new PublicMessage("CAP6", "CAP6"),
+
+        new PublicMessage("nocap4", "nocap4"),
+        new PublicMessage("nocap5", "nocap5"),
+        new PublicMessage("nocap6", "nocap6"),
+
         new PublicMessage("red4", "red4"),
         new PublicMessage("red5", "red5"),
         new PublicMessage("red6", "red6"),
@@ -714,22 +732,19 @@ namespace Dbot.UnitTest {
         new PublicMessage("transparent3", "transparent3"),
         new PublicMessage("transparent4", "transparent4"),
         new PublicMessage("transparent5", "transparent5"),
-
       });
       messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => new PublicMessage("User" + i, "test")));
 
       var r = await new PrimaryLogic().TestRun(messageList);
 
-      foreach (var i in Enumerable.Range(2, 4)) {
+      foreach (var i in Enumerable.Range(1, 6)) {
         Assert.IsTrue(r.Count(x => x.Contains("Muted red" + i.ToString())) == 1);
         Assert.IsTrue(r.Count(x => x.Contains("Muted yellow" + i.ToString())) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains("Muted cap" + i.ToString())) == 1);
         Assert.IsTrue(r.Count(x => x.Contains("Unbanned red" + i.ToString())) == 1);
         Assert.IsTrue(r.Count(x => x.Contains("Unbanned yellow" + i.ToString())) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains("Unbanned cap" + i.ToString())) == 1);
       }
-      Assert.IsTrue(r.Count(x => x.Contains("Muted red1")) >= 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted yellow1")) >= 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Unbanned red1")) >= 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Unbanned yellow1")) >= 1);
       foreach (var i in Enumerable.Range(1, firstBufferSize + secondBufferSize + thirdBufferSize)) {
         Assert.IsTrue(!r.Any(x => x.Contains("Muted user" + i.ToString())));
       }
@@ -740,6 +755,7 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent3")));
       Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent4")));
       Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent5")));
+      Assert.IsTrue(!r.Any(x => x.Contains("Muted nocap")));
     }
 
     [TestMethod]

@@ -38,7 +38,7 @@ namespace Dbot.Processor {
       VictimList = new List<string>();
       Cancel = false;
 
-      PreordainedVictims = context.Where(c => !c.IsMod).Where(s => Predicate(s.Text)).Select(x => x.Nick).Distinct().ToList();
+      PreordainedVictims = context.Where(c => !c.IsMod).Where(s => Predicate(s.Text) || Predicate(s.OriginalText)).Select(x => x.Nick).Distinct().ToList();
       Tools.Log(string.Join(",", PreordainedVictims), ConsoleColor.Cyan);
 
       try {
