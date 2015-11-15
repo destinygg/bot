@@ -95,9 +95,11 @@ namespace Dbot.Processor {
         var victimInput = (HasVictim) input;
         var banInput = input as Ban;
         var muteInput = input as Mute;
-        if (banInput != null)
+        if (banInput != null) {
+          if (string.IsNullOrWhiteSpace(banInput.Reason))
+            banInput.Reason = "Manual bot ban.";
           _client.Send(banInput);
-        else if (muteInput != null)
+        } else if (muteInput != null)
           _client.Send(muteInput);
         else
           throw new Exception("Unsupported HasVictim");
