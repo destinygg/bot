@@ -11,6 +11,7 @@ namespace Dbot.Data {
     public const string FullWidth = "FullWidth";
     public const string Unicode = "Unicode";
     public const string Facespam = "Facespam";
+    public const string SpamCharacters = "SpamCharacters";
     public const string CustomCommands = "CustomCommands";
   }
 }

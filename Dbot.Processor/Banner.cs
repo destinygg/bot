@@ -45,11 +45,16 @@ namespace Dbot.Processor {
       var userHistory = Datastore.UserHistory(_message.Nick) ?? new UserHistory { Nick = _message.Nick }; // todo maKe this lazy
 
       var fullWidthCharacters = new[] { 'ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｑ', 'ｘ', 'ｙ', 'ｚ', 'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ', 'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｑ', 'Ｘ', 'Ｙ', 'Ｚ' };
-      if (fullWidthCharacters.Count(x => _originalText.Contains(x)) > 5)
+      if (fullWidthCharacters.Sum(c => _originalText.Count(ot => ot == c)) > 5)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.FullWidth, "fullwidth text", wait);
+      var spamCharacters = new[] {
+        '▓','▂', '♥', 'ᴶ', '♠', 'ᑫ', 'ᴷ', '♦', 'ᴬ', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹', '⁰', ':', '░', '═', '╔', '╗','╚', '╝', '║', '─', '┐', '┌', '└', '╥', '┘', '╡', '▀', '▐', '▌', '█', '▄', '■', '▉', ' ', '▒', '　', '̍', '̎','̄', '̅', '̿', '̑', '̆', '̐', '͒', '͗', '͑', '̇', '̈', '̊', '͂', '̓', '̈́', '͊', '͋', '͌', '̃', '̂', '̌', '͐','̀', '́', '̋', '̏', '̒', '̓', '̔', '̽', '̉', 'ͣ', 'ͤ', 'ͥ', 'ͦ', 'ͧ', 'ͨ', 'ͩ', 'ͪ', 'ͫ', 'ͬ', 'ͭ', 'ͮ', 'ͯ','̾', '͛', '͆', '̚', '̕', '̛', '̀', '́', '͘', '̡', '̢', '̧', '̨', '̴', '̵', '̶', '͏', '͜', '͝', '͞', '͟', '͠','͢', '̸', '̷', '͡', '҉', '̖', '̗', '̘', '̙', '̜', '̝', '̞', '̟', '̠', '̤', '̥', '̦', '̩', '̪', '̫', '̬', '̭','̮', '̯', '̰', '̱', '̲', '̳', '̹', '̺', '̻', '̼', 'ͅ', '͇', '͈', '͉', '͍', '͎', '͓', '͔', '͕', '͖', '͙', '͚','̣'
+      };
+      if (spamCharacters.Sum(c => _originalText.Count(ot => ot == c)) > 20)
+        return MuteAndIncrementHardCoded(userHistory, MagicStrings.SpamCharacters, "spam characters", wait);
 
       var unicode = new[] { '็', 'е', '' };
-      if (unicode.Count(x => _originalText.Contains(x)) > 1)
+      if (unicode.Sum(c => _originalText.Count(ot => ot == c)) >= 1)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.Unicode, "unicode idiocy", wait);
 
       if (Datastore.EmoteRegex.Matches(_message.OriginalText).Count > 7)

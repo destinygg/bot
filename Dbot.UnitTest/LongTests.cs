@@ -148,9 +148,9 @@ namespace Dbot.UnitTest {
         "Banned userx for 8h",
         "Banned userx for 9h",
         "Banned userx for 10h",
-        "Permanently banned userx for ",
-        "Permanently banned userx for ",
-        "Permanently banned userx for ",
+        "Permanently banned userx for Manual bot ban.",
+        "Permanently banned userx for Manual bot ban.",
+        "Permanently banned userx for Manual bot ban.",
       };
 
       Assert.IsTrue(s.SequenceEqual(r));
@@ -186,14 +186,14 @@ namespace Dbot.UnitTest {
       });
 
       var s = new List<string> {
-        "Permanently ipbanned userx for ",
-        "Permanently ipbanned userx for ",
+        "Permanently ipbanned userx for Manual bot ban.",
+        "Permanently ipbanned userx for Manual bot ban.",
         "Ipbanned userx for 2m",
         "Ipbanned userx for 3m",
         "Ipbanned userx for 4m",
         "Ipbanned userx for 5m",
-        "Permanently ipbanned userx for ",
-        "Permanently ipbanned userx for ",
+        "Permanently ipbanned userx for Manual bot ban.",
+        "Permanently ipbanned userx for Manual bot ban.",
         "Ipbanned userx for 6m",
         "Ipbanned userx for 7m",
         "Ipbanned userx for 8m",
@@ -207,9 +207,9 @@ namespace Dbot.UnitTest {
         "Ipbanned userx for 8h",
         "Ipbanned userx for 9h",
         "Ipbanned userx for 10h",
-        "Permanently ipbanned userx for ",
-        "Permanently ipbanned userx for ",
-        "Permanently ipbanned userx for ",
+        "Permanently ipbanned userx for Manual bot ban.",
+        "Permanently ipbanned userx for Manual bot ban.",
+        "Permanently ipbanned userx for Manual bot ban.",
       };
 
       Assert.IsTrue(s.SequenceEqual(r));
@@ -820,6 +820,56 @@ namespace Dbot.UnitTest {
 
       Assert.IsTrue(r.Count(x => x.Contains("Subonly enabled")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains("Subonly disabled")) == 1);
+    }
+
+    [TestMethod]
+    public async Task SpamCharactersTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        new PublicMessage("UserX", "░░░░░░▄▀▓░░▒░░▒▒▒▒▒▒█▄░░░░░░"),
+        new PublicMessage("UserX", "░░░░▄█▓▓▓░░░░▒▒▒▒▒▒▒▒█▀▄░░░░"),
+        new PublicMessage("UserX", "░░▄▀█▌▓▓▓░░░░▒▒▒▒▒▒▒▒▐▌▓▀▄░░"),
+        new PublicMessage("UserX", "░█▓▓█▌▓▄▄▓░░░▒▒▒▒▄▄▒▒▒█▓▓▀▄░"),
+        new PublicMessage("UserX", "▄▀▓▓█▌▓▀█▓░░░▒▒▒▒█▓▀▒▄▌▓▓▓▓█"),
+      });
+      await Task.Delay(1000);
+
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 1h 20m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 2h 40m")) == 1);
+    }
+
+    [TestMethod]
+    public async Task FullWidthTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        new PublicMessage("UserX", "ａｂｃｄｅｆ"),
+        new PublicMessage("UserX", "ｇｈｉｊｋｌ"),
+        new PublicMessage("UserX", "ｍｎｏｐｑｒ"),
+        new PublicMessage("UserX", "ｓｔｕｖｑｘ"),
+        new PublicMessage("UserX", "ｙｚＡＢＣＤ"),
+      });
+      await Task.Delay(1000);
+
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 1h 20m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 2h 40m")) == 1);
+    }
+    
+    [TestMethod]
+    public async Task UnicodeTest() {
+      var r = await new PrimaryLogic().TestRun(new List<Message> {
+        new PublicMessage("UserX", ""),
+        new PublicMessage("UserX", "е"),
+        new PublicMessage("UserX", "็"),
+      });
+      await Task.Delay(1000);
+
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) == 1);
     }
   }
 }
