@@ -20,7 +20,7 @@ namespace Dbot.Utility {
     public const int EmoteUserSpamTriggerLength = 6;
     public const int NumberSpamTriggerLength = 6;
 
-    public const int LongSpamMinimumLength = 40;
+    public const int LongSpamMinimumLength = 60;
     public const int LongSpamLongerBanMultiplier = 3;
 
     public static readonly TimeSpan NukeDissipateTime = TimeSpan.FromMinutes(10);
