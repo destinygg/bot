@@ -211,7 +211,7 @@ namespace Dbot.Processor {
     public Mute NumberSpam() {
       var numberRegex = new Regex(@"^.{0,2}\d+.{0,5}$");
       if (!numberRegex.Match(_message.Text).Success) return null;
-      var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(x => numberRegex.Match(_message.Text).Success && _message.Nick == x.Nick) + 1; // To include the latest message that isn't in context yet.
+      var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(m => numberRegex.Match(m.Text).Success && _message.Nick == m.Nick) + 1; // To include the latest message that isn't in context yet.
       return numberMessages >= Settings.NumberSpamTriggerLength ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Counting down to your ban?") : null;
     }
 
