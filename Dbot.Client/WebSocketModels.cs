@@ -32,6 +32,14 @@ namespace Dbot.Client {
   public class BanReceiver : MessageReceiver {
     //BAN {"nick":"Destiny","features":["protected","subscriber","moderator","admin","flair9"],"timestamp":1447626974443,"data":"RightToBearAss"}
   }
+  
+  public class UnMuteReceiver : MessageReceiver {
+    //UNMUTE {"nick":"Bot","features":["protected","bot"],"timestamp":1447686420950,"data":"dharmatest"}
+  }
+  
+  public class UnBanReceiver : MessageReceiver {
+    //UNBAN {"nick":"Destiny","features":["protected","subscriber","moderator","admin","flair9"],"timestamp":1447660962664,"data":"Tailsdarcy_"}
+  }
 
   public class BroadcastReceiver : MessageReceiver {
     //BROADCAST {"timestamp":1447628780116,"data":"Testing... might as well shill this while I'm at it https://www.twitchalerts.com/donate/destiny"}
