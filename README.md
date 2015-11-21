@@ -37,11 +37,11 @@ Mute/Ban Commands                            | Result
 !AddBanRegex 1s \s                           | Automatically bans‡ users who say <br> any whitespace character§ for 1s\*†
 !DeleteMute any phrase                       | Removes the automatic mute on `any phrase`
 !DeleteBan any phrase                        | Removes the automatic ban on `any phrase`
-!DeleteMuteRegex 1s \s                       | Removes the automatic mute on any whitespace character
-!DeleteBanRegex 1s \s                        | Removes the automatic ban on any whitespace character
-!Mute MyUser 1s Reason                       | Mutes MyUser with the optional `Reason` for 1s\*
-!Ban MyUser 1s Reason                        | Bans MyUser with the optional `Reason` for 1s\*
-!Ipban MyUser 1s Reason                      | Ipbans MyUser with the optional `Reason` for 1s\*
+!DeleteMuteRegex \s                          | Removes the automatic mute on any whitespace character
+!DeleteBanRegex \s                           | Removes the automatic ban on any whitespace character
+!Mute 1s MyUser Reason                       | Mutes MyUser with the optional `Reason` for 1s\*
+!Ban 1s MyUser Reason                        | Bans MyUser with the optional `Reason` for 1s\*
+!Ipban 1s MyUser Reason                      | Ipbans MyUser with the optional `Reason` for 1s\*
 !Unmute MyUser <br> !Unban MyUser            | Unbans MyUser (this also removes mutes)
 !Nuke 1s any phrase                          | Mutes users who said `any phrase` <br> before or after the nuke is launched for 1s\*
 !NukeRegex 1s \s                             | Mutes users who said any whitespace character§ <br> before or after the nuke is launched for 1s\*
