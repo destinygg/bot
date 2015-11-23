@@ -26,7 +26,8 @@ namespace Dbot.Processor {
       LoadCommandDictionary();
     }
 
-    private void Send(string message) {if (_message is PrivateMessage) {
+    private void Send(string message) {
+      if (_message is PrivateMessage) {
         var pm = (PrivateMessage) _message;
         _messageProcessor.Sender.Post(new PrivateMessage(pm.Nick, message));
       } else {
@@ -218,7 +219,13 @@ namespace Dbot.Processor {
     }
 
     private TimeSpan BanTime(string stringInt, string s, bool ip = false) {
-      var i = stringInt == "" ? 10 : int.Parse(stringInt);
+      int i;
+      try {
+        i = stringInt == "" ? 10 : int.Parse(stringInt);
+      } catch (OverflowException) {
+        i = int.MaxValue;
+      }
+
       if (_compiledRegex.Seconds.Any(x => x == s)) {
         return TimeSpan.FromSeconds(i);
       }

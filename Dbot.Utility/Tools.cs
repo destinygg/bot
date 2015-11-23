@@ -74,10 +74,11 @@ namespace Dbot.Utility {
       }
     }
 
-    public static string PrettyDeltaTime(TimeSpan span, string rough = "") {
-      int day = Convert.ToInt16(span.ToString("%d")),
-        hour = Convert.ToInt16(span.ToString("%h")),
-        minute = Convert.ToInt16(span.ToString("%m"));
+    public static string PrettyDeltaTime(TimeSpan span, string rough = "")
+    {
+      int day = Convert.ToInt32(span.ToString("%d"));
+      int hour = Convert.ToInt32(span.ToString("%h"));
+      int minute = Convert.ToInt32(span.ToString("%m"));
 
       if (span.CompareTo(TimeSpan.Zero) == -1) {
         Log("Time to sync the clock?" + span, ConsoleColor.Red);

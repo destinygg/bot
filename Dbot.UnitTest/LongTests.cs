@@ -124,6 +124,7 @@ namespace Dbot.UnitTest {
         new ModPublicMessage("!ban 10perm UserX reason goes here"),
         new ModPublicMessage("!ban 11perm UserX"),
         new ModPublicMessage("!ban perm UserX"),
+        new ModPublicMessage("!ban7777777777777777777777 UserX"),
       });
 
       var s = new List<string> {
@@ -151,6 +152,7 @@ namespace Dbot.UnitTest {
         "Permanently banned userx for Manual bot ban.",
         "Permanently banned userx for Manual bot ban.",
         "Permanently banned userx for Manual bot ban.",
+        "Banned userx for 1491308 days 2h",
       };
 
       Assert.IsTrue(s.SequenceEqual(r));
