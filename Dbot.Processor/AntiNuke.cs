@@ -17,7 +17,11 @@ namespace Dbot.Processor {
     }
 
     public async void Dissipate(Nuke nuke) {
-      await Task.Delay(Settings.NukeDissipateTime);
+      if (nuke.Duration < Settings.NukeDissipateTime)
+        await Task.Delay(nuke.Duration);
+      else
+        await Task.Delay(Settings.NukeDissipateTime);
+
       if (nuke.Word != null)
         Tools.Log(nuke.Word + " dissipated.", ConsoleColor.Red);
       else
