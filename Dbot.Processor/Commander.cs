@@ -100,7 +100,7 @@ namespace Dbot.Processor {
       } else {
         decision = "played";
       }
-      return "Destiny " + decision + " a " + type + " game on " + map + " " + delta + " ago sc2ranks.com/character/us/310150/Destiny";
+      return "Destiny " + decision + " a " + type + " game on " + map + " " + delta + " ago us.battle.net/sc2/en/profile/310150/1/Destiny/";
     }
 
     private string Song() {

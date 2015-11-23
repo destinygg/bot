@@ -364,9 +364,7 @@ namespace Dbot.UnitTest {
       var longerMessage = longerBuilder.ToString();
       var longestMessage = longestBuilder.ToString();
 
-      var messageList = Enumerable.Range(1, 40).Select(i => new PublicMessage("User" + i, Tools.RandomString(Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier + 1))).ToList();
-
-      messageList.AddRange(new List<PublicMessage> {
+      var messageList = new List<PublicMessage> {
         new PublicMessage("UserA", longMessage),
         new PublicMessage("SpamA", longMessage),
         new PublicMessage("UserB", longMessage + "b"),
@@ -375,7 +373,7 @@ namespace Dbot.UnitTest {
         new PublicMessage("SpamX", longerMessage),
         new PublicMessage("UserY", longestMessage + "y"),
         new PublicMessage("SpamY", longestMessage + "y"),
-      });
+      };
       var r = await new PrimaryLogic().TestRun(messageList);
 
       Assert.IsTrue(r.Count(x => x.Contains("Muted user")) == 0);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
@@ -30,6 +31,7 @@ namespace Dbot.CommonModels {
 
   public abstract class TargetedSendable : User, ISendable { }
 
+  [DebuggerDisplay("{Ordinal}. {OriginalText}")]
   public abstract class Message : TargetedSendable, IEquatable<Message> {
     private string _originalText;
     public string OriginalText {
