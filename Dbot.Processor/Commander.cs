@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using Dbot.CommonModels;
 using Dbot.Data;
@@ -49,7 +50,9 @@ namespace Dbot.Processor {
         Twitter },
       { new List<string> { "youtube", "yt" }, 
         () => Tools.FallibleCode(Youtube) },
-    };
+      { new List<string> { "strim", "overrustle" }, 
+        () => Tools.FallibleCode(Overrustle) },
+      };
     }
 
     public Message Run() {
@@ -155,6 +158,27 @@ namespace Dbot.Processor {
       var title = jObject.SelectToken("items[0].snippet.title").Value<string>();
       var delta = Tools.PrettyDeltaTime(DateTime.UtcNow - publishedAt);
       return "\"" + title + "\" posted " + delta + " ago youtu.be/" + videoId;
+    }
+
+    private string Overrustle() {
+      var hack = Tools.LiveStatus(); // horrible hack todo
+      if (hack.Contains("viewers"))
+        return "Destiny is live! destiny.gg/bigscreen";
+      var json = Tools.DownloadData("http://api.overrustle.com/api");
+      dynamic dyn = JsonConvert.DeserializeObject(json.Result);
+      var streamsObject = (JObject) dyn.streams;
+      var sArray = JObject.Parse(streamsObject.ToString());
+      var sb = new StringBuilder();
+      foreach (dynamic o in sArray.Children().Take(3)) {
+        var name = o.Name;
+        var viewers = o.Value.Value;
+        sb.Append(viewers);
+        sb.Append(" ");
+        sb.Append("overrustle.com");
+        sb.Append(name);
+        sb.Append("\n");
+      }
+      return sb.ToString().Trim();
     }
   }
 }
