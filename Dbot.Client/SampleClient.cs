@@ -12,7 +12,7 @@ using Dbot.Utility;
 namespace Dbot.Client {
   public class SampleClient : ConsolePrintClient {
     private IProcessor _processor;
-    private readonly List<Message> _messageList = new List<Message>();
+    private readonly List<PublicMessage> _messageList = new List<PublicMessage>();
 
     public override async void Run(IProcessor processor) {
       _processor = processor;
@@ -23,7 +23,7 @@ namespace Dbot.Client {
       }
     }
 
-    public override void Forward(Message message) {
+    public override void Forward(PublicMessage message) {
       _processor.ProcessMessage(message);
     }
 

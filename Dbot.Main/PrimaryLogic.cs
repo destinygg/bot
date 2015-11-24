@@ -57,7 +57,7 @@ namespace Dbot.Main {
       Exit();
     }
 
-    public async Task<IList<string>> TestRun(IEnumerable<Message> testInput) {
+    public async Task<IList<string>> TestRun(IEnumerable<PublicMessage> testInput) {
       InitializeDatastore.Run();
       var testClient = new TestClient();
       return await testClient.Run(new MessageProcessor(testClient), testInput);

@@ -37,7 +37,7 @@ namespace Dbot.Processor {
       _modCommander = new ActionBlock<Message>(m => ModCommand(m));
     }
 
-    public void ProcessMessage(Message message) {
+    public void ProcessMessage(PublicMessage message) {
       message.Ordinal = _contextIndex;
       _contextDictionary.TryAdd(_contextIndex, message);
       _contextIndex++;

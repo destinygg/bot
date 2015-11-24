@@ -9,7 +9,7 @@ using Dbot.CommonModels;
 namespace Dbot.Common {
   public interface IClient {
     void Run(IProcessor processor);
-    void Forward(Message message);
+    void Forward(PublicMessage message);
     void Send(PrivateMessage privateMessage);
     void Send(PublicMessage publicMessage);
     void Send(Mute mute);

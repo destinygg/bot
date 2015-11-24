@@ -18,7 +18,7 @@ namespace Dbot.Client {
       throw new NotImplementedException();
     }
 
-    public async Task<IList<string>> Run(IProcessor processor, IEnumerable<Message> testInput) {
+    public async Task<IList<string>> Run(IProcessor processor, IEnumerable<PublicMessage> testInput) {
       _processor = processor;
       _log = new List<string>();
       foreach (var message in testInput) {
@@ -28,7 +28,7 @@ namespace Dbot.Client {
       return _log;
     }
 
-    public void Forward(Message message) {
+    public void Forward(PublicMessage message) {
       _processor.ProcessMessage(message);
     }
 

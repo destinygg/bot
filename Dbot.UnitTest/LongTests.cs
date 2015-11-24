@@ -14,7 +14,7 @@ namespace Dbot.UnitTest {
   public class LongTests {
     [TestMethod]
     public async Task SimpleCommandsTest() {
-      var messageList = new List<Message> {
+      var messageList = new List<PublicMessage> {
         new ModPublicMessage("!sing"),
       };
 
@@ -27,7 +27,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task ManualMuteTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message>() {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage>() {
         new ModPublicMessage("!mute UserX"),
         new ModPublicMessage("!m UserX"),
         new ModPublicMessage("!mute2 UserX"),
@@ -99,7 +99,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task ManualBanTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message>() {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage>() {
         new ModPublicMessage("!ban UserX"),
         new ModPublicMessage("!b UserX"),
         new ModPublicMessage("!ban2 UserX"),
@@ -160,7 +160,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task ManualIpbanTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message>() {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage>() {
         new ModPublicMessage("!ipban UserX"),
         new ModPublicMessage("!i UserX"),
         new ModPublicMessage("!ipban2 UserX"),
@@ -219,7 +219,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task SelfSpamTest() {
-      var messageList = new List<Message> {
+      var messageList = new List<PublicMessage> {
         new PublicMessage("BanVictimA", "playing a longer game"),
         new PublicMessage("BanVictimA", "playing a longer game"),
         new PublicMessage("BanVictimB", "short spam"),
@@ -239,7 +239,7 @@ namespace Dbot.UnitTest {
         messageList.Add(new PublicMessage("User" + i, i.ToString()));
       }
       messageList.Add(new PublicMessage("BanVictimA", "playing a longer game"));
-      messageList.AddRange(new List<Message> {
+      messageList.AddRange(new List<PublicMessage> {
         new PublicMessage("Innocent", "Sweetie240Belle why"), // todo fix people who talk to long names, then consider having a history for it.
         new PublicMessage("Innocent2", "1"),
         new PublicMessage("Innocent3", "2"),
@@ -271,7 +271,7 @@ namespace Dbot.UnitTest {
       const int firstBufferSize = 5; // 5/25 Use NukeLoopWait/AegisLoopWait delays of 0/2000 for this
       const int secondBufferSize = 5; // 5/25
       const int thirdBufferSize = 5; // 5/225
-      var messageList = new List<Message>{
+      var messageList = new List<PublicMessage>{
         new PublicMessage("red1", "red"),
         new PublicMessage("red2", "red"),
         new PublicMessage("red3", "red"),
@@ -284,7 +284,7 @@ namespace Dbot.UnitTest {
         new ModPublicMessage("!nuke30m yellow"),
       };
       messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage("User" + i, "test")));
-      messageList.AddRange(new List<Message>{
+      messageList.AddRange(new List<PublicMessage>{
         new PublicMessage("red4", "red"),
         new PublicMessage("red5", "red"),
         new PublicMessage("red6", "red"),
@@ -295,7 +295,7 @@ namespace Dbot.UnitTest {
         //new ModPublicMessage("!mute User26"),
       });
       messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => new PublicMessage("User" + i, "test")));
-      messageList.AddRange(new List<Message>{
+      messageList.AddRange(new List<PublicMessage>{
         new ModPublicMessage("!aegis"),
         new PublicMessage("red7", "red"),
         new PublicMessage("yellow7", "yellow7"),
@@ -336,7 +336,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task EmotesTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message>() {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage>() {
         new PublicMessage("UserX","Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa"),
         new PublicMessage("UserX","OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle"),
         new PublicMessage("UserX","LUL LUL LUL LUL LUL LUL LUL LUL"),
@@ -405,7 +405,7 @@ namespace Dbot.UnitTest {
     }
 
     private async Task AutoMuteBanRegexTest(string normal, string capsPasttense) {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new ModPublicMessage("!add" + normal + @"9m r(e|3)g\dx"),
         new ModPublicMessage("!add" + normal + @"1m ^begin *end$"),
         new ModPublicMessage("!add" + normal + @"m cAsEsEnSiTiViTy MaTtErS"),
@@ -464,7 +464,7 @@ namespace Dbot.UnitTest {
     }
 
     private async Task AutoMuteBanTest(string normal, string capsPasttense) {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new ModPublicMessage("!Add" + normal + "9m teST"),
         new ModPublicMessage("!aDd" + normal + "m boRK"),
         new ModPublicMessage("!adD" + normal + "1m heRP"),
@@ -558,7 +558,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task NumberSpamTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new PublicMessage("UserX", "Buffer"),
         new PublicMessage("UserY", "Buffer"),
         new PublicMessage("UserZ", "Buffer"),
@@ -592,7 +592,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task StalkTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new PublicMessage("UniqueUserA", "Unique Message A"),
         new ModPublicMessage("!stalk UniqueUserA"),
       });
@@ -603,7 +603,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task EmoteUserSpamTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new PublicMessage("UserA", "Buffer"),
         new PublicMessage("User1", "Kappa UserA"),
         new PublicMessage("User2", "Kappa UserA"),
@@ -621,7 +621,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task ThirdPartyEmoteTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new ModPublicMessage("!addEMOTE FaceA"),
         new ModPublicMessage("!ADDemote MyEmoteB"),
         new ModPublicMessage("!listemote"),
@@ -654,7 +654,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task MuteIncreaserTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new ModPublicMessage("!add word"),
         new PublicMessage("UserX", "word"),
         new PublicMessage("UserX", "word"),
@@ -679,7 +679,7 @@ namespace Dbot.UnitTest {
       const int firstBufferSize = 5; // 5/25 Use NukeLoopWait/AegisLoopWait delays of 0/2000 for this
       const int secondBufferSize = 5; // 5/25
       const int thirdBufferSize = 5; // 5/225
-      var messageList = new List<Message>{
+      var messageList = new List<PublicMessage>{
         new PublicMessage("red1", "red1"),
         new PublicMessage("red2", "red2"),
         new PublicMessage("red3", "red3"),
@@ -701,7 +701,7 @@ namespace Dbot.UnitTest {
         new ModPublicMessage(@"!nukeregex 20m CAP"),
       };
       messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage("User" + i, "test")));
-      messageList.AddRange(new List<Message>{
+      messageList.AddRange(new List<PublicMessage>{
 
         new PublicMessage("CAP4", "CAP4"),
         new PublicMessage("CAP5", "CAP5"),
@@ -721,7 +721,7 @@ namespace Dbot.UnitTest {
         //new ModPublicMessage("!mute User26"),
       });
       messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => new PublicMessage("User" + i, "test")));
-      messageList.AddRange(new List<Message>{
+      messageList.AddRange(new List<PublicMessage>{
         new ModPublicMessage("!aegis"),
         new PublicMessage("red7", "red7"),
         new PublicMessage("yellow7", "yellow7"),
@@ -760,7 +760,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task CustomCommandTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new ModPublicMessage("!ADDcommand !burp bless you"),
         new ModPublicMessage(Tools.RandomString(20)),
         new ModPublicMessage(Tools.RandomString(20)),
@@ -800,7 +800,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task UnMuteBanTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new ModPublicMessage("!unban userA"),
         new ModPublicMessage("!unmute userB"),
       });
@@ -812,7 +812,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task SubOnlyTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new ModPublicMessage("!subonly on"),
         new ModPublicMessage("!subonly off"),
       });
@@ -824,7 +824,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task SpamCharactersTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new PublicMessage("UserX", "░░░░░░▄▀▓░░▒░░▒▒▒▒▒▒█▄░░░░░░"),
         new PublicMessage("UserX", "░░░░▄█▓▓▓░░░░▒▒▒▒▒▒▒▒█▀▄░░░░"),
         new PublicMessage("UserX", "░░▄▀█▌▓▓▓░░░░▒▒▒▒▒▒▒▒▐▌▓▀▄░░"),
@@ -842,7 +842,7 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task FullWidthTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new PublicMessage("UserX", "ａｂｃｄｅｆ"),
         new PublicMessage("UserX", "ｇｈｉｊｋｌ"),
         new PublicMessage("UserX", "ｍｎｏｐｑｒ"),
@@ -860,7 +860,7 @@ namespace Dbot.UnitTest {
     
     [TestMethod]
     public async Task UnicodeTest() {
-      var r = await new PrimaryLogic().TestRun(new List<Message> {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new PublicMessage("UserX", ""),
         new PublicMessage("UserX", "е"),
         new PublicMessage("UserX", "็"),

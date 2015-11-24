@@ -7,7 +7,7 @@ using Dbot.CommonModels;
 
 namespace Dbot.Common {
   public interface IProcessor {
-    void ProcessMessage(Message message);
+    void ProcessMessage(PublicMessage message);
     void ProcessMessage(PrivateMessage message);
   }
 }

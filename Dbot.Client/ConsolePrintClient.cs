@@ -11,7 +11,7 @@ namespace Dbot.Client {
   public abstract class ConsolePrintClient : IClient {
     public abstract void Run(IProcessor processor);
 
-    public abstract void Forward(Message message);
+    public abstract void Forward(PublicMessage message);
 
     public virtual void Send(PrivateMessage privateMessage) {
       Tools.Log("Private Messaged " + privateMessage.Nick + " with: " + privateMessage.OriginalText);

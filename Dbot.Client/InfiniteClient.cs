@@ -17,7 +17,7 @@ namespace Dbot.Client {
       }
     }
 
-    public override void Forward(Message message) {
+    public override void Forward(PublicMessage message) {
       _processor.ProcessMessage(message);
     }
   }
