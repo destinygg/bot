@@ -14,6 +14,7 @@ namespace Dbot.Client {
     protected readonly WebSocket _websocket;
     private IProcessor _processor;
     private readonly List<string> _modList;
+    protected PublicMessage LatestPublicMessage;
 
     public WebSocketListenerClient(string websocketAuth) {
       _modList = new List<string>();
@@ -52,7 +53,7 @@ namespace Dbot.Client {
           break;
         case "MSG": {
             var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
-            var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator" );
+            var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
             if (isMod && !_modList.Contains(msg.Nick)) _modList.Add(msg.Nick);
             _processor.ProcessMessage(new PublicMessage(msg.Nick, msg.Data) { IsMod = isMod });
           }
@@ -61,6 +62,16 @@ namespace Dbot.Client {
             var privmsg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
             var isMod = _modList.Contains(privmsg.Nick);
             _processor.ProcessMessage(new PrivateMessage(privmsg.Nick, privmsg.Data) { IsMod = isMod });
+          }
+          break;
+        case "ERR": {
+            if (jsonMessage == "\"duplicate\"") {
+              LatestPublicMessage.OriginalText = LatestPublicMessage.OriginalText + ".";
+              Send(LatestPublicMessage);
+              Tools.Log("Duplicate, sending: " + LatestPublicMessage.OriginalText, ConsoleColor.Magenta);
+            } else {
+              Tools.Log("Server reports error: " + jsonMessage , ConsoleColor.Red);
+            }
           }
           break;
         case "JOIN": {
@@ -108,6 +119,11 @@ namespace Dbot.Client {
 
     private void websocket_Opened(object sender, EventArgs e) {
       Tools.Log("Connected!", ConsoleColor.Green);
+    }
+
+    public override void Send(PublicMessage publicMessage) {
+      LatestPublicMessage = publicMessage;
+      Tools.Log("Messaged " + publicMessage.OriginalText);
     }
   }
 }

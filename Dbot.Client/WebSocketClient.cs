@@ -20,6 +20,7 @@ namespace Dbot.Client {
     }
 
     public override void Send(PublicMessage publicMessage) {
+      LatestPublicMessage = publicMessage;
       var obj = new MessageSender(publicMessage.OriginalText);
       _websocket.Send("MSG " + JsonConvert.SerializeObject(obj));
     }
