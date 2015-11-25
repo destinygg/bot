@@ -40,7 +40,7 @@ namespace Dbot.Client {
     }
 
     public override void Send(Ban ban) {
-      var obj = ban.Duration.TotalMilliseconds < 0 ? new BanSender(ban.Nick, ban.Ip, true, ban.Reason) : new BanSender(ban.Nick, ban.Ip, ban.Duration, ban.Reason);
+      var obj = ban.Duration == TimeSpan.Zero ? new BanSender(ban.Nick, ban.Ip, true, ban.Reason) : new BanSender(ban.Nick, ban.Ip, ban.Duration, ban.Reason);
       _websocket.Send("BAN " + JsonConvert.SerializeObject(obj));
     }
   }
