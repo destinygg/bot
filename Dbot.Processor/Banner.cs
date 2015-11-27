@@ -194,14 +194,6 @@ namespace Dbot.Processor {
       if (shortMessages.Count >= 2) {
         var percentList = shortMessages.Select(sm => Convert.ToInt32(StringTools.Delta(sm.Text, _text) * 100)).Where(x => x >= Settings.SelfSpamSimilarity).ToList();
         if (percentList.Count >= 2) {
-          Tools.Log("Muted " + _message.Nick + " for selfspam");
-          Tools.Log("Current " + _message.Ordinal + ": " + _originalText);
-          foreach (var shortMessage in shortMessages) {
-            var s = StringTools.Delta(shortMessage.Text, _text) * 100;
-            if (s >= Settings.SelfSpamSimilarity) {
-              Tools.Log("Previous" + shortMessage.Ordinal + ": " + shortMessage.Text);
-            }
-          }
           return new Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text");
         }
       }
