@@ -175,7 +175,7 @@ namespace Dbot.Processor {
     public Mute LongSpam() {
       var longMessages = _context.TakeLast(Settings.LongSpamContextLength).Where(x => x.Text.Length > Settings.LongSpamMinimumLength);
       foreach (var longMessage in longMessages) {
-        var delta = Convert.ToInt32(StringTools.Delta(_originalText, longMessage.Text) * 100);
+        var delta = Convert.ToInt32(StringTools.Delta(_text, longMessage.Text) * 100);
         if (delta > Settings.LongSpamSimilarity) {
           Tools.Log("Muted " + _message.Nick + " for longspam");
           Tools.Log("Current " + _message.Ordinal + ": " + _originalText);
