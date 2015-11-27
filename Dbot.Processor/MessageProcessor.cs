@@ -131,7 +131,7 @@ namespace Dbot.Processor {
 #if DEBUG
       Console.WriteLine(message.Ordinal + " " + message.Nick + ": " + message.OriginalText);
 #endif
-      //Datastore.InsertMessage(message);
+      Datastore.InsertMessage(message);
     }
 
     private void DoneWithContext(Message message) {
