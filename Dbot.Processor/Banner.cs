@@ -88,6 +88,8 @@ namespace Dbot.Processor {
       if (numberSpam != null) return numberSpam;
       var emoteUserSpam = EmoteUserSpam();
       if (emoteUserSpam != null) return emoteUserSpam;
+      var repeatCharacterSpam = RepeatCharacterSpam();
+      if (repeatCharacterSpam != null) return repeatCharacterSpam;
 
       foreach (var nuke in _messageProcessor.Nukes.Where(x => x.Predicate(_message.Text) || x.Predicate(_message.OriginalText))) {
         nuke.VictimList.Add(_message.Nick);
@@ -211,6 +213,11 @@ namespace Dbot.Processor {
       if (!Datastore.EmoteWordRegex.Match(_message.OriginalText).Success) return null;
       var emoteWordCount = _context.TakeLast(Settings.EmoteUserSpamContextLength).Count(x => Datastore.EmoteWordRegex.Match(x.OriginalText).Success) + 1; // To include the latest message that isn't in context yet.
       return emoteWordCount >= Settings.EmoteUserSpamTriggerLength ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Too many faces; 10m") : null;
+    }
+
+    public Mute RepeatCharacterSpam() { //todo find a way to apply this to CTRL V as well
+      var match = new Regex(@"(.)\1{15,}").Match(_message.Text);
+      return match.Success ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Let go of that poor " + match.Groups[1].Value + "; 10m") : null;
     }
   }
 }

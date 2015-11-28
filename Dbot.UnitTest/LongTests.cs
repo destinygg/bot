@@ -871,5 +871,16 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) == 1);
     }
+
+    [TestMethod]
+    public async Task RepeatCharacterSpamTest() {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
+        new PublicMessage("UserX", "aaaaaaaaaaaaaaaa"),
+        new PublicMessage("UserX", "bbbbbbbbbbbbbbbb"),
+        new PublicMessage("UserX", "cccccccccccccccc"),
+      });
+
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) == 3);
+    }
   }
 }
