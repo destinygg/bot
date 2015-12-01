@@ -340,14 +340,16 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserX","Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa"),
         new PublicMessage("UserX","OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle"),
         new PublicMessage("UserX","LUL LUL LUL LUL LUL LUL LUL LUL"),
+        new PublicMessage("UserY","LUL LUL LUL LUL LUL LUL LULLUL"),
       });
       await Task.Delay(1000);
 
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) > 0);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) > 0);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) > 0);
-      Assert.IsTrue(r.Count(x => x.Contains("10m for face spam")) > 0);
-      Assert.IsTrue(r.Count(x => x.Contains("your time has doubled. Future sanctions will not be explicitly justified")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("10m for face spam")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("your time has doubled. Future sanctions will not be explicitly justified")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted usery for 10m")) == 0);
     }
 
     [TestMethod]

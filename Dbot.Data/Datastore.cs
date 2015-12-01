@@ -31,8 +31,9 @@ namespace Dbot.Data {
 
     public static void GenerateEmoteRegex() {
       var bothLists = new List<string>().Concat(ThirdPartyEmotesList).Concat(EmotesList).ToList();
-      EmoteRegex = new Regex(string.Join("|", bothLists), RegexOptions.Compiled);
-      EmoteWordRegex = new Regex(@"^(?:" + string.Join("|", bothLists) + @")\s*\S+$", RegexOptions.Compiled);
+      var allEmotesWithWordBoundaries = bothLists.Select(x => @"\b" + x + @"\b").ToList();
+      EmoteRegex = new Regex(string.Join("|", allEmotesWithWordBoundaries), RegexOptions.Compiled);
+      EmoteWordRegex = new Regex(@"^(?:" + string.Join("|", allEmotesWithWordBoundaries) + @")\s*\S+$", RegexOptions.Compiled);
     }
 
     public static Regex EmoteRegex { get; set; }
