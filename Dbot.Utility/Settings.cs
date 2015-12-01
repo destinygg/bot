@@ -23,6 +23,8 @@ namespace Dbot.Utility {
     public const int LongSpamMinimumLength = 60;
     public const int LongSpamLongerBanMultiplier = 3;
 
+    public static int RepeatCharacterSpamLimit = 30;
+
     public static readonly TimeSpan NukeDissipateTime = TimeSpan.FromMinutes(10);
     public const double NukeStringDelta = 0.7;
     public const int NukeLoopWait = 0;

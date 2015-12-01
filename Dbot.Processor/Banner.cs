@@ -216,7 +216,7 @@ namespace Dbot.Processor {
     }
 
     public Mute RepeatCharacterSpam() { //todo find a way to apply this to CTRL V as well
-      var match = new Regex(@"(.)\1{15,}").Match(_message.Text);
+      var match = new Regex(@"(.)\1{" + Settings.RepeatCharacterSpamLimit + ",}").Match(_message.Text);
       return match.Success ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Let go of that poor " + match.Groups[1].Value + "; 10m") : null;
     }
   }
