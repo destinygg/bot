@@ -125,6 +125,7 @@
     <Compile Include="BannerTest.cs" />
     <Compile Include="CommanderTest.cs" />
     <Compile Include="LongTests.cs" />
+    <Compile Include="UnitTestTools.cs" />
     <Compile Include="WebSocketIntegrationTest.cs" />
     <Compile Include="UtilityTools.cs" />
   </ItemGroup>

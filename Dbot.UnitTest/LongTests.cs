@@ -868,12 +868,13 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public async Task RepeatCharacterSpamTest() {
       var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
-        new PublicMessage("UserX", "aaaaaaaaaaaaaaaa"),
-        new PublicMessage("UserX", "bbbbbbbbbbbbbbbb"),
-        new PublicMessage("UserX", "cccccccccccccccc"),
+        new PublicMessage("UserA", UnitTestTools.RepeatCharacter(Settings.RepeatCharacterSpamLimit - 1, 'a')),
+        new PublicMessage("UserB", UnitTestTools.RepeatCharacter(Settings.RepeatCharacterSpamLimit,     'b')),
+        new PublicMessage("SpamC", UnitTestTools.RepeatCharacter(Settings.RepeatCharacterSpamLimit + 1, 'c')),
       });
 
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) == 3);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted user")) == 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted spamc for 10m")) == 1);
     }
   }
 }
