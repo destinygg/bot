@@ -354,36 +354,27 @@ namespace Dbot.UnitTest {
 
     [TestMethod]
     public async Task LongSpam() {
-      var longBuilder = new StringBuilder();
-      var longerBuilder = new StringBuilder();
-      var longestBuilder = new StringBuilder();
-      foreach (var i in Enumerable.Range(1, Settings.LongSpamMinimumLength)) {
-        longBuilder.Append("a");
-      }
-      foreach (var i in Enumerable.Range(1, Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier)) {
-        longerBuilder.Append("x");
-        longestBuilder.Append("y");
-      }
-      var longMessage = longBuilder.ToString();
-      var longerMessage = longerBuilder.ToString();
-      var longestMessage = longestBuilder.ToString();
+      var longA = Tools.RandomString(Settings.LongSpamMinimumLength);
+      var longB = Tools.RandomString(Settings.LongSpamMinimumLength + 1);
+      var longerA = Tools.RandomString(Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier);
+      var longerB = Tools.RandomString(Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier + 1);
 
       var messageList = new List<PublicMessage> {
-        new PublicMessage("UserA", longMessage),
-        new PublicMessage("SpamA", longMessage),
-        new PublicMessage("UserB", longMessage + "b"),
-        new PublicMessage("SpamB", longMessage + "b"),
-        new PublicMessage("UserX", longerMessage),
-        new PublicMessage("SpamX", longerMessage),
-        new PublicMessage("UserY", longestMessage + "y"),
-        new PublicMessage("SpamY", longestMessage + "y"),
+        new PublicMessage("UserLongA1", longA),
+        new PublicMessage("UserLongA2", longA),
+        new PublicMessage("UserLongB1", longB),
+        new PublicMessage("SpamLongB2", longB),
+        new PublicMessage("UserLongerA1", longerA),
+        new PublicMessage("SpamLongerA2", longerA),
+        new PublicMessage("UserLongerB1", longerB),
+        new PublicMessage("SpamLongerB2", longerB),
       };
       var r = await new PrimaryLogic().TestRun(messageList);
 
       Assert.IsTrue(r.Count(x => x.Contains("Muted user")) == 0);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted spamb for 1m")) > 0);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted spamx for 1m")) > 0);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted spamy for 10m")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted spamlongb2 for 1m")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted spamlongera2 for 1m")) > 0);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted spamlongerb2 for 10m")) > 0);
     }
 
     [TestMethod]
