@@ -25,6 +25,8 @@ namespace Dbot.Utility {
 
     public const int RepeatCharacterSpamLimit = 30;
 
+    public const int LineSpamLimit = 4;
+
     public static readonly TimeSpan NukeDissipateTime = TimeSpan.FromMinutes(10);
     public const double NukeStringDelta = 0.7;
     public const int NukeLoopWait = 0;

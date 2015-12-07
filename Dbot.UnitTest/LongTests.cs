@@ -558,18 +558,21 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserA", "1"),
         new PublicMessage("UserA", "2"),
         new PublicMessage("UserA", "3"),
+        new PublicMessage("UserX", "Buffer"),
         new PublicMessage("UserA", "4"),
         new PublicMessage("UserA", "5"),
         new PublicMessage("UserA", "6"),
         new PublicMessage("UserB", "#1."),
         new PublicMessage("UserB", "#2."),
         new PublicMessage("UserB", "#3."),
+        new PublicMessage("UserY", "Buffer"),
         new PublicMessage("UserB", "#4."),
         new PublicMessage("UserB", "#5."),
         new PublicMessage("UserB", "#6."),
         new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
         new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
         new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
+        new PublicMessage("UserZ", "Buffer"),
         new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
         new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
         new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
@@ -875,6 +878,19 @@ namespace Dbot.UnitTest {
 
       Assert.IsTrue(r.Count(x => x.Contains("Muted user")) == 0);
       Assert.IsTrue(r.Count(x => x.Contains("Muted spamc for 10m")) == 1);
+    }
+
+    [TestMethod]
+    public async Task LineSpamTest() {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
+        new PublicMessage("SpamA", Tools.RandomString(20)),
+        new PublicMessage("SpamA", Tools.RandomString(20)),
+        new PublicMessage("SpamA", Tools.RandomString(20)),
+        new PublicMessage("SpamA", Tools.RandomString(20)),
+        new PublicMessage("SpamA", Tools.RandomString(20)),
+      });
+
+      Assert.IsTrue(r.Count(x => x.Contains("Muted spama for 10m")) == 1); // todo make these use Assert.IsEqual or NUnit
     }
   }
 }
