@@ -20,7 +20,7 @@ namespace Dbot.Utility {
       Console.ForegroundColor = ConsoleColor.Cyan;
       Console.Write(Process.GetCurrentProcess().Threads.Count + " ");
       Console.ForegroundColor = ConsoleColor.DarkCyan;
-      Console.Write(DateTime.UtcNow.ToString("t"));
+      Console.Write(DateTime.UtcNow.ToString("T"));
       Console.ForegroundColor = color;
       Console.WriteLine(" " + text);
       Console.ResetColor();
