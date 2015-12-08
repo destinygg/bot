@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 namespace Dbot.Client {
   public class WebSocketClient : WebSocketListenerClient {
+    private string _previousSend = "";
     public WebSocketClient(string websocketAuth)
       : base(websocketAuth) {
 
@@ -21,8 +22,16 @@ namespace Dbot.Client {
 
     public override void Send(PublicMessage publicMessage) {
       LatestPublicMessage = publicMessage;
+      if (_previousSend == publicMessage.OriginalText) {
+        if (publicMessage.OriginalText.EndsWith(".")) {
+          publicMessage.OriginalText = publicMessage.OriginalText.TrimEnd('.');
+        } else {
+          publicMessage.OriginalText = publicMessage.OriginalText + ".";
+        }
+      }
       var obj = new MessageSender(publicMessage.OriginalText);
       _websocket.Send("MSG " + JsonConvert.SerializeObject(obj));
+      _previousSend = publicMessage.OriginalText;
     }
 
     public override void Send(Mute mute) {
