@@ -60,14 +60,19 @@ namespace Dbot.Processor {
       var customCommand = Datastore.CustomCommands.FirstOrDefault(y => _text.StartsWith(y.Key)).Value;
       if (customCommand != null) {
         if (!_message.IsMod)
-          _messageProcessor.LastCommandTime = DateTime.UtcNow;
+          _messageProcessor.NextCommandTime = DateTime.UtcNow + Settings.UserCommandInterval;
         return new ModPublicMessage(customCommand);
       }
       var command = _commandDictionary.FirstOrDefault(y => y.Key.Any(x => _text.StartsWith(x))).Value;
       if (command != null) {
         if (!_message.IsMod)
-          _messageProcessor.LastCommandTime = DateTime.UtcNow;
-        return new ModPublicMessage(command.Invoke());
+          _messageProcessor.NextCommandTime = DateTime.UtcNow + Settings.UserCommandInterval;
+        var returnMessage = command.Invoke();
+        var newLineCount = returnMessage.Count(x => x == '\n');
+        if (newLineCount >= 3) {
+          _messageProcessor.NextCommandTime = DateTime.UtcNow + Settings.UserCommandInterval.Multiply(newLineCount - 1);
+        }
+        return new ModPublicMessage(returnMessage);
       }
       return null;
     }

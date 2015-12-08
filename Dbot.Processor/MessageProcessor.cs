@@ -11,7 +11,7 @@ using Dbot.Utility;
 
 namespace Dbot.Processor {
   public class MessageProcessor : IProcessor {
-    public DateTime LastCommandTime = DateTime.MinValue;
+    public DateTime NextCommandTime = DateTime.MinValue;
     public readonly ActionBlock<Message> Banner;
     public readonly ActionBlock<ISendable> Sender;
     private readonly ActionBlock<Message> _logger;
@@ -119,7 +119,7 @@ namespace Dbot.Processor {
       var recentMessages = _contextDictionary.Where(x => x.Key < message.Ordinal && x.Key >= message.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
       var bantest = new Banner(message, this, recentMessages).BanParser();
       if (bantest == null) {
-        if (message.Text[0] == '!' && (LastCommandTime.Add(Settings.UserCommandInterval) <= DateTime.UtcNow))
+        if (message.Text[0] == '!' && (NextCommandTime <= DateTime.UtcNow))
           _commander.Post(message);
       } else {
         Sender.Post(bantest);

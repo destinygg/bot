@@ -22,5 +22,9 @@ namespace Dbot.Utility {
       var enumerated = source as IList<T> ?? source.ToList();
       return enumerated.Skip(Math.Max(0, enumerated.Count() - n));
     }
+
+    public static TimeSpan Multiply(this TimeSpan multiplicand, int multiplier) {
+      return TimeSpan.FromTicks(multiplicand.Ticks * multiplier);
+    }
   }
 }
