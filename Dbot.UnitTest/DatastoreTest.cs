@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using Dbot.Data;
 using Dbot.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Newtonsoft.Json;
 
 namespace Dbot.UnitTest {
   /// <summary>

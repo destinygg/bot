@@ -12,7 +12,6 @@ using Dbot.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Tweetinvi.Core.Interfaces;
-using Dbot.CommonModels;
 
 namespace Dbot.Utility {
   public static class Tools {
@@ -106,7 +105,7 @@ namespace Dbot.Utility {
     }
 
     public static DateTime Epoch(TimeSpan timeSpan) {
-      return Tools.Epoch() + timeSpan;
+      return Epoch() + timeSpan;
     }
 
     public static TimeSpan Epoch(DateTime dateTime) {
@@ -143,7 +142,7 @@ namespace Dbot.Utility {
 
     public static string LiveStatus(bool wait = false) {
       try {
-        return Tools.LiveStatus(Tools.GetLiveApi(), DateTime.UtcNow, wait);
+        return LiveStatus(GetLiveApi(), DateTime.UtcNow, wait);
       } catch (Exception e) {
         ErrorLog("Live check failed.");
         ErrorLog(e);
@@ -152,13 +151,13 @@ namespace Dbot.Utility {
     }
 
     public static string LiveStatus(bool liveStatus, DateTime compareTime, bool wait = false) {
-      var onTime = Tools.Epoch().AddSeconds(Datastore.OnTime());
-      var offTime = Tools.Epoch().AddSeconds(Datastore.OffTime());
+      var onTime = Epoch().AddSeconds(Datastore.OnTime());
+      var offTime = Epoch().AddSeconds(Datastore.OffTime());
 
       var onTimeDelta = compareTime - onTime;
       var offTimeDelta = compareTime - offTime;
 
-      var time = (Int32) (compareTime - Tools.Epoch()).TotalSeconds;
+      var time = (Int32) (compareTime - Epoch()).TotalSeconds;
 
       if (liveStatus && Datastore.OnTime() != 0) { //we've been live for some time
         Datastore.UpdateStateVariable(MagicStrings.OffTime, 0, wait);
@@ -187,8 +186,8 @@ namespace Dbot.Utility {
     public static string Stalk(string user) {
       var msg = Datastore.Stalk(user.ToLower());
       if (msg == null) return user + " not found";
-      var baseTime = DateTime.UtcNow - Tools.Epoch();
-      return Tools.PrettyDeltaTime(TimeSpan.FromSeconds(baseTime.TotalSeconds - msg.Time)) + " ago: " + msg.Text;
+      var baseTime = DateTime.UtcNow - Epoch();
+      return PrettyDeltaTime(TimeSpan.FromSeconds(baseTime.TotalSeconds - msg.Time)) + " ago: " + msg.Text;
     }
 
     // http://stackoverflow.com/questions/13240915/converting-a-webclient-method-to-async-await

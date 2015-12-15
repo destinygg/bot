@@ -9,8 +9,8 @@ using Dbot.Data;
 using Dbot.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Tweetinvi;
 using Tweetinvi.Core.Exceptions;
-using ExceptionHandler = Tweetinvi.ExceptionHandler;
 using Message = Dbot.CommonModels.Message;
 using User = Tweetinvi.User;
 

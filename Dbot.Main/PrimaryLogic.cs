@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dbot.Client;
 using Dbot.Common;
@@ -12,7 +10,6 @@ using Dbot.Utility;
 using Tweetinvi;
 using Tweetinvi.Core.Credentials;
 using Tweetinvi.Core.Interfaces;
-using Message = Dbot.CommonModels.Message;
 
 namespace Dbot.Main {
   public class PrimaryLogic {
