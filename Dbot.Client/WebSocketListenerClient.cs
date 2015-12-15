@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Dbot.Common;
 using Dbot.CommonModels;
 using Dbot.Utility;
@@ -110,6 +111,7 @@ namespace Dbot.Client {
 
     private void websocket_Closed(object sender, EventArgs e) {
       Tools.Log("Connection lost!", ConsoleColor.Red);
+      Thread.Sleep(TimeSpan.FromSeconds(10));
       this._websocket.Open();
     }
 
