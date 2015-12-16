@@ -4,31 +4,30 @@ using System.Diagnostics;
 namespace Dbot.CommonModels {
   [DebuggerDisplay("{Ordinal}. {OriginalText}")]
   public abstract class Message : TargetedSendable, IEquatable<Message> {
-    private string _originalText;
-    public string OriginalText
-    {
+
+    public string OriginalText {
       get { return _originalText; }
-      set
-      {
+      set {
         _originalText = value;
         _text = value.ToLower();
       }
     }
+    private string _originalText;
 
-    private string _text;
-    public string Text
-    {
+    public string Text {
       get { return _text; }
       set { OriginalText = value; }
     }
+    private string _text;
 
     public int Ordinal { get; set; }
-    public bool Equals(Message other) {
+
+    public bool Equals(Message that) {
       return
-        this.Nick == other.Nick &&
-        this.Text == other.Text &&
-        this.IsMod == other.IsMod &&
-        this.Ordinal == other.Ordinal;
+        this.Nick == that.Nick &&
+        this.Text == that.Text &&
+        this.IsMod == that.IsMod &&
+        this.Ordinal == that.Ordinal;
     }
   }
 }
