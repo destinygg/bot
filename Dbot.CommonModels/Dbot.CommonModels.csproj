@@ -39,8 +39,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonModels.cs" />
+    <Compile Include="Ban.cs" />
+    <Compile Include="Mute.cs" />
+    <Compile Include="HasVictim.cs" />
+    <Compile Include="ISendable.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="ModPublicMessage.cs" />
+    <Compile Include="PermBan.cs" />
+    <Compile Include="PrivateMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicMessage.cs" />
+    <Compile Include="Subonly.cs" />
+    <Compile Include="TargetedSendable.cs" />
+    <Compile Include="UnMuteBan.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

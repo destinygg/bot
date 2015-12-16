@@ -1,0 +1,8 @@
+﻿namespace Dbot.CommonModels {
+  public class Subonly : ISendable {
+    public Subonly(bool enabled) {
+      Enabled = enabled;
+    }
+    public bool Enabled { get; set; }
+  }
+}
