@@ -5,9 +5,9 @@
     public PublicMessage(string text)
       : this("MyNick", text) { }
 
-    public PublicMessage(string nick, string text) {
+    public PublicMessage(string nick, string originalText) {
       Nick = nick;
-      OriginalText = text;
+      OriginalText = originalText;
     }
   }
 }

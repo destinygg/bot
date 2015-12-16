@@ -38,20 +38,24 @@ namespace Dbot.Main {
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
 
-      while (!_exit) {
+      ProcessConsoleInput();
+      Exit();
+    }
+
+    private void ProcessConsoleInput() {
+      while (true) {
         //Process.GetCurrentProcess().WaitForExit(); // If you ever have to get rid of the while(true)
         var input = Console.ReadLine();
-        if (!string.IsNullOrEmpty(input)) {
-          if (input == "exit") {
-            _exit = true;
-          } else if (input[0] == '~') {
-            _client.Send(new PublicMessage(input.Substring(1)));
-          } else if (input[0] == '!') {
-            _client.Forward(new PublicMessage("SYSTEM CONSOLE", input) { IsMod = true });
-          }
+        if (string.IsNullOrEmpty(input)) continue;
+        if (input == "exit") return;
+
+        if (input[0] == '~') {
+          _client.Send(new PublicMessage(input.Substring(1)));
+        }
+        if (input[0] == '!') {
+          _client.Forward(new PublicMessage("SYSTEM CONSOLE", input) { IsMod = true });
         }
       }
-      Exit();
     }
 
     public async Task<IList<string>> TestRun(IEnumerable<PublicMessage> testInput) {

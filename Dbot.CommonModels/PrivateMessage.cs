@@ -1,8 +1,8 @@
 ﻿namespace Dbot.CommonModels {
   public class PrivateMessage : Message {
-    public PrivateMessage(string nick, string message) {
+    public PrivateMessage(string nick, string originalText) {
       Nick = nick;
-      OriginalText = message;
+      OriginalText = originalText;
     }
   }
 }
