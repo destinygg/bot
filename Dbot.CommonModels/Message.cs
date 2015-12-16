@@ -9,23 +9,23 @@ namespace Dbot.CommonModels {
       get { return _originalText; }
       set {
         _originalText = value;
-        _text = value.ToLower();
+        _sanitizedText = value.ToLower();
       }
     }
     private string _originalText;
 
-    public string Text {
-      get { return _text; }
+    public string SanitizedText {
+      get { return _sanitizedText; }
       set { OriginalText = value; }
     }
-    private string _text;
+    private string _sanitizedText;
 
     public int Ordinal { get; set; }
 
     public bool Equals(Message that) {
       return
         this.Nick == that.Nick &&
-        this.Text == that.Text &&
+        this.SanitizedText == that.SanitizedText &&
         this.IsMod == that.IsMod &&
         this.Ordinal == that.Ordinal;
     }

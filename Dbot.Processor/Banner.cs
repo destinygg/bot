@@ -20,7 +20,7 @@ namespace Dbot.Processor {
       _messageProcessor = messageProcessor;
       _message = input;
       //_text = StringTools.RemoveDiacritics(input.Text); //todo use this somehow. 
-      _text = input.Text;
+      _text = input.SanitizedText;
       _originalText = input.OriginalText;
       if (context != null)
         _context = context;
@@ -90,7 +90,7 @@ namespace Dbot.Processor {
       var lineSpam = LineSpam();
       if (lineSpam != null) return lineSpam;
 
-      foreach (var nuke in _messageProcessor.Nukes.Where(x => x.Predicate(_message.Text) || x.Predicate(_message.OriginalText))) {
+      foreach (var nuke in _messageProcessor.Nukes.Where(x => x.Predicate(_message.SanitizedText) || x.Predicate(_message.OriginalText))) {
         nuke.VictimList.Add(_message.Nick);
         return new Mute(_message.Nick, nuke.Duration, null);
       }
@@ -174,14 +174,14 @@ namespace Dbot.Processor {
     //todo: make the graduation more encompassing; it should start banning when people say 100 characters 50x for example
     //todo: remove duplicate spaces and other characters with http://stackoverflow.com/questions/4429995/how-do-you-remove-repeated-characters-in-a-string
     public Mute LongSpam() {
-      var longMessages = _context.TakeLast(Settings.LongSpamContextLength).Where(x => x.Text.Length > Settings.LongSpamMinimumLength);
+      var longMessages = _context.TakeLast(Settings.LongSpamContextLength).Where(x => x.SanitizedText.Length > Settings.LongSpamMinimumLength);
       foreach (var longMessage in longMessages) {
-        var delta = Convert.ToInt32(StringTools.Delta(_text, longMessage.Text) * 100);
+        var delta = Convert.ToInt32(StringTools.Delta(_text, longMessage.SanitizedText) * 100);
         if (delta > Settings.LongSpamSimilarity) {
           Tools.Log("Muted " + _message.Nick + " for longspam");
           Tools.Log("Current " + _message.Ordinal + ": " + _originalText);
-          Tools.Log("Previous" + longMessage.Ordinal + ": " + longMessage.Text);
-          if (_message.Text.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier) {
+          Tools.Log("Previous" + longMessage.Ordinal + ": " + longMessage.SanitizedText);
+          if (_message.SanitizedText.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier) {
             return new Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + delta + "% = past text");
           }
           return new Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + delta + "% = past text");
@@ -193,7 +193,7 @@ namespace Dbot.Processor {
     public Mute SelfSpam() {
       var shortMessages = _context.TakeLast(Settings.SelfSpamContextLength).Where(x => x.Nick == _message.Nick).ToList();
       if (shortMessages.Count >= 2) {
-        var percentList = shortMessages.Select(sm => Convert.ToInt32(StringTools.Delta(sm.Text, _text) * 100)).Where(x => x >= Settings.SelfSpamSimilarity).ToList();
+        var percentList = shortMessages.Select(sm => Convert.ToInt32(StringTools.Delta(sm.SanitizedText, _text) * 100)).Where(x => x >= Settings.SelfSpamSimilarity).ToList();
         if (percentList.Count >= 2) {
           return new Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text");
         }
@@ -203,8 +203,8 @@ namespace Dbot.Processor {
 
     public Mute NumberSpam() {
       var numberRegex = new Regex(@"^.{0,2}\d+.{0,5}$");
-      if (!numberRegex.Match(_message.Text).Success) return null;
-      var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(m => numberRegex.Match(m.Text).Success && _message.Nick == m.Nick) + 1; // To include the latest message that isn't in context yet.
+      if (!numberRegex.Match(_message.SanitizedText).Success) return null;
+      var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(m => numberRegex.Match(m.SanitizedText).Success && _message.Nick == m.Nick) + 1; // To include the latest message that isn't in context yet.
       return numberMessages >= Settings.NumberSpamTriggerLength ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Counting down to your ban? 10m") : null;
     }
 
@@ -215,7 +215,7 @@ namespace Dbot.Processor {
     }
 
     public Mute RepeatCharacterSpam() { //todo find a way to apply this to CTRL V as well
-      var match = new Regex(@"(.)\1{" + Settings.RepeatCharacterSpamLimit + ",}").Match(_message.Text);
+      var match = new Regex(@"(.)\1{" + Settings.RepeatCharacterSpamLimit + ",}").Match(_message.SanitizedText);
       return match.Success ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Let go of that poor " + match.Groups[1].Value + "; 10m") : null;
     }
 

@@ -54,7 +54,7 @@ namespace Dbot.Processor {
 
       _logger.Post(message);
       if (message.IsMod) {
-        if (message.Text[0] == '!') {
+        if (message.SanitizedText[0] == '!') {
           _commander.Post(message);
           _modCommander.Post(message);
         } else {
@@ -65,7 +65,7 @@ namespace Dbot.Processor {
     }
 
     public void ProcessMessage(PrivateMessage message) {
-      if (message.Text[0] == '!' && message.IsMod) {
+      if (message.SanitizedText[0] == '!' && message.IsMod) {
         _commander.Post(message);
         _modCommander.Post(message);
       }
@@ -119,7 +119,7 @@ namespace Dbot.Processor {
       var recentMessages = _contextDictionary.Where(x => x.Key < message.Ordinal && x.Key >= message.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
       var bantest = new Banner(message, this, recentMessages).BanParser();
       if (bantest == null) {
-        if (message.Text[0] == '!' && (NextCommandTime <= DateTime.UtcNow))
+        if (message.SanitizedText[0] == '!' && (NextCommandTime <= DateTime.UtcNow))
           _commander.Post(message);
       } else {
         Sender.Post(bantest);

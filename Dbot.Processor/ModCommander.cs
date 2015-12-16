@@ -247,7 +247,7 @@ namespace Dbot.Processor {
     }
 
     public void Run() {
-      Debug.Assert(_message.Text[0] == '!' || _message.Text[0] == '<');
+      Debug.Assert(_message.SanitizedText[0] == '!' || _message.SanitizedText[0] == '<');
       foreach (var x in _commandDictionary) {
         var regex = x.Key.Match(_message.OriginalText);
         if (regex.Success) {

@@ -23,7 +23,7 @@ namespace Dbot.Processor {
 
     public Commander(Message message, MessageProcessor messageProcessor) {
       _message = message;
-      _text = message.Text.Substring(1);
+      _text = message.SanitizedText.Substring(1);
       _messageProcessor = messageProcessor;
       _commandDictionary = new Dictionary<List<string>, Func<string>> {
       { new List<string> { "playlist" }, 
