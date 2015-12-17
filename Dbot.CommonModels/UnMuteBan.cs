@@ -3,5 +3,9 @@
     public UnMuteBan(string nick) {
       this.Nick = nick;
     }
+
+    public void SendVia(IClient client) {
+      client.Send(this);
+    }
   }
 }

@@ -18,23 +18,26 @@ namespace Dbot.CommonModels {
     }
 
     private TimeSpan _duration;
-    public override TimeSpan Duration
-    {
+    public override TimeSpan Duration {
       get { return _duration; }
-      set
-      {
+      set {
         _duration = value;
         _perm = false;
       }
     }
 
+    public override void SendVia(IClient client) {
+      if (string.IsNullOrWhiteSpace(Reason))
+        Reason = "Manual bot ban.";
+      client.Send(this);
+      base.SendCommon(client);
+    }
+
     private bool _perm;
 
-    public bool Perm
-    {
+    public bool Perm {
       get { return _perm; }
-      set
-      {
+      set {
         _perm = value;
         if (_perm) {
           _duration = TimeSpan.Zero;

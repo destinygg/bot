@@ -1,3 +1,7 @@
-﻿namespace Dbot.CommonModels {
-  public interface ISendable { }
+﻿using System;
+
+namespace Dbot.CommonModels {
+  public interface ISendable {
+    void SendVia(IClient client);
+  }
 }

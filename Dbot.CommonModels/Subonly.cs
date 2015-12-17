@@ -3,6 +3,11 @@
     public Subonly(bool enabled) {
       Enabled = enabled;
     }
+
     public bool Enabled { get; set; }
+
+    public void SendVia(IClient client) {
+      client.Send(this);
+    }
   }
 }

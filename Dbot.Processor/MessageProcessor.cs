@@ -83,35 +83,7 @@ namespace Dbot.Processor {
     }
 
     private void Send(ISendable input) {
-      if (input is PrivateMessage) {
-        _client.Send((PrivateMessage) input);
-      } else if (input is PublicMessage) {
-        var message = (PublicMessage) input;
-        foreach (var submessage in message.OriginalText.Split('\n')) {
-          _client.Send(new PublicMessage(submessage));
-        }
-      } else if (input is HasVictim) {
-        var victimInput = (HasVictim) input;
-        var banInput = input as Ban;
-        var muteInput = input as Mute;
-        if (banInput != null) {
-          if (string.IsNullOrWhiteSpace(banInput.Reason))
-            banInput.Reason = "Manual bot ban.";
-          _client.Send(banInput);
-        } else if (muteInput != null)
-          _client.Send(muteInput);
-        else
-          throw new Exception("Unsupported HasVictim");
-        if (!victimInput.SilentReason && !string.IsNullOrWhiteSpace(victimInput.Reason)) {
-          _client.Send(new PublicMessage(victimInput.Reason));
-        }
-      } else if (input is UnMuteBan) {
-        _client.Send((UnMuteBan) input);
-      } else if (input is Subonly) {
-        _client.Send((Subonly) input);
-      } else {
-        throw new Exception("Unsupported ISendable");
-      }
+      input.SendVia(_client);
     }
 
     private void Ban(Message message) {

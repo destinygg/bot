@@ -6,6 +6,8 @@ namespace Dbot.CommonModels {
   [DebuggerDisplay("{Ordinal}. {OriginalText}")]
   public abstract class Message : TargetedSendable, ISendable, IEquatable<Message> {
 
+    public abstract void SendVia(IClient client);
+
     public IUser From { get; private set; }
 
     public bool FromModerator => From is Moderator;

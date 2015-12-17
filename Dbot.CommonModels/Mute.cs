@@ -16,5 +16,10 @@ namespace Dbot.CommonModels {
       get { return _duration; }
       set { _duration = value > TimeSpan.FromDays(7) ? TimeSpan.FromDays(7) : value; }
     }
+
+    public override void SendVia(IClient client) {
+      client.Send(this);
+      base.SendCommon(client);
+    }
   }
 }
