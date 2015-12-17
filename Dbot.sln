@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Processor", "Dbot.Proc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Client", "Dbot.Client\Dbot.Client.csproj", "{063691B4-0283-46A9-8EAA-19FE0DB0628A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.WebSocketModels", "Dbot.WebSocketModels\Dbot.WebSocketModels.csproj", "{B5EACEA0-BA29-4FA5-A692-27BD699FCDAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{063691B4-0283-46A9-8EAA-19FE0DB0628A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{063691B4-0283-46A9-8EAA-19FE0DB0628A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{063691B4-0283-46A9-8EAA-19FE0DB0628A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5EACEA0-BA29-4FA5-A692-27BD699FCDAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5EACEA0-BA29-4FA5-A692-27BD699FCDAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5EACEA0-BA29-4FA5-A692-27BD699FCDAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5EACEA0-BA29-4FA5-A692-27BD699FCDAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

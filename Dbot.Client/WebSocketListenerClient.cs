@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Dbot.CommonModels;
 using Dbot.Utility;
+using Dbot.WebSocketModels;
 using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;

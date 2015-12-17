@@ -1,6 +1,7 @@
 ﻿using System;
 using Dbot.CommonModels;
 using Dbot.Utility;
+using Dbot.WebSocketModels;
 using Newtonsoft.Json;
 
 namespace Dbot.Client {
