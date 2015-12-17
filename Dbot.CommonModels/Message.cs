@@ -1,9 +1,14 @@
 using System;
 using System.Diagnostics;
+using Dbot.CommonModels.Users;
 
 namespace Dbot.CommonModels {
   [DebuggerDisplay("{Ordinal}. {OriginalText}")]
   public abstract class Message : TargetedSendable, IEquatable<Message> {
+
+    public IUser From { get; private set; }
+
+    public bool FromModerator => From is Moderator;
 
     public string OriginalText {
       get { return _originalText; }
@@ -21,6 +26,11 @@ namespace Dbot.CommonModels {
     private string _sanitizedText;
 
     public int Ordinal { get; set; }
+
+    protected Message(string nick, string originalText) {
+      this.Nick = nick;
+      this.OriginalText = originalText;
+    }
 
     public bool Equals(Message that) {
       return

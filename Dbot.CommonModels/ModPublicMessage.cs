@@ -1,8 +1,7 @@
 ﻿namespace Dbot.CommonModels {
   public class ModPublicMessage : PublicMessage {
-    public ModPublicMessage(string text) {
-      Nick = "AutoMod";
-      OriginalText = text;
+    public ModPublicMessage(string text)
+      : base("AutoMod", text) {
       IsMod = true;
     }
   }
