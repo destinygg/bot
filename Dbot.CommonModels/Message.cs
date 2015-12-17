@@ -4,7 +4,7 @@ using Dbot.CommonModels.Users;
 
 namespace Dbot.CommonModels {
   [DebuggerDisplay("{Ordinal}. {OriginalText}")]
-  public abstract class Message : TargetedSendable, IEquatable<Message> {
+  public abstract class Message : TargetedSendable, ISendable, IEquatable<Message> {
 
     public IUser From { get; private set; }
 

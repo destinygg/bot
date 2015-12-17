@@ -1,3 +1,3 @@
 ﻿namespace Dbot.CommonModels {
-  public abstract class TargetedSendable : User, ISendable { }
+  public abstract class TargetedSendable : User { }
 }
