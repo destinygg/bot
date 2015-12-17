@@ -1,6 +1,4 @@
-﻿using Dbot.CommonModels;
-
-namespace Dbot.Common {
+﻿namespace Dbot.CommonModels {
   public interface IClient {
     void Run(IProcessor processor);
     void Forward(PublicMessage message);

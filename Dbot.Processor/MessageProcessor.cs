@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks.Dataflow;
-using Dbot.Common;
 using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;

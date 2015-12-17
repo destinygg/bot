@@ -1,5 +1,4 @@
-﻿using Dbot.Common;
-using Dbot.CommonModels;
+﻿using Dbot.CommonModels;
 using Dbot.Utility;
 
 namespace Dbot.Client {

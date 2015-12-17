@@ -61,10 +61,6 @@
       <Project>{65D520B2-5739-4908-90B0-739CB4DAAC4D}</Project>
       <Name>Dbot.CommonModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dbot.Common\Dbot.Common.csproj">
-      <Project>{E59D160D-6C94-421F-916A-8533AFC15211}</Project>
-      <Name>Dbot.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
       <Project>{E27FAB2D-880D-4137-B32A-23E7DB585BF3}</Project>
       <Name>Dbot.Utility</Name>

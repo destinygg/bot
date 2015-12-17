@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dbot.Client;
-using Dbot.Common;
 using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Processor;

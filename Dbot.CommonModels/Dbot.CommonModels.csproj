@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ban.cs" />
+    <Compile Include="IClient.cs" />
+    <Compile Include="IProcessor.cs" />
     <Compile Include="Mute.cs" />
     <Compile Include="HasVictim.cs" />
     <Compile Include="ISendable.cs" />

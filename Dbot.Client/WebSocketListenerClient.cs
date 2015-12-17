@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Dbot.Common;
 using Dbot.CommonModels;
 using Dbot.Utility;
 using Newtonsoft.Json;
