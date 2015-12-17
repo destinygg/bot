@@ -33,6 +33,22 @@ namespace Dbot.CommonModels {
       base.SendCommon(client);
     }
 
+    public override string GetString() {
+      if (Ip) {
+        if (Perm) {
+          return "Permanently ipbanned " + Nick + " for " + Reason;
+        } else {
+          return "Ipbanned " + Nick + " for " + Tools.PrettyDeltaTime(Duration);
+        }
+      } else {
+        if (Perm) {
+          return "Permanently banned " + Nick + " for " + Reason;
+        } else {
+          return "Banned " + Nick + " for " + Tools.PrettyDeltaTime(Duration);
+        }
+      }
+    }
+
     private bool _perm;
 
     public bool Perm {

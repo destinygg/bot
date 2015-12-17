@@ -12,5 +12,9 @@
         client.Send(new PublicMessage(submessage));
       }
     }
+
+    public override string GetString() {
+      return "Messaged " + OriginalText;
+    }
   }
 }

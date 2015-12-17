@@ -29,6 +29,10 @@ namespace Dbot.Client {
       _processor.ProcessMessage(message);
     }
 
+    public void Send(ISendable sendable) {
+      throw new NotImplementedException();
+    }
+
     public virtual void Send(PrivateMessage privateMessage) {
       _log.Add("Private Messaged " + privateMessage.Nick + " with: " + privateMessage.OriginalText);
       Tools.Log(_log.Last());

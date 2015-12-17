@@ -73,8 +73,7 @@ namespace Dbot.Utility {
       }
     }
 
-    public static string PrettyDeltaTime(TimeSpan span, string rough = "")
-    {
+    public static string PrettyDeltaTime(TimeSpan span, string rough = "") {
       int day = Convert.ToInt32(span.ToString("%d"));
       int hour = Convert.ToInt32(span.ToString("%h"));
       int minute = Convert.ToInt32(span.ToString("%m"));

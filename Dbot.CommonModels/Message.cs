@@ -8,6 +8,8 @@ namespace Dbot.CommonModels {
 
     public abstract void SendVia(IClient client);
 
+    public abstract string GetString();
+
     public IUser From { get; private set; }
 
     public bool FromModerator => From is Moderator;

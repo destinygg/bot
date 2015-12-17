@@ -9,5 +9,9 @@
     public void SendVia(IClient client) {
       client.Send(this);
     }
+
+    public string GetString() {
+      return Enabled ? "Subonly enabled" : "Subonly disabled";
+    }
   }
 }

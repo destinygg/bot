@@ -21,5 +21,9 @@ namespace Dbot.CommonModels {
       client.Send(this);
       base.SendCommon(client);
     }
+
+    public override string GetString() {
+      return "Muted " + Nick + " for " + Tools.PrettyDeltaTime(Duration);
+    }
   }
 }

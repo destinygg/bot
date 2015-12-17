@@ -7,5 +7,9 @@
     public void SendVia(IClient client) {
       client.Send(this);
     }
+
+    public string GetString() {
+      return "Unbanned " + Nick;
+    }
   }
 }

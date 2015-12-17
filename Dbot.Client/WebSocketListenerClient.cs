@@ -122,7 +122,7 @@ namespace Dbot.Client {
       Tools.Log("Connected!", ConsoleColor.Green);
     }
 
-    public override void Send(PublicMessage publicMessage) {
+    public void Send(PublicMessage publicMessage) {
       LatestPublicMessage = publicMessage;
       Tools.Log("Messaged " + publicMessage.OriginalText);
     }

@@ -53,6 +53,7 @@
     <Compile Include="PublicMessage.cs" />
     <Compile Include="Subonly.cs" />
     <Compile Include="TargetedSendable.cs" />
+    <Compile Include="Tools.cs" />
     <Compile Include="UnMuteBan.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Users\IUser.cs" />
