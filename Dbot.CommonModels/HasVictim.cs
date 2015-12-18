@@ -8,7 +8,7 @@ namespace Dbot.CommonModels {
     public abstract void SendVia(IClient client);
     public abstract string GetString();
     protected void SendCommon(IClient client) {
-      if (SilentReason && !string.IsNullOrWhiteSpace(Reason)) {
+      if (!SilentReason && !string.IsNullOrWhiteSpace(Reason)) {
         client.Send(new PublicMessage(Reason));
       }
     }

@@ -30,49 +30,8 @@ namespace Dbot.Client {
     }
 
     public void Send(ISendable sendable) {
-      throw new NotImplementedException();
-    }
-
-    public virtual void Send(PrivateMessage privateMessage) {
-      _log.Add("Private Messaged " + privateMessage.Nick + " with: " + privateMessage.OriginalText);
-      Tools.Log(_log.Last());
-    }
-
-    public void Send(PublicMessage publicMessage) {
-      _log.Add("Messaged " + publicMessage.OriginalText);
-      Tools.Log(_log.Last());
-    }
-
-    public void Send(Mute mute) {
-      _log.Add("Muted " + mute.Nick + " for " + Tools.PrettyDeltaTime(mute.Duration));
-      Tools.Log(_log.Last());
-    }
-
-    public void Send(UnMuteBan unMuteBan) {
-      _log.Add("Unbanned " + unMuteBan.Nick);
-      Tools.Log(_log.Last());
-    }
-
-    public void Send(Subonly subonly) {
-      _log.Add(subonly.Enabled ? "Subonly enabled" : "Subonly disabled");
-      Tools.Log(_log.Last());
-    }
-
-    public void Send(Ban ban) {
-      if (ban.Ip) {
-        if (ban.Perm) {
-          _log.Add("Permanently ipbanned " + ban.Nick + " for " + ban.Reason);
-        } else {
-          _log.Add("Ipbanned " + ban.Nick + " for " + Tools.PrettyDeltaTime(ban.Duration));
-        }
-      } else {
-        if (ban.Perm) {
-          _log.Add("Permanently banned " + ban.Nick + " for " + ban.Reason);
-        } else {
-          _log.Add("Banned " + ban.Nick + " for " + Tools.PrettyDeltaTime(ban.Duration));
-        }
-      }
-      Tools.Log(_log.Last());
+      _log.Add(sendable.GetString());
+      Tools.Log(sendable.GetString());
     }
   }
 }
