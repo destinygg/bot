@@ -174,7 +174,7 @@ namespace Dbot.Processor {
       var streamsObject = (JObject) dyn.streams;
       var sArray = JObject.Parse(streamsObject.ToString());
       var sb = new StringBuilder();
-      foreach (dynamic o in sArray.Children().Take(3)) {
+      foreach (dynamic o in sArray.Children().OrderByDescending(x => x.First).Take(3)) {
         var name = o.Name;
         var viewers = o.Value.Value;
         sb.Append(viewers);
