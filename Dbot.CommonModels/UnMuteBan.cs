@@ -1,4 +1,7 @@
-﻿namespace Dbot.CommonModels {
+﻿using Dbot.WebSocketModels;
+using Newtonsoft.Json;
+
+namespace Dbot.CommonModels {
   public class UnMuteBan : TargetedSendable, ISendable {
     public UnMuteBan(string nick) {
       this.Nick = nick;
@@ -10,6 +13,11 @@
 
     public string GetString() {
       return "Unbanned " + Nick;
+    }
+
+    public string GetStringJson() {
+      var obj = new UnMuteBanSender(Nick);
+      return "UNBAN " + JsonConvert.SerializeObject(obj);
     }
   }
 }

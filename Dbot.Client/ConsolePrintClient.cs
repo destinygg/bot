@@ -8,7 +8,7 @@ namespace Dbot.Client {
 
     public abstract void Forward(PublicMessage message);
 
-    public void Send(ISendable sendable) {
+    public virtual void Send(ISendable sendable) {
       Tools.Log(sendable.GetString());
     }
 

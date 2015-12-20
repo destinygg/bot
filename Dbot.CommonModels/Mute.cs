@@ -1,4 +1,6 @@
 ﻿using System;
+using Dbot.WebSocketModels;
+using Newtonsoft.Json;
 
 namespace Dbot.CommonModels {
   public class Mute : HasVictim {
@@ -11,8 +13,7 @@ namespace Dbot.CommonModels {
     }
     private TimeSpan _duration;
 
-    public override TimeSpan Duration
-    {
+    public override TimeSpan Duration {
       get { return _duration; }
       set { _duration = value > TimeSpan.FromDays(7) ? TimeSpan.FromDays(7) : value; }
     }
@@ -24,6 +25,11 @@ namespace Dbot.CommonModels {
 
     public override string GetString() {
       return "Muted " + Nick + " for " + Tools.PrettyDeltaTime(Duration);
+    }
+
+    public override string GetStringJson() {
+      var obj = new MuteSender(Nick, Duration);
+      return "MUTE " + JsonConvert.SerializeObject(obj);
     }
   }
 }

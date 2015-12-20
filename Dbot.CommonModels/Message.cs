@@ -9,6 +9,7 @@ namespace Dbot.CommonModels {
     public abstract void SendVia(IClient client);
 
     public abstract string GetString();
+    public abstract string GetStringJson();
 
     public IUser From { get; private set; }
 

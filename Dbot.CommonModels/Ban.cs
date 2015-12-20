@@ -1,4 +1,6 @@
 using System;
+using Dbot.WebSocketModels;
+using Newtonsoft.Json;
 
 namespace Dbot.CommonModels {
   public class Ban : HasVictim {
@@ -47,6 +49,11 @@ namespace Dbot.CommonModels {
           return "Banned " + Nick + " for " + Tools.PrettyDeltaTime(Duration);
         }
       }
+    }
+
+    public override string GetStringJson() {
+      var obj = Duration == TimeSpan.Zero ? new BanSender(Nick, Ip, true, Reason) : new BanSender(Nick, Ip, Duration, Reason);
+      return "BAN " + JsonConvert.SerializeObject(obj);
     }
 
     private bool _perm;
