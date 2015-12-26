@@ -6,7 +6,7 @@ namespace Dbot.CommonModels {
   [DebuggerDisplay("{Ordinal}. {OriginalText}")]
   public abstract class Message : TargetedSendable, ISendableVisitable, IEquatable<Message> {
 
-    public abstract void SendVia(IClientVisitor client);
+    public abstract void Accept(IClientVisitor visitor);
 
     public abstract string GetString();
     public abstract string GetStringJson();

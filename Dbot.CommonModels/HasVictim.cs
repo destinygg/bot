@@ -5,7 +5,7 @@ namespace Dbot.CommonModels {
     public virtual TimeSpan Duration { get; set; }
     public string Reason { get; set; }
     public bool SilentReason { get; set; }
-    public abstract void SendVia(IClientVisitor client);
+    public abstract void Accept(IClientVisitor visitor);
     public abstract string GetString();
     public abstract string GetStringJson();
 

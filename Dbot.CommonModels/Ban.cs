@@ -28,11 +28,11 @@ namespace Dbot.CommonModels {
       }
     }
 
-    public override void SendVia(IClientVisitor client) {
+    public override void Accept(IClientVisitor visitor) {
       if (string.IsNullOrWhiteSpace(Reason))
         Reason = "Manual bot ban.";
-      client.Send(this);
-      base.SendCommon(client);
+      visitor.Send(this);
+      base.SendCommon(visitor);
     }
 
     public override string GetString() {

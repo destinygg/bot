@@ -7,8 +7,8 @@ namespace Dbot.CommonModels {
       this.Nick = nick;
     }
 
-    public void SendVia(IClientVisitor client) {
-      client.Send(this);
+    public void Accept(IClientVisitor visitor) {
+      visitor.Send(this);
     }
 
     public string GetString() {

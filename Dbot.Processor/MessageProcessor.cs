@@ -83,7 +83,7 @@ namespace Dbot.Processor {
     }
 
     private void Send(ISendableVisitable input) {
-      input.SendVia(_client);
+      input.Accept(_client);
     }
 
     private void Ban(Message message) {

@@ -8,8 +8,8 @@ namespace Dbot.CommonModels {
 
     public bool Enabled { get; set; }
 
-    public void SendVia(IClientVisitor client) {
-      client.Send(this);
+    public void Accept(IClientVisitor visitor) {
+      visitor.Send(this);
     }
 
     public string GetString() {
