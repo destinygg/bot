@@ -2,12 +2,12 @@
 using Newtonsoft.Json;
 
 namespace Dbot.CommonModels {
-  public class UnMuteBan : TargetedSendable, ISendable {
+  public class UnMuteBan : TargetedSendable, ISendableVisitable {
     public UnMuteBan(string nick) {
       this.Nick = nick;
     }
 
-    public void SendVia(IClient client) {
+    public void SendVia(IClientVisitor client) {
       client.Send(this);
     }
 

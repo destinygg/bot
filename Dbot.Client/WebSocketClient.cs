@@ -12,9 +12,9 @@ namespace Dbot.Client {
 
     }
 
-    public override void Send(ISendable sendable) { // disgusting, figure out visitor pattern some day
-      if (sendable is PublicMessage) {
-        var publicMessage = (PublicMessage) sendable;
+    public override void Send(ISendableVisitable sendableVisitable) { // disgusting, figure out visitor pattern some day
+      if (sendableVisitable is PublicMessage) {
+        var publicMessage = (PublicMessage) sendableVisitable;
         LatestPublicMessage = publicMessage;
         if (_previousSend == publicMessage.OriginalText) {
           if (publicMessage.OriginalText.EndsWith(".")) {
@@ -27,7 +27,7 @@ namespace Dbot.Client {
         _websocket.Send("MSG " + JsonConvert.SerializeObject(obj));
         _previousSend = publicMessage.OriginalText;
       } else {
-        _websocket.Send(sendable.GetStringJson());
+        _websocket.Send(sendableVisitable.GetStringJson());
 
       }
 

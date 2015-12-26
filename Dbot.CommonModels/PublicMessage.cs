@@ -7,7 +7,7 @@
     public PublicMessage(string nick, string originalText)
       : base(nick, originalText) { }
 
-    public override void SendVia(IClient client) {
+    public override void SendVia(IClientVisitor client) {
       foreach (var submessage in OriginalText.Split('\n')) {
         client.Send(new PublicMessage(submessage));
       }

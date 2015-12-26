@@ -12,7 +12,7 @@ namespace Dbot.Processor {
   public class MessageProcessor : IProcessor {
     public DateTime NextCommandTime = DateTime.MinValue;
     public readonly ActionBlock<Message> Banner;
-    public readonly ActionBlock<ISendable> Sender;
+    public readonly ActionBlock<ISendableVisitable> Sender;
     private readonly ActionBlock<Message> _logger;
     private readonly ActionBlock<Message> _commander;
     private readonly ActionBlock<Message> _modCommander;
@@ -22,15 +22,15 @@ namespace Dbot.Processor {
     private readonly ConcurrentDictionary<int, Message> _contextDictionary = new ConcurrentDictionary<int, Message>();
     private readonly ConcurrentDictionary<int, Message> _dequeueDictionary = new ConcurrentDictionary<int, Message>();
 
-    private IClient _client;
+    private IClientVisitor _client;
     private int _contextIndex;
     private int _dequeueIndex;
 
-    public MessageProcessor(IClient client) {
+    public MessageProcessor(IClientVisitor client) {
       CompiledRegex = new CompiledRegex();
       _client = client;
       Banner = new ActionBlock<Message>(m => Ban(m));
-      Sender = new ActionBlock<ISendable>(m => Send(m));
+      Sender = new ActionBlock<ISendableVisitable>(m => Send(m));
       _logger = new ActionBlock<Message>(m => Log(m));
       _commander = new ActionBlock<Message>(m => Command(m));
       _modCommander = new ActionBlock<Message>(m => ModCommand(m));
@@ -82,7 +82,7 @@ namespace Dbot.Processor {
       DoneWithContext(message);
     }
 
-    private void Send(ISendable input) {
+    private void Send(ISendableVisitable input) {
       input.SendVia(_client);
     }
 

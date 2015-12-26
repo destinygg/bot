@@ -6,7 +6,7 @@ using Dbot.CommonModels;
 using Dbot.Utility;
 
 namespace Dbot.Client {
-  public class TestClient : IClient {
+  public class TestClient : IClientVisitor {
 
     private IProcessor _processor;
     private IList<string> _log;
@@ -29,9 +29,9 @@ namespace Dbot.Client {
       _processor.ProcessMessage(message);
     }
 
-    public void Send(ISendable sendable) {
-      _log.Add(sendable.GetString());
-      Tools.Log(sendable.GetString());
+    public void Send(ISendableVisitable sendableVisitable) {
+      _log.Add(sendableVisitable.GetString());
+      Tools.Log(sendableVisitable.GetString());
     }
   }
 }

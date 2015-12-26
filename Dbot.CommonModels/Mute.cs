@@ -18,7 +18,7 @@ namespace Dbot.CommonModels {
       set { _duration = value > TimeSpan.FromDays(7) ? TimeSpan.FromDays(7) : value; }
     }
 
-    public override void SendVia(IClient client) {
+    public override void SendVia(IClientVisitor client) {
       client.Send(this);
       base.SendCommon(client);
     }

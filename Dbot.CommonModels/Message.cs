@@ -4,9 +4,9 @@ using Dbot.CommonModels.Users;
 
 namespace Dbot.CommonModels {
   [DebuggerDisplay("{Ordinal}. {OriginalText}")]
-  public abstract class Message : TargetedSendable, ISendable, IEquatable<Message> {
+  public abstract class Message : TargetedSendable, ISendableVisitable, IEquatable<Message> {
 
-    public abstract void SendVia(IClient client);
+    public abstract void SendVia(IClientVisitor client);
 
     public abstract string GetString();
     public abstract string GetStringJson();

@@ -28,7 +28,7 @@ namespace Dbot.CommonModels {
       }
     }
 
-    public override void SendVia(IClient client) {
+    public override void SendVia(IClientVisitor client) {
       if (string.IsNullOrWhiteSpace(Reason))
         Reason = "Manual bot ban.";
       client.Send(this);

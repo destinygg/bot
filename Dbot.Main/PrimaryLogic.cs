@@ -12,8 +12,8 @@ using Tweetinvi.Core.Interfaces;
 
 namespace Dbot.Main {
   public class PrimaryLogic {
-    private readonly IClient _client = new WebSocketListenerClient(PrivateConstants.BotWebsocketAuth);
-    //private readonly IClient _client = new WebSocketListenerClient();
+    private readonly IClientVisitor _client = new WebSocketListenerClient(PrivateConstants.BotWebsocketAuth);
+    //private readonly IClientVisitor _client = new WebSocketListenerClient();
     private readonly MessageProcessor _messageProcessor;
     private bool _exit;
 

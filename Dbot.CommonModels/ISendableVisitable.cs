@@ -1,8 +1,8 @@
 ﻿using System;
 
 namespace Dbot.CommonModels {
-  public interface ISendable {
-    void SendVia(IClient client);
+  public interface ISendableVisitable {
+    void SendVia(IClientVisitor client);
     string GetString();
     string GetStringJson();
   }

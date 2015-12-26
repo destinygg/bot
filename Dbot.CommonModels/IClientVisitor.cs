@@ -1,7 +1,7 @@
 ﻿namespace Dbot.CommonModels {
-  public interface IClient {
+  public interface IClientVisitor {
     void Run(IProcessor processor);
     void Forward(PublicMessage message);
-    void Send(ISendable sendable);
+    void Send(ISendableVisitable sendableVisitable);
   }
 }

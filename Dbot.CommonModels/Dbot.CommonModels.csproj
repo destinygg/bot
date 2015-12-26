@@ -44,11 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ban.cs" />
-    <Compile Include="IClient.cs" />
+    <Compile Include="IClientVisitor.cs" />
     <Compile Include="IProcessor.cs" />
     <Compile Include="Mute.cs" />
     <Compile Include="HasVictim.cs" />
-    <Compile Include="ISendable.cs" />
+    <Compile Include="ISendableVisitable.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="ModPublicMessage.cs" />
     <Compile Include="PermBan.cs" />

@@ -6,7 +6,7 @@ namespace Dbot.CommonModels {
     public PrivateMessage(string nick, string originalText)
       : base(nick, originalText) { }
 
-    public override void SendVia(IClient client) {
+    public override void SendVia(IClientVisitor client) {
       client.Send(this);
     }
 

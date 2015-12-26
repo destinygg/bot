@@ -1,14 +1,14 @@
 ﻿using System;
 
 namespace Dbot.CommonModels {
-  public class Subonly : ISendable {
+  public class Subonly : ISendableVisitable {
     public Subonly(bool enabled) {
       Enabled = enabled;
     }
 
     public bool Enabled { get; set; }
 
-    public void SendVia(IClient client) {
+    public void SendVia(IClientVisitor client) {
       client.Send(this);
     }
 
