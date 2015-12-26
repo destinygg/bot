@@ -25,7 +25,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(new Mute("dharmatest", TimeSpan.FromMinutes(3), "test reason"));
+      client.Visit(new Mute("dharmatest", TimeSpan.FromMinutes(3), "test reason"));
     }
 
     [TestMethod]
@@ -34,7 +34,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(new Ban("dharmatest", TimeSpan.FromMinutes(3), "test reason"));
+      client.Visit(new Ban("dharmatest", TimeSpan.FromMinutes(3), "test reason"));
     }
 
     [TestMethod]
@@ -43,7 +43,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(new Ban("dharmatest", TimeSpan.FromMinutes(-1), "perm reason"));
+      client.Visit(new Ban("dharmatest", TimeSpan.FromMinutes(-1), "perm reason"));
     }
 
     [TestMethod]
@@ -52,7 +52,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(new Ban("dharmatest", TimeSpan.FromMinutes(3), "test reason") {
+      client.Visit(new Ban("dharmatest", TimeSpan.FromMinutes(3), "test reason") {
         Ip = true,
       });
     }
@@ -63,7 +63,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(new UnMuteBan("dharmatest"));
+      client.Visit(new UnMuteBan("dharmatest"));
     }
 
     [TestMethod]
@@ -72,7 +72,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(5000);
-      client.Send(new PrivateMessage("dharmatest", "test message"));
+      client.Visit(new PrivateMessage("dharmatest", "test message"));
     }
   }
 }

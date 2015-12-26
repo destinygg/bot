@@ -11,7 +11,7 @@ namespace Dbot.CommonModels {
 
     protected void SendCommon(IClientVisitor client) {
       if (!SilentReason && !string.IsNullOrWhiteSpace(Reason)) {
-        client.Send(new PublicMessage(Reason));
+        client.Visit(new PublicMessage(Reason));
       }
     }
   }

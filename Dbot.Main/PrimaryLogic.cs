@@ -49,7 +49,7 @@ namespace Dbot.Main {
         if (input == "exit") return;
 
         if (input[0] == '~') {
-          _client.Send(new PublicMessage(input.Substring(1)));
+          _client.Visit(new PublicMessage(input.Substring(1)));
         }
         if (input[0] == '!') {
           _client.Forward(new PublicMessage("SYSTEM CONSOLE", input) { IsMod = true });

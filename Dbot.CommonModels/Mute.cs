@@ -19,7 +19,7 @@ namespace Dbot.CommonModels {
     }
 
     public override void Accept(IClientVisitor visitor) {
-      visitor.Send(this);
+      visitor.Visit(this);
       base.SendCommon(visitor);
     }
 

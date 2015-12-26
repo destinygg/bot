@@ -9,7 +9,7 @@ namespace Dbot.CommonModels {
     public bool Enabled { get; set; }
 
     public void Accept(IClientVisitor visitor) {
-      visitor.Send(this);
+      visitor.Visit(this);
     }
 
     public string GetString() {

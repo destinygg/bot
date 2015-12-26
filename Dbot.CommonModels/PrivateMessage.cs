@@ -7,7 +7,7 @@ namespace Dbot.CommonModels {
       : base(nick, originalText) { }
 
     public override void Accept(IClientVisitor visitor) {
-      visitor.Send(this);
+      visitor.Visit(this);
     }
 
     public override string GetString() {

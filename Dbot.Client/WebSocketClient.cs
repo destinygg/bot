@@ -12,25 +12,38 @@ namespace Dbot.Client {
 
     }
 
-    public override void Send(ISendableVisitable sendableVisitable) { // disgusting, figure out visitor pattern some day
-      if (sendableVisitable is PublicMessage) {
-        var publicMessage = (PublicMessage) sendableVisitable;
-        LatestPublicMessage = publicMessage;
-        if (_previousSend == publicMessage.OriginalText) {
-          if (publicMessage.OriginalText.EndsWith(".")) {
-            publicMessage.OriginalText = publicMessage.OriginalText.TrimEnd('.');
-          } else {
-            publicMessage.OriginalText = publicMessage.OriginalText + ".";
-          }
+    public override void Visit(PrivateMessage privateMessage) {
+      _websocket.Send(privateMessage.GetStringJson());
+    }
+
+    public override void Visit(PublicMessage publicMessage) {
+      LatestPublicMessage = publicMessage;
+      if (_previousSend == publicMessage.OriginalText) {
+        if (publicMessage.OriginalText.EndsWith(".")) {
+          publicMessage.OriginalText = publicMessage.OriginalText.TrimEnd('.');
+        } else {
+          publicMessage.OriginalText = publicMessage.OriginalText + ".";
         }
-        var obj = new MessageSender(publicMessage.OriginalText);
-        _websocket.Send("MSG " + JsonConvert.SerializeObject(obj));
-        _previousSend = publicMessage.OriginalText;
-      } else {
-        _websocket.Send(sendableVisitable.GetStringJson());
-
       }
+      var obj = new MessageSender(publicMessage.OriginalText);
+      _websocket.Send("MSG " + JsonConvert.SerializeObject(obj));
+      _previousSend = publicMessage.OriginalText;
+    }
 
+    public override void Visit(Mute mute) {
+      _websocket.Send(mute.GetStringJson());
+    }
+
+    public override void Visit(UnMuteBan unMuteBan) {
+      _websocket.Send(unMuteBan.GetStringJson());
+    }
+
+    public override void Visit(Subonly subonly) {
+      _websocket.Send(subonly.GetStringJson());
+    }
+
+    public override void Visit(Ban ban) {
+      _websocket.Send(ban.GetStringJson());
     }
   }
 }

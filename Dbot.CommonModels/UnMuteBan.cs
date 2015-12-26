@@ -8,7 +8,7 @@ namespace Dbot.CommonModels {
     }
 
     public void Accept(IClientVisitor visitor) {
-      visitor.Send(this);
+      visitor.Visit(this);
     }
 
     public string GetString() {

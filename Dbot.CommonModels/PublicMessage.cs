@@ -9,7 +9,7 @@
 
     public override void Accept(IClientVisitor visitor) {
       foreach (var submessage in OriginalText.Split('\n')) {
-        visitor.Send(new PublicMessage(submessage));
+        visitor.Visit(new PublicMessage(submessage));
       }
     }
 

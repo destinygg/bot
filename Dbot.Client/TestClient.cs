@@ -29,7 +29,31 @@ namespace Dbot.Client {
       _processor.ProcessMessage(message);
     }
 
-    public void Send(ISendableVisitable sendableVisitable) {
+    public void Visit(PrivateMessage privateMessage) {
+      Print(privateMessage);
+    }
+
+    public void Visit(PublicMessage publicMessage) {
+      Print(publicMessage);
+    }
+
+    public void Visit(Mute mute) {
+      Print(mute);
+    }
+
+    public void Visit(UnMuteBan unMuteBan) {
+      Print(unMuteBan);
+    }
+
+    public void Visit(Subonly subonly) {
+      Print(subonly);
+    }
+
+    public void Visit(Ban ban) {
+      Print(ban);
+    }
+
+    private void Print(ISendableVisitable sendableVisitable) {
       _log.Add(sendableVisitable.GetString());
       Tools.Log(sendableVisitable.GetString());
     }
