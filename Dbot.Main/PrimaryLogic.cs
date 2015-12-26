@@ -15,7 +15,6 @@ namespace Dbot.Main {
     private readonly IClientVisitor _client = new WebSocketListenerClient(PrivateConstants.BotWebsocketAuth);
     //private readonly IClientVisitor _client = new WebSocketListenerClient();
     private readonly MessageProcessor _messageProcessor;
-    private bool _exit;
 
     public PrimaryLogic() {
       _messageProcessor = new MessageProcessor(_client);
