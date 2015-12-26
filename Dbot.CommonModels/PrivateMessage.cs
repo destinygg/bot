@@ -13,10 +13,5 @@ namespace Dbot.CommonModels {
     public override string ToString() {
       return "Private Messaged " + Nick + " with: " + OriginalText;
     }
-
-    public override string GetStringJson() {
-      var obj = new PrivateMessageSender(Nick, OriginalText);
-      return "PRIVMSG " + JsonConvert.SerializeObject(obj);
-    }
   }
 }

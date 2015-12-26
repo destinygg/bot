@@ -15,10 +15,5 @@ namespace Dbot.CommonModels {
     public override string ToString() {
       return Enabled ? "Subonly enabled" : "Subonly disabled";
     }
-
-    public string GetStringJson() {
-      Tools.Log(Enabled ? "Subonly enabled" : "Subonly disabled"); //todo
-      throw new NotImplementedException("Todo");
-    }
   }
 }

@@ -14,10 +14,5 @@ namespace Dbot.CommonModels {
     public override string ToString() {
       return "Unbanned " + Nick;
     }
-
-    public string GetStringJson() {
-      var obj = new UnMuteBanSender(Nick);
-      return "UNBAN " + JsonConvert.SerializeObject(obj);
-    }
   }
 }

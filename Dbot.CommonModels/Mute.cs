@@ -26,10 +26,5 @@ namespace Dbot.CommonModels {
     public override string ToString() {
       return "Muted " + Nick + " for " + Tools.PrettyDeltaTime(Duration);
     }
-
-    public override string GetStringJson() {
-      var obj = new MuteSender(Nick, Duration);
-      return "MUTE " + JsonConvert.SerializeObject(obj);
-    }
   }
 }

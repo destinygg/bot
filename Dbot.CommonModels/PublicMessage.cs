@@ -16,9 +16,5 @@
     public override string ToString() {
       return "Messaged " + OriginalText;
     }
-
-    public override string GetStringJson() {
-      throw new System.NotImplementedException();
-    }
   }
 }

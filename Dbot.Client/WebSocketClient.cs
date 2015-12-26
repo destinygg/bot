@@ -13,7 +13,8 @@ namespace Dbot.Client {
     }
 
     public override void Visit(PrivateMessage privateMessage) {
-      _websocket.Send(privateMessage.GetStringJson());
+      var obj = new PrivateMessageSender(privateMessage.Nick, privateMessage.OriginalText);
+      _websocket.Send("PRIVMSG " + JsonConvert.SerializeObject(obj));
     }
 
     public override void Visit(PublicMessage publicMessage) {
@@ -31,19 +32,24 @@ namespace Dbot.Client {
     }
 
     public override void Visit(Mute mute) {
-      _websocket.Send(mute.GetStringJson());
+      var obj = new MuteSender(mute.Nick, mute.Duration);
+      _websocket.Send("MUTE " + JsonConvert.SerializeObject(obj));
     }
 
     public override void Visit(UnMuteBan unMuteBan) {
-      _websocket.Send(unMuteBan.GetStringJson());
+      var obj = new UnMuteBanSender(unMuteBan.Nick);
+      _websocket.Send("UNBAN " + JsonConvert.SerializeObject(obj));
     }
 
     public override void Visit(Subonly subonly) {
-      _websocket.Send(subonly.GetStringJson());
+      Tools.Log(subonly.Enabled ? "Subonly enabled" : "Subonly disabled"); //todo
+      throw new NotImplementedException("Todo");
+      //_websocket.Send(subonly.ToString());
     }
 
     public override void Visit(Ban ban) {
-      _websocket.Send(ban.GetStringJson());
+      var obj = ban.Duration == TimeSpan.Zero ? new BanSender(ban.Nick, ban.Ip, true, ban.Reason) : new BanSender(ban.Nick, ban.Ip, ban.Duration, ban.Reason);
+      _websocket.Send("BAN " + JsonConvert.SerializeObject(obj));
     }
   }
 }
