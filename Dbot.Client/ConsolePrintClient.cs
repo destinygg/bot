@@ -33,7 +33,7 @@ namespace Dbot.Client {
     }
 
     private void Print(ISendableVisitable sendableVisitable) {
-      Tools.Log(sendableVisitable.GetString());
+      Tools.Log(sendableVisitable.ToString());
     }
   }
 }

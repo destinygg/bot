@@ -8,7 +8,6 @@ namespace Dbot.CommonModels {
 
     public abstract void Accept(IClientVisitor visitor);
 
-    public abstract string GetString();
     public abstract string GetStringJson();
 
     public IUser From { get; private set; }

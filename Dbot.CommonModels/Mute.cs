@@ -23,7 +23,7 @@ namespace Dbot.CommonModels {
       base.SendCommon(visitor);
     }
 
-    public override string GetString() {
+    public override string ToString() {
       return "Muted " + Nick + " for " + Tools.PrettyDeltaTime(Duration);
     }
 

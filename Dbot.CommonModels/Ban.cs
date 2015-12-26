@@ -35,7 +35,7 @@ namespace Dbot.CommonModels {
       base.SendCommon(visitor);
     }
 
-    public override string GetString() {
+    public override string ToString() {
       if (Ip) {
         if (Perm) {
           return "Permanently ipbanned " + Nick + " for " + Reason;

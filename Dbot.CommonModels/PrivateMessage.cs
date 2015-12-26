@@ -10,7 +10,7 @@ namespace Dbot.CommonModels {
       visitor.Visit(this);
     }
 
-    public override string GetString() {
+    public override string ToString() {
       return "Private Messaged " + Nick + " with: " + OriginalText;
     }
 

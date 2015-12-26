@@ -12,7 +12,7 @@ namespace Dbot.CommonModels {
       visitor.Visit(this);
     }
 
-    public string GetString() {
+    public override string ToString() {
       return Enabled ? "Subonly enabled" : "Subonly disabled";
     }
 

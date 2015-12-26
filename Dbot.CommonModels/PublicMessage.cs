@@ -13,7 +13,7 @@
       }
     }
 
-    public override string GetString() {
+    public override string ToString() {
       return "Messaged " + OriginalText;
     }
 

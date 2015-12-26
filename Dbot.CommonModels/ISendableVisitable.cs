@@ -3,7 +3,6 @@
 namespace Dbot.CommonModels {
   public interface ISendableVisitable {
     void Accept(IClientVisitor visitor);
-    string GetString();
     string GetStringJson();
   }
 }
