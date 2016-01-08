@@ -143,11 +143,11 @@ namespace Dbot.Processor {
     private string Twitter() {
       ExceptionHandler.SwallowWebExceptions = false;
       try {
-        var user = User.GetUserFromScreenName("steven_bonnell");
+        var user = User.GetUserFromScreenName("OmniDestiny");
         var timeline = user.GetUserTimeline(1);
         var tweet = timeline.First();
         var delta = Tools.PrettyDeltaTime(tweet.TweetLocalCreationDate - tweet.CreatedAt);
-        return "twitter.com/Steven_Bonnell " + delta + " ago: " + Tools.TweetPrettier(tweet);
+        return "twitter.com/OmniDestiny " + delta + " ago: " + Tools.TweetPrettier(tweet);
       } catch (TwitterException e) {
         if (e.WebException != null && !string.IsNullOrWhiteSpace(e.WebException.Message))
           return "Twitter borked: " + e.WebException.Message;
