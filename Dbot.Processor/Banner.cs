@@ -44,9 +44,7 @@ namespace Dbot.Processor {
       var fullWidthCharacters = new[] { 'ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｑ', 'ｘ', 'ｙ', 'ｚ', 'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ', 'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｑ', 'Ｘ', 'Ｙ', 'Ｚ' };
       if (fullWidthCharacters.Sum(c => _originalText.Count(ot => ot == c)) > 5)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.FullWidth, "fullwidth text", wait);
-      var spamCharacters = new[] {
-        "▓","▂", "♥", "ᴶ", "♠", "ᑫ", "ᴷ", "♦", "ᴬ", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰", ":", "░", "═", "╔", "╗","╚", "╝", "║", "─", "┐", "┌", "└", "╥", "┘", "╡", "▀", "▐", "▌", "█", "▄", "■", "▉", " ", "▒", "　", "̍", "̎","̄", "̅", "̿", "̑", "̆", "̐", "͒", "͗", "͑", "̇", "̈", "̊", "͂", "̓", "̈́", "͊", "͋", "͌", "̃", "̂", "̌", "͐","̀", "́", "̋", "̏", "̒", "̓", "̔", "̽", "̉", "ͣ", "ͤ", "ͥ", "ͦ", "ͧ", "ͨ", "ͩ", "ͪ", "ͫ", "ͬ", "ͭ", "ͮ", "ͯ","̾", "͛", "͆", "̚", "̕", "̛", "̀", "́", "͘", "̡", "̢", "̧", "̨", "̴", "̵", "̶", "͏", "͜", "͝", "͞", "͟", "͠","͢", "̸", "̷", "͡", "҉", "̖", "̗", "̘", "̙", "̜", "̝", "̞", "̟", "̠", "̤", "̥", "̦", "̩", "̪", "̫", "̬", "̭","̮", "̯", "̰", "̱", "̲", "̳", "̹", "̺", "̻", "̼", "ͅ", "͇", "͈", "͉", "͍", "͎", "͓", "͔", "͕", "͖", "͙", "͚","̣","👎","💉","🔪","🔫","🚬","👌","ү","ｆ","👀","👎","❌","🚫","ʳ","ᶦ","ᵍ","ʰ","ᵗ","ᵉ","✔","ᵒ","О","Ｏ","Н","Ꮇ","ƽ","ԁ","💯"," ","▁","▃","▅","▆","✋","🤔","😏"
-      };
+      var spamCharacters = new[] { "▓","▂", "♥", "ᴶ", "♠", "ᑫ", "ᴷ", "♦", "ᴬ", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰", ":", "░", "═", "╔", "╗","╚", "╝", "║", "─", "┐", "┌", "└", "╥", "┘", "╡", "▀", "▐", "▌", "█", "▄", "■", "▉", " ", "▒", "　", "̍", "̎","̄", "̅", "̿", "̑", "̆", "̐", "͒", "͗", "͑", "̇", "̈", "̊", "͂", "̓", "̈́", "͊", "͋", "͌", "̃", "̂", "̌", "͐","̀", "́", "̋", "̏", "̒", "̓", "̔", "̽", "̉", "ͣ", "ͤ", "ͥ", "ͦ", "ͧ", "ͨ", "ͩ", "ͪ", "ͫ", "ͬ", "ͭ", "ͮ", "ͯ","̾", "͛", "͆", "̚", "̕", "̛", "̀", "́", "͘", "̡", "̢", "̧", "̨", "̴", "̵", "̶", "͏", "͜", "͝", "͞", "͟", "͠","͢", "̸", "̷", "͡", "҉", "̖", "̗", "̘", "̙", "̜", "̝", "̞", "̟", "̠", "̤", "̥", "̦", "̩", "̪", "̫", "̬", "̭","̮", "̯", "̰", "̱", "̲", "̳", "̹", "̺", "̻", "̼", "ͅ", "͇", "͈", "͉", "͍", "͎", "͓", "͔", "͕", "͖", "͙", "͚","̣","👎","💉","🔪","🔫","🚬","👌","ү","ｆ","👀","👎","❌","🚫","ʳ","ᶦ","ᵍ","ʰ","ᵗ","ᵉ","✔","ᵒ","О","Ｏ","Н","Ꮇ","ƽ","ԁ","💯"," ","▁","▃","▅","▆","✋","🤔","😏" };
       if (spamCharacters.Sum(c => _originalText.Count(ot => ot.ToString() == c)) > 20)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.SpamCharacters, "spam characters", wait);
 
@@ -201,25 +199,25 @@ namespace Dbot.Processor {
       return null;
     }
 
-    public Mute NumberSpam() {
+    private Mute NumberSpam() {
       var numberRegex = new Regex(@"^.{0,2}\d+.{0,5}$");
       if (!numberRegex.Match(_message.SanitizedText).Success) return null;
       var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(m => numberRegex.Match(m.SanitizedText).Success && _message.Nick == m.Nick) + 1; // To include the latest message that isn't in context yet.
       return numberMessages >= Settings.NumberSpamTriggerLength ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Counting down to your ban? 10m") : null;
     }
 
-    public Mute EmoteUserSpam() {
+    private Mute EmoteUserSpam() {
       if (!Datastore.EmoteWordRegex.Match(_message.OriginalText).Success) return null;
       var emoteWordCount = _context.TakeLast(Settings.EmoteUserSpamContextLength).Count(x => Datastore.EmoteWordRegex.Match(x.OriginalText).Success) + 1; // To include the latest message that isn't in context yet.
       return emoteWordCount >= Settings.EmoteUserSpamTriggerLength ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Too many faces; 10m") : null;
     }
 
-    public Mute RepeatCharacterSpam() { //todo find a way to apply this to CTRL V as well
+    private Mute RepeatCharacterSpam() { //todo find a way to apply this to CTRL V as well
       var match = new Regex(@"(.)\1{" + Settings.RepeatCharacterSpamLimit + ",}").Match(_message.SanitizedText);
       return match.Success ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Let go of that poor " + match.Groups[1].Value + "; 10m") : null;
     }
 
-    public Mute LineSpam() {
+    private Mute LineSpam() {
       var shortMessages = _context.TakeLast(Settings.LineSpamLimit).Where(x => x.Nick == _message.Nick).ToList();
       return shortMessages.Count == Settings.LineSpamLimit 
         ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Let someone else talk; 10m") 
