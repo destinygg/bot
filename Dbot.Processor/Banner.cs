@@ -48,8 +48,9 @@ namespace Dbot.Processor {
       if (spamCharacters.Sum(c => _originalText.Count(ot => ot.ToString() == c)) > 20)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.SpamCharacters, "spam characters", wait);
 
-      var unicode = new[] { '็', 'е', '' };
-      if (unicode.Sum(c => _originalText.Count(ot => ot == c)) >= 1)
+      var unicode = new[] { '็', 'е', };
+      var controlCharacters = new Regex(@"[\u0000-\u001F\u0080-\u009F\u007F-[\x0D\x0A\x09]]"); //http://stackoverflow.com/questions/3770117/what-is-the-range-of-unicode-printable-characters
+      if (unicode.Sum(c => _originalText.Count(ot => ot == c)) >= 1 || controlCharacters.Match(_originalText).Success)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.Unicode, "unicode idiocy", wait);
 
       if (Datastore.EmoteRegex.Matches(_message.OriginalText).Count > 7)

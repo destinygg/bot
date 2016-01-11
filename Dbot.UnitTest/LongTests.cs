@@ -855,6 +855,7 @@ namespace Dbot.UnitTest {
     public async Task UnicodeTest() {
       var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new PublicMessage("UserX", ""),
+        new PublicMessage("UserX", ""),
         new PublicMessage("UserX", "е"),
         new PublicMessage("UserX", "็"),
       });
@@ -863,6 +864,7 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 1h 20m")) == 1);
     }
 
     [TestMethod]
