@@ -26,31 +26,31 @@ namespace Dbot.Processor {
       _text = message.SanitizedText.Substring(1);
       _messageProcessor = messageProcessor;
       _commandDictionary = new Dictionary<List<string>, Func<string>> {
-      { new List<string> { "playlist" }, 
+      { new List<string> { "playlist" },
         () => "Playlist at last.fm/user/StevenBonnellII" },
-      { new List<string> { "rules", "unmoddharma" }, 
+      { new List<string> { "rules", "unmoddharma" },
         () => "github.com/destinygg/bot" },
-      { new List<string> { "refer", "sponsor" }, 
+      { new List<string> { "refer", "sponsor" },
         () => "destiny.gg/amazon ☜(ﾟヮﾟ☜) Amazon referral ☜(⌒▽⌒)☞ 25$ off Sprint network (☞ﾟヮﾟ)☞ destiny.gg/ting\nᕦ(ò_óˇ)ᕤ Carry things every day! EverydayCarry.com ᕦ(ˇò_ó)ᕤ" },
-      { new List<string> { "irc" }, 
+      { new List<string> { "irc" },
         () => "IRC will be implemented Soon™. For now, chat is echoed to Rizon IRC at qchat.rizon.net/?channels=#destinyecho . Forwarding of IRC chat to Destiny.gg Chat is available" },
-      { new List<string> { "time" }, 
+      { new List<string> { "time" },
         () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Settings.Timezone).ToShortTimeString() + " Central Steven Time" },
-      { new List<string> { "live" }, 
+      { new List<string> { "live" },
         () => Tools.LiveStatus() },
-      { new List<string> { "blog", "blag" }, 
+      { new List<string> { "blog", "blag" },
         () => Tools.FallibleCode(Blog) },
-      { new List<string> { "starcraft", "sc" }, 
+      { new List<string> { "starcraft", "sc" },
         () => Tools.FallibleCode(Starcraft) },
-      { new List<string> { "song" }, 
+      { new List<string> { "song" },
         () => Tools.FallibleCode(Song) },
-      { new List<string> { "pastsong", "lastsong", "previoussong", "earliersong" }, 
+      { new List<string> { "pastsong", "lastsong", "previoussong", "earliersong" },
         () => Tools.FallibleCode(EarlierSong) },
-      { new List<string> { "twitter", "tweet", "twatter" }, 
+      { new List<string> { "twitter", "tweet", "twatter" },
         Twitter },
-      { new List<string> { "youtube", "yt" }, 
+      { new List<string> { "youtube", "yt" },
         () => Tools.FallibleCode(Youtube) },
-      { new List<string> { "strim", "stream", "overrustle" }, 
+      { new List<string> { "strim", "stream", "overrustle" },
         () => Tools.FallibleCode(Overrustle) },
       };
     }
@@ -171,17 +171,22 @@ namespace Dbot.Processor {
         return "Destiny is live! destiny.gg/bigscreen";
       var json = Tools.DownloadData("http://api.overrustle.com/api");
       dynamic dyn = JsonConvert.DeserializeObject(json.Result);
-      var streamsObject = (JObject) dyn.streams;
-      var sArray = JObject.Parse(streamsObject.ToString());
+      var streamListArray = (JArray) dyn.stream_list;
+      var streamListInfo = JArray.Parse(streamListArray.ToString());
       var sb = new StringBuilder();
-      foreach (dynamic o in sArray.Children().OrderByDescending(x => x.First).Take(3)) {
-        var name = o.Name;
-        var viewers = o.Value.Value;
-        sb.Append(viewers);
-        sb.Append(" ");
-        sb.Append("overrustle.com");
-        sb.Append(name);
-        sb.Append("\n");
+      foreach (var o in streamListInfo.Children().Take(3)) {
+        foreach (dynamic child in o.Children()) {
+          if (child.Name == "rustlers") {
+            var viewers = child.Value.Value;
+            sb.Append(viewers);
+          } else if (child.Name == "url") {
+            var url = child.Value.Value;
+            sb.Append(" ");
+            sb.Append("overrustle.com");
+            sb.Append(url);
+            sb.Append("\n");
+          }
+        }
       }
       return sb.ToString().Trim();
     }
