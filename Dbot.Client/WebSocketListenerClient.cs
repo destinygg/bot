@@ -71,7 +71,7 @@ namespace Dbot.Client {
               Send(LatestPublicMessage);
               Tools.Log("Duplicate, sending: " + LatestPublicMessage.OriginalText, ConsoleColor.Magenta);
             } else {
-              Tools.Log("Server reports error: " + jsonMessage , ConsoleColor.Red);
+              Tools.Log("Server reports error: " + jsonMessage, ConsoleColor.Red);
             }
           }
           break;
@@ -111,8 +111,21 @@ namespace Dbot.Client {
 
     private void websocket_Closed(object sender, EventArgs e) {
       Tools.Log("Connection lost!", ConsoleColor.Red);
-      Thread.Sleep(TimeSpan.FromSeconds(10));
-      this._websocket.Open();
+      var retryCount = 0;
+      while (_websocket.State != WebSocketState.Open) {
+        var backoffTime = Math.Min((int) Math.Pow(2, retryCount), 60);
+        Thread.Sleep(TimeSpan.FromSeconds(backoffTime));
+        Tools.Log("retryCount is: " + retryCount + ", backoffTime is " + backoffTime);
+        try {
+          _websocket.Open();
+        } catch { }
+
+        while (_websocket.State != WebSocketState.Closed && _websocket.State != WebSocketState.Open) {
+          Tools.Log("Invalid websockets state: " + _websocket.State);
+          Thread.Sleep(TimeSpan.FromSeconds(1));
+        }
+        retryCount++;
+      }
     }
 
     private void websocket_Error(object sender, ErrorEventArgs e) {
