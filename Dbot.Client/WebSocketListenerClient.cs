@@ -118,7 +118,9 @@ namespace Dbot.Client {
         Tools.Log("retryCount is: " + retryCount + ", backoffTime is " + backoffTime);
         try {
           _websocket.Open();
-        } catch { }
+        } catch {
+          Tools.Log("Error opening socket in websocket_Closed.");
+        }
 
         while (_websocket.State != WebSocketState.Closed && _websocket.State != WebSocketState.Open) {
           Tools.Log("Invalid websockets state: " + _websocket.State);
@@ -129,7 +131,13 @@ namespace Dbot.Client {
     }
 
     private void websocket_Error(object sender, ErrorEventArgs e) {
+      Tools.Log("Websocket error!");
       Tools.ErrorLog(e.Exception);
+      try {
+        _websocket.Open();
+      } catch {
+        Tools.Log("Error opening socket in websocket_Error.");
+      }
     }
 
     private void websocket_Opened(object sender, EventArgs e) {
