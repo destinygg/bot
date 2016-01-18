@@ -82,8 +82,6 @@ namespace Dbot.Processor {
       if (selfSpam != null) return selfSpam;
       var numberSpam = NumberSpam();
       if (numberSpam != null) return numberSpam;
-      var emoteUserSpam = EmoteUserSpam();
-      if (emoteUserSpam != null) return emoteUserSpam;
       var repeatCharacterSpam = RepeatCharacterSpam();
       if (repeatCharacterSpam != null) return repeatCharacterSpam;
       var lineSpam = LineSpam();
@@ -205,12 +203,6 @@ namespace Dbot.Processor {
       if (!numberRegex.Match(_message.SanitizedText).Success) return null;
       var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(m => numberRegex.Match(m.SanitizedText).Success && _message.Nick == m.Nick) + 1; // To include the latest message that isn't in context yet.
       return numberMessages >= Settings.NumberSpamTriggerLength ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Counting down to your ban? 10m") : null;
-    }
-
-    private Mute EmoteUserSpam() {
-      if (!Datastore.EmoteWordRegex.Match(_message.OriginalText).Success) return null;
-      var emoteWordCount = _context.TakeLast(Settings.EmoteUserSpamContextLength).Count(x => Datastore.EmoteWordRegex.Match(x.OriginalText).Success) + 1; // To include the latest message that isn't in context yet.
-      return emoteWordCount >= Settings.EmoteUserSpamTriggerLength ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Too many faces; 10m") : null;
     }
 
     private Mute RepeatCharacterSpam() { //todo find a way to apply this to CTRL V as well
