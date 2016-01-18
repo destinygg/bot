@@ -47,7 +47,7 @@ namespace Dbot.Processor {
       }
 
       _messageProcessor.Nukes.Add(this);
-      _messageProcessor.Sender.Post(new PublicMessage(Duration.TotalSeconds / 1000 + "kilosecond missiles away!"));
+      _messageProcessor.Sender.Post(new PublicMessage(Tools.PrettyDeltaTime(duration) + " missiles away!"));
 
       while (PreordainedVictims.Except(VictimList).Any()) {
         if (!Cancel) {
