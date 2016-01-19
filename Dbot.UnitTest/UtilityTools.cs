@@ -52,27 +52,27 @@ namespace Dbot.UnitTest {
 
       var expectedAnswer = new List<string> {
         "50 days 23h",
-        
+
         "6 days 23h",
         "6 days 1h",
         "6 days",
-        
+
         "1 day 23h",
         "1 day 1h",
         "1 day",
-        
+
         "23h 59m",
         "23h 1m",
         "23h",
-        
+
         "1h 59m",
         "1h 1m",
         "1h",
-        
+
         "59m",
         "59m",
         "59m",
-        
+
         "1m",
         "1m",
         "1m",
@@ -182,6 +182,19 @@ namespace Dbot.UnitTest {
     public void StringNormalize() {
       var test = StringTools.RemoveDiacritics("NeoDéstiny е ё ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｑｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＱＸＹＺАнастасияäöüÄÖÜОльгаТатьяна");
       Assert.AreEqual(test, "NeoDestiny e e abcdefghijklmnopqrstuvqxyzABCDEFGHIJKLMNOPQRSTUVQXYZAnastasiyaaouAOUOl'gaTat'yana");
+    }
+
+    [TestMethod]
+    public void RandomInclusiveInt() {
+      var list = new List<int>();
+      foreach (var i in Enumerable.Range(0, 100)) {
+        var r = Tools.RandomInclusiveInt(5, 6);
+        list.Add(r);
+      }
+      Assert.IsFalse(list.Contains(4));
+      Assert.IsTrue(list.Contains(5));
+      Assert.IsTrue(list.Contains(6));
+      Assert.IsFalse(list.Contains(7));
     }
   }
 }

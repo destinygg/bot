@@ -247,5 +247,9 @@ namespace Dbot.Utility {
       const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
       return new string(Enumerable.Repeat(chars, length).Select(s => s[Random.Next(s.Length)]).ToArray());
     }
+
+    public static int RandomInclusiveInt(int min, int max) {
+      return Random.Next(min, max + 1);
+    }
   }
 }
