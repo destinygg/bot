@@ -595,47 +595,21 @@ namespace Dbot.UnitTest {
     }
 
     [TestMethod]
-    public async Task EmoteUserSpamTest() {
-      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
-        new PublicMessage("UserA", "Buffer"),
-        new PublicMessage("User1", "Kappa UserA"),
-        new PublicMessage("User2", "Kappa UserA"),
-        new PublicMessage("User3", "Kappa UserA"),
-        new PublicMessage("User4", "Kappa UserA"),
-        new PublicMessage("User5", "Kappa UserA"),
-        new PublicMessage("UserA", "Buffer"),
-        new PublicMessage("User6", "Kappa UserA"),
-      });
-      await Task.Delay(300);
-
-      Assert.IsTrue(r.Count(x => x.Contains("Muted user5")) == 0);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted user6")) == 1);
-    }
-
-    [TestMethod]
     public async Task ThirdPartyEmoteTest() {
       var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
         new ModPublicMessage("!addEMOTE FaceA"),
         new ModPublicMessage("!ADDemote MyEmoteB"),
         new ModPublicMessage("!listemote"),
-        new PublicMessage("User1", "FaceA UserA"),
-        new PublicMessage("User2", "FaceA UserA"),
-        new PublicMessage("User3", "FaceA UserA"),
-        new PublicMessage("User4", "FaceA UserA"),
-        new PublicMessage("User5", "FaceA UserA"),
-        new PublicMessage("User6", "Buffer"),
-        new PublicMessage("1Spam", "FaceA UserA"),
-        new PublicMessage("2Spam", "FaceA UserA"),
-        new PublicMessage("3Spam", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
-        new PublicMessage("User7", "facea facea facea facea facea facea facea facea facea facea" + Tools.RandomString(20)),
+        new PublicMessage("1Spam", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
+        new PublicMessage("User1", "facea facea facea facea facea facea facea facea facea facea" + Tools.RandomString(20)),
         new ModPublicMessage("!delemote FaceA"),
-        new PublicMessage("User8", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
-        new PublicMessage("4Spam", "MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB " + Tools.RandomString(20)),
+        new PublicMessage("User2", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
+        new PublicMessage("2Spam", "MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB " + Tools.RandomString(20)),
       });
       await Task.Delay(400);
 
       Assert.IsTrue(r.Count(x => x.Contains("FaceA, MyEmoteB")) == 1);
-      SpamAndUserAssert(r, 4);
+      SpamAndUserAssert(r, 2);
     }
 
     private static void SpamAndUserAssert(IList<string> returns, int spamMax) {
