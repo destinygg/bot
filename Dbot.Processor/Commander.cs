@@ -47,7 +47,7 @@ namespace Dbot.Processor {
       { new List<string> { "pastsong", "lastsong", "previoussong", "earliersong" },
         () => Tools.FallibleCode(EarlierSong) },
       { new List<string> { "twitter", "tweet", "twatter" },
-        Twitter },
+        () => Twitter("OmniDestiny") },
       { new List<string> { "youtube", "yt" },
         () => Tools.FallibleCode(Youtube) },
       { new List<string> { "strim", "stream", "overrustle" },
@@ -142,16 +142,16 @@ namespace Dbot.Processor {
       return name2 + " - " + artist2 + " played before " + name + " - " + artist + " ~" + prettyDelta + " ago";
     }
 
-    private string Twitter() {
+    private string Twitter(string twitterNick) {
       ExceptionHandler.SwallowWebExceptions = false;
       try {
-        var user = User.GetUserFromScreenName("OmniDestiny");
+        var user = User.GetUserFromScreenName(twitterNick);
         var timeline = user.GetUserTimeline(1);
         var tweet = timeline.First();
         var delta = Tools.PrettyDeltaTime(tweet.TweetLocalCreationDate - tweet.CreatedAt);
-        return "twitter.com/OmniDestiny " + delta + " ago: " + Tools.TweetPrettier(tweet);
+        return "twitter.com/" + twitterNick + " " + delta + " ago: " + Tools.TweetPrettier(tweet);
       } catch (TwitterException e) {
-        if (e.WebException != null && !string.IsNullOrWhiteSpace(e.WebException.Message))
+        if (!string.IsNullOrWhiteSpace(e.WebException?.Message))
           return "Twitter borked: " + e.WebException.Message;
         return "Twitter borked.";
       }
