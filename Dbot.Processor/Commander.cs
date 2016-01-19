@@ -52,6 +52,8 @@ namespace Dbot.Processor {
         () => Tools.FallibleCode(Youtube) },
       { new List<string> { "strim", "stream", "overrustle" },
         () => Tools.FallibleCode(Overrustle) },
+      { new List<string> { "randomaslan", "randomcat", "cat" },
+        () => Tools.FallibleCode(RandomAslan) },
       };
     }
 
@@ -189,6 +191,14 @@ namespace Dbot.Processor {
         }
       }
       return sb.ToString().Trim();
+    }
+
+    private string RandomAslan() {
+      var json = Tools.DownloadData("https://api.imgur.com/3/album/hCR89", PrivateConstants.ImgurAuthHeader);
+      dynamic dyn = JsonConvert.DeserializeObject(json.Result);
+      var imageCount = (int) dyn.data.images_count - 1;
+      var link = dyn.data.images[Tools.RandomInclusiveInt(0, imageCount)].link;
+      return "ASLAN ! " + link;
     }
   }
 }
