@@ -875,5 +875,15 @@ namespace Dbot.UnitTest {
 
       Assert.IsTrue(r.Count(x => x.Contains("imgur.com")) == 1); // todo make these use Assert.IsEqual or NUnit
     }
+
+    [TestMethod]
+    public async Task AslanTwitterTest() {
+      var r = await new PrimaryLogic().TestRun(new List<PublicMessage> {
+        new PublicMessage("!aslan"),
+      });
+      await Task.Delay(2000);
+
+      Assert.IsTrue(r.Count(x => x.Contains("twitter.com/AslanVondran")) == 1); // todo make these use Assert.IsEqual or NUnit
+    }
   }
 }

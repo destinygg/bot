@@ -58,6 +58,7 @@ namespace Dbot.Main {
 
     public async Task<IList<string>> TestRun(IEnumerable<PublicMessage> testInput) {
       InitializeDatastore.Run();
+      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret));
       var testClient = new TestClient();
       return await testClient.Run(new MessageProcessor(testClient), testInput);
     }

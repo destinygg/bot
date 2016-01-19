@@ -54,6 +54,8 @@ namespace Dbot.Processor {
         () => Tools.FallibleCode(Overrustle) },
       { new List<string> { "randomaslan", "randomcat", "cat" },
         () => Tools.FallibleCode(RandomAslan) },
+      { new List<string> { "aslan" },
+        () => Twitter("AslanVondran") },
       };
     }
 
