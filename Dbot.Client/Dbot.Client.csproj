@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IrcDotNet, Version=0.5.0.0, Culture=neutral, PublicKeyToken=44f6d157e750246b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\IRC.NET\src\source\IrcDotNet\bin\Debug\IrcDotNet.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
       <Private>True</Private>
@@ -77,6 +81,7 @@
     <Compile Include="SampleClient.cs" />
     <Compile Include="ConsolePrintClient.cs" />
     <Compile Include="TestClient.cs" />
+    <Compile Include="TwitchListenerClient.cs" />
     <Compile Include="WebSocketClient.cs" />
     <Compile Include="WebSocketListenerClient.cs" />
   </ItemGroup>
