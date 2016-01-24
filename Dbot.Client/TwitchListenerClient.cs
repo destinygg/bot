@@ -4,48 +4,53 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Dbot.CommonModels;
 using Dbot.Utility;
 using IrcDotNet;
 
 namespace Dbot.Client {
-  public class TwitchListenerClient {
+  public class TwitchListenerClient : IClientVisitor {
     public TwitchListenerClient() {
+
+    }
+
+    public void Run(IProcessor processor) {
       var server = "irc.twitch.tv";
       var username = PrivateConstants.TwitchNick;
       var password = PrivateConstants.TwitchOauth;
       Console.WriteLine("Starting to connect to twitch as {0}.", username);
 
       var client = new TwitchIrcClient();
-        client.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
-        client.Disconnected += IrcClient_Disconnected;
-        client.Registered += IrcClient_Registered;
-        // Wait until connection has succeeded or timed out.
-        using (var registeredEvent = new ManualResetEventSlim(false)) {
-          using (var connectedEvent = new ManualResetEventSlim(false)) {
-            client.Connected += (sender2, e2) => connectedEvent.Set();
-            client.Registered += (sender2, e2) => registeredEvent.Set();
-            client.Connect(server, false,
-                new IrcUserRegistrationInfo() {
-                  NickName = username,
-                  Password = password,
-                  UserName = username
-                });
-            if (!connectedEvent.Wait(10000)) {
-              Console.WriteLine("Connection to '{0}' timed out.", server);
-              return;
-            }
-          }
-          Console.Out.WriteLine("Now connected to '{0}'.", server);
-          if (!registeredEvent.Wait(10000)) {
-            Console.WriteLine("Could not register to '{0}'.", server);
+      client.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
+      client.Disconnected += IrcClient_Disconnected;
+      client.Registered += IrcClient_Registered;
+      // Wait until connection has succeeded or timed out.
+      using (var registeredEvent = new ManualResetEventSlim(false)) {
+        using (var connectedEvent = new ManualResetEventSlim(false)) {
+          client.Connected += (sender2, e2) => connectedEvent.Set();
+          client.Registered += (sender2, e2) => registeredEvent.Set();
+          client.Connect(server, false,
+            new IrcUserRegistrationInfo() {
+              NickName = username,
+              Password = password,
+              UserName = username
+            });
+          if (!connectedEvent.Wait(10000)) {
+            Console.WriteLine("Connection to '{0}' timed out.", server);
             return;
           }
         }
-
-        Console.Out.WriteLine("Now registered to '{0}' as '{1}'.", server, username);
-      client.Channels.Join("#dharmaturtle");
-        HandleEventLoop(client);
+        Console.Out.WriteLine("Now connected to '{0}'.", server);
+        if (!registeredEvent.Wait(10000)) {
+          Console.WriteLine("Could not register to '{0}'.", server);
+          return;
+        }
       }
+
+      Console.Out.WriteLine("Now registered to '{0}' as '{1}'.", server, username);
+      client.Channels.Join("#dharmaturtle");
+      HandleEventLoop(client);
+    }
 
     private static void HandleEventLoop(IrcDotNet.IrcClient client) {
       bool isExit = false;
@@ -149,6 +154,34 @@ namespace Dbot.Client {
 
     private static void IrcClient_Connected(object sender, EventArgs e) {
       var client = (IrcClient) sender;
+    }
+
+    public void Forward(PublicMessage message) {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(PrivateMessage privateMessage) {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(PublicMessage publicMessage) {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(Mute mute) {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(UnMuteBan unMuteBan) {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(Subonly subonly) {
+      throw new NotImplementedException();
+    }
+
+    public void Visit(Ban ban) {
+      throw new NotImplementedException();
     }
   }
 }
