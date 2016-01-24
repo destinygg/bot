@@ -10,9 +10,8 @@ using IrcDotNet;
 
 namespace Dbot.Client {
   public class TwitchListenerClient : IClientVisitor {
-    public TwitchListenerClient() {
 
-    }
+    public TwitchIrcClient Client { get; } = new TwitchIrcClient();
 
     public void Run(IProcessor processor) {
       var server = "irc.twitch.tv";
@@ -20,16 +19,15 @@ namespace Dbot.Client {
       var password = PrivateConstants.TwitchOauth;
       Console.WriteLine("Starting to connect to twitch as {0}.", username);
 
-      var client = new TwitchIrcClient();
-      client.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
-      client.Disconnected += IrcClient_Disconnected;
-      client.Registered += IrcClient_Registered;
+      Client.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
+      Client.Disconnected += IrcClient_Disconnected;
+      Client.Registered += IrcClient_Registered;
       // Wait until connection has succeeded or timed out.
       using (var registeredEvent = new ManualResetEventSlim(false)) {
         using (var connectedEvent = new ManualResetEventSlim(false)) {
-          client.Connected += (sender2, e2) => connectedEvent.Set();
-          client.Registered += (sender2, e2) => registeredEvent.Set();
-          client.Connect(server, false,
+          Client.Connected += (sender2, e2) => connectedEvent.Set();
+          Client.Registered += (sender2, e2) => registeredEvent.Set();
+          Client.Connect(server, false,
             new IrcUserRegistrationInfo() {
               NickName = username,
               Password = password,
@@ -48,8 +46,8 @@ namespace Dbot.Client {
       }
 
       Console.Out.WriteLine("Now registered to '{0}' as '{1}'.", server, username);
-      client.Channels.Join("#dharmaturtle");
-      HandleEventLoop(client);
+      Client.Channels.Join("#dharmaturtle");
+      HandleEventLoop(Client);
     }
 
     private static void HandleEventLoop(IrcDotNet.IrcClient client) {
