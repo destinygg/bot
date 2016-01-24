@@ -47,30 +47,6 @@ namespace Dbot.Client {
 
       Console.Out.WriteLine("Now registered to '{0}' as '{1}'.", server, username);
       Client.Channels.Join("#dharmaturtle");
-      HandleEventLoop(Client);
-    }
-
-    private static void HandleEventLoop(IrcDotNet.IrcClient client) {
-      bool isExit = false;
-      while (!isExit) {
-        Console.Write("> ");
-        var command = Console.ReadLine();
-        switch (command) {
-          case "exit":
-            isExit = true;
-            break;
-          default:
-            if (!string.IsNullOrEmpty(command)) {
-              if (command.StartsWith("/") && command.Length > 1) {
-                client.SendRawMessage(command.Substring(1));
-              } else {
-                Console.WriteLine("unknown command '{0}'", command);
-              }
-            }
-            break;
-        }
-      }
-      client.Disconnect();
     }
 
     private static void IrcClient_Registered(object sender, EventArgs e) {
