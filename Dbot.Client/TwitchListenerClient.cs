@@ -12,8 +12,10 @@ namespace Dbot.Client {
   public class TwitchListenerClient : IClientVisitor {
 
     public TwitchIrcClient Client { get; } = new TwitchIrcClient();
+    private IProcessor _processor;
 
     public void Run(IProcessor processor) {
+      _processor = processor;
       var server = "irc.twitch.tv";
       var username = PrivateConstants.TwitchNick;
       var password = PrivateConstants.TwitchOauth;
