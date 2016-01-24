@@ -15,7 +15,7 @@ namespace Dbot.Client {
       var password = PrivateConstants.TwitchOauth;
       Console.WriteLine("Starting to connect to twitch as {0}.", username);
 
-      using (var client = new IrcDotNet.TwitchIrcClient()) {
+      var client = new TwitchIrcClient();
         client.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
         client.Disconnected += IrcClient_Disconnected;
         client.Registered += IrcClient_Registered;
@@ -43,9 +43,9 @@ namespace Dbot.Client {
         }
 
         Console.Out.WriteLine("Now registered to '{0}' as '{1}'.", server, username);
+      client.Channels.Join("#dharmaturtle");
         HandleEventLoop(client);
       }
-    }
 
     private static void HandleEventLoop(IrcDotNet.IrcClient client) {
       bool isExit = false;
