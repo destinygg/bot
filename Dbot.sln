@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Client", "Dbot.Client\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.WebSocketModels", "Dbot.WebSocketModels\Dbot.WebSocketModels.csproj", "{B5EACEA0-BA29-4FA5-A692-27BD699FCDAD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Main", "Main", "{963F2F72-3CC6-4975-BFD3-00471FCC004A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Service", "Dbot.Service\Dbot.Service.csproj", "{EE5D6C87-675B-43A6-8F7D-9ED227968DEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,10 @@ Global
 		{B5EACEA0-BA29-4FA5-A692-27BD699FCDAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5EACEA0-BA29-4FA5-A692-27BD699FCDAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5EACEA0-BA29-4FA5-A692-27BD699FCDAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE5D6C87-675B-43A6-8F7D-9ED227968DEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE5D6C87-675B-43A6-8F7D-9ED227968DEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE5D6C87-675B-43A6-8F7D-9ED227968DEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE5D6C87-675B-43A6-8F7D-9ED227968DEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,5 +78,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{65D520B2-5739-4908-90B0-739CB4DAAC4D} = {D5C9D8F2-D660-41B9-AE22-E1732127FB13}
 		{E27FAB2D-880D-4137-B32A-23E7DB585BF3} = {D5C9D8F2-D660-41B9-AE22-E1732127FB13}
+		{EE5D6C87-675B-43A6-8F7D-9ED227968DEA} = {963F2F72-3CC6-4975-BFD3-00471FCC004A}
 	EndGlobalSection
 EndGlobal
