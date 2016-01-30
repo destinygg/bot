@@ -34,7 +34,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,14 +49,20 @@
     <Compile Include="PrimaryService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PrimaryService.Designer.cs">
-      <DependentUpon>PrimaryService.cs</DependentUpon>
+    <Compile Include="PrimaryServiceInstaller.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dbot.Main\Dbot.Main.csproj">
+      <Project>{2D7C9BBC-6FE8-4734-B045-A7E4A6C1F2A9}</Project>
+      <Name>Dbot.Main</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
