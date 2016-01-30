@@ -100,7 +100,7 @@ namespace Dbot.Processor {
 
     private void Log(Message message) {
 #if DEBUG
-      Console.WriteLine(message.Ordinal + " " + message.Nick + ": " + message.OriginalText);
+      Logger.Write(message.Ordinal + " " + message.Nick + ": " + message.OriginalText);
 #endif
       Datastore.InsertMessage(message);
     }

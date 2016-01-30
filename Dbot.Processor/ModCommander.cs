@@ -242,7 +242,7 @@ namespace Dbot.Processor {
         if (ip && stringInt == "") return TimeSpan.Zero;
         return TimeSpan.FromMinutes(i);
       }
-      Tools.Log("Somehow an invalid time passed the regex. StringInt:" + stringInt + ", s:" + s + ", ip:" + ip, ConsoleColor.Red);
+      Logger.Write("Somehow an invalid time passed the regex. StringInt:" + stringInt + ", s:" + s + ", ip:" + ip, ConsoleColor.Red);
       return TimeSpan.FromMinutes(10);
     }
 

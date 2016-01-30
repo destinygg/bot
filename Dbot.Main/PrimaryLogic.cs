@@ -24,6 +24,7 @@ namespace Dbot.Main {
     }
 
     public void Run() {
+      Logger.Init();
       InitializeDatastore.Run();
       Auth.SetCredentials(new TwitterCredentials(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret));
       var stream = Stream.CreateUserStream();

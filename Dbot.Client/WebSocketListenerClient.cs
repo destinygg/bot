@@ -49,7 +49,7 @@ namespace Dbot.Client {
       switch (actionMessage) {
         case "NAMES": {
             var names = JsonConvert.DeserializeObject<NamesReceiver>(jsonMessage);
-            Tools.Log(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
+            Logger.Write(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
           }
           break;
         case "MSG": {
@@ -69,9 +69,9 @@ namespace Dbot.Client {
             if (jsonMessage == "\"duplicate\"") {
               LatestPublicMessage.OriginalText = LatestPublicMessage.OriginalText + ".";
               Send(LatestPublicMessage);
-              Tools.Log("Duplicate, sending: " + LatestPublicMessage.OriginalText, ConsoleColor.Magenta);
+              Logger.Write("Duplicate, sending: " + LatestPublicMessage.OriginalText, ConsoleColor.Magenta);
             } else {
-              Tools.Log("Server reports error: " + jsonMessage, ConsoleColor.Red);
+              Logger.Write("Server reports error: " + jsonMessage, ConsoleColor.Red);
             }
           }
           break;
@@ -104,26 +104,26 @@ namespace Dbot.Client {
           }
           break;
         default:
-          Tools.Log(e.Message, ConsoleColor.Red);
+          Logger.Write(e.Message, ConsoleColor.Red);
           break;
       }
     }
 
     private void websocket_Closed(object sender, EventArgs e) {
-      Tools.Log("Connection lost!", ConsoleColor.Red);
+      Logger.Write("Connection lost!", ConsoleColor.Red);
       var retryCount = 0;
       while (_websocket.State != WebSocketState.Open) {
         var backoffTime = Math.Min((int) Math.Pow(2, retryCount), 60);
         Thread.Sleep(TimeSpan.FromSeconds(backoffTime));
-        Tools.Log("retryCount is: " + retryCount + ", backoffTime is " + backoffTime);
+        Logger.Write("retryCount is: " + retryCount + ", backoffTime is " + backoffTime);
         try {
           _websocket.Open();
         } catch {
-          Tools.Log("Error opening socket in websocket_Closed.");
+          Logger.Write("Error opening socket in websocket_Closed.");
         }
 
         while (_websocket.State != WebSocketState.Closed && _websocket.State != WebSocketState.Open) {
-          Tools.Log("Invalid websockets state: " + _websocket.State);
+          Logger.Write("Invalid websockets state: " + _websocket.State);
           Thread.Sleep(TimeSpan.FromSeconds(1));
         }
         retryCount++;
@@ -131,22 +131,22 @@ namespace Dbot.Client {
     }
 
     private void websocket_Error(object sender, ErrorEventArgs e) {
-      Tools.Log("Websocket error!");
-      Tools.ErrorLog(e.Exception);
+      Logger.Write("Websocket error!");
+      Logger.ErrorLog(e.Exception);
       try {
         _websocket.Open();
       } catch {
-        Tools.Log("Error opening socket in websocket_Error.");
+        Logger.Write("Error opening socket in websocket_Error.");
       }
     }
 
     private void websocket_Opened(object sender, EventArgs e) {
-      Tools.Log("Connected!", ConsoleColor.Green);
+      Logger.Write("Connected!", ConsoleColor.Green);
     }
 
     public void Send(PublicMessage publicMessage) {
       LatestPublicMessage = publicMessage;
-      Tools.Log("Messaged " + publicMessage.OriginalText);
+      Logger.Write("Messaged " + publicMessage.OriginalText);
     }
   }
 }

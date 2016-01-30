@@ -35,15 +35,15 @@ namespace Dbot.Processor {
       Cancel = false;
 
       PreordainedVictims = context.Where(c => !c.IsMod).Where(s => Predicate(s.SanitizedText) || Predicate(s.OriginalText)).Select(x => x.Nick).Distinct().ToList();
-      Tools.Log(string.Join(",", PreordainedVictims), ConsoleColor.Cyan);
+      Logger.Write(string.Join(",", PreordainedVictims), ConsoleColor.Cyan);
 
       try {
         var nuke = new AntiNuke(_messageProcessor);
         var cancelToken = nuke.CancellationTokenSource.Token;
         await Task.Run(() => nuke.Dissipate(this), cancelToken);
       } catch (TaskCanceledException e) {
-        Tools.Log("Cancelled!" + Word + Regex);
-        Tools.Log(e.Message);
+        Logger.Write("Cancelled!" + Word + Regex);
+        Logger.Write(e.Message);
       }
 
       _messageProcessor.Nukes.Add(this);

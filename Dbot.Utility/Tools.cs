@@ -15,63 +15,6 @@ using Tweetinvi.Core.Interfaces;
 
 namespace Dbot.Utility {
   public static class Tools {
-    public static void Log(string text, ConsoleColor color = ConsoleColor.White) {
-      Console.ForegroundColor = ConsoleColor.Cyan;
-      Console.Write(Process.GetCurrentProcess().Threads.Count + " ");
-      Console.ForegroundColor = ConsoleColor.DarkCyan;
-      Console.Write(DateTime.UtcNow.ToString("T"));
-      Console.ForegroundColor = color;
-      Console.WriteLine(" " + text);
-      Console.ResetColor();
-    }
-
-    public static void ErrorLog(string text) {
-      Log(text, ConsoleColor.Red);
-#if DEBUG
-      throw new Exception(text);
-#endif
-    }
-
-    public static void ErrorLog(Exception exception) {
-      var builder = new StringBuilder();
-      WriteExceptionDetails(exception, builder, 0);
-      ErrorLog(builder.ToString());
-#if DEBUG
-      throw exception;
-#endif
-    }
-
-    public static void WriteExceptionDetails(Exception exception, StringBuilder builderToFill, int level) {
-      var indent = new string(' ', level);
-
-      if (level > 0) {
-        builderToFill.AppendLine(indent + "=== INNER EXCEPTION ===");
-      }
-
-      Action<string> append = (prop) => {
-        var propInfo = exception.GetType().GetProperty(prop);
-        var val = propInfo.GetValue(exception);
-
-        if (val != null) {
-          builderToFill.AppendFormat("{0}{1}: {2}{3}", indent, prop, val.ToString(), Environment.NewLine);
-        }
-      };
-
-      append("Message");
-      append("HResult");
-      append("HelpLink");
-      append("Source");
-      append("StackTrace");
-      append("TargetSite");
-
-      foreach (DictionaryEntry de in exception.Data) {
-        builderToFill.AppendFormat("{0} {1} = {2}{3}", indent, de.Key, de.Value, Environment.NewLine);
-      }
-
-      if (exception.InnerException != null) {
-        WriteExceptionDetails(exception.InnerException, builderToFill, ++level);
-      }
-    }
 
     public static string PrettyDeltaTime(TimeSpan span, string rough = "") {
       int day = Convert.ToInt32(span.ToString("%d"));
@@ -79,7 +22,7 @@ namespace Dbot.Utility {
       int minute = Convert.ToInt32(span.ToString("%m"));
 
       if (span.CompareTo(TimeSpan.Zero) == -1) {
-        Log("Time to sync the clock?" + span, ConsoleColor.Red);
+        Logger.ErrorLog("Time to sync the clock?" + span);
         return "a few seconds";
       }
 
@@ -125,14 +68,14 @@ namespace Dbot.Utility {
           Datastore.Delay = delay;
         } else {
           Datastore.Delay = -1;
-          ErrorLog("Tryparse on Delay failed");
+          Logger.ErrorLog("Tryparse on Delay failed");
         }
         var parseViewers = Int32.TryParse(viewersJvalue.Value.ToString(), out viewers);
         if (parseViewers) {
           Datastore.Viewers = viewers;
         } else {
           Datastore.Viewers = -1;
-          ErrorLog("Tryparse on Viewers failed");
+          Logger.ErrorLog("Tryparse on Viewers failed");
         }
         return true;
       }
@@ -143,8 +86,8 @@ namespace Dbot.Utility {
       try {
         return LiveStatus(GetLiveApi(), DateTime.UtcNow, wait);
       } catch (Exception e) {
-        ErrorLog("Live check failed.");
-        ErrorLog(e);
+        Logger.ErrorLog("Live check failed.");
+        Logger.ErrorLog(e);
         return "Live check failed.";
       }
     }
@@ -178,7 +121,7 @@ namespace Dbot.Utility {
         Datastore.UpdateStateVariable(MagicStrings.OnTime, 0, wait);
         return "Stream offline for " + PrettyDeltaTime(offTimeDelta, "~");
       }
-      ErrorLog(String.Format("LiveStatus()'s ifs failed. LiveStatus: {0}. In minutes: OnTimeΔ {1}. OffTimeΔ {2}", liveStatus, onTimeDelta.TotalMinutes, offTimeDelta.TotalMinutes));
+      Logger.ErrorLog($"LiveStatus()'s ifs failed. LiveStatus: {liveStatus}. In minutes: OnTimeΔ {onTimeDelta.TotalMinutes}. OffTimeΔ {offTimeDelta.TotalMinutes}");
       return "Live check failed";
     }
 
@@ -198,13 +141,13 @@ namespace Dbot.Utility {
         }
         return await client.DownloadStringTaskAsync(url);
       } catch (Exception e) {
-        Log("An error in DownloadData!", ConsoleColor.Red);
-        Log("Url   : " + url, ConsoleColor.Red);
-        if (header == "") Log("Header is empty string.", ConsoleColor.Red);
-        else Log("Header: " + header, ConsoleColor.Red);
-        Log(e.Message, ConsoleColor.Red);
-        Log(e.Source, ConsoleColor.Red);
-        Log(e.StackTrace, ConsoleColor.Red);
+        Logger.Write("An error in DownloadData!", ConsoleColor.Red);
+        Logger.Write("Url   : " + url, ConsoleColor.Red);
+        if (header == "") Logger.Write("Header is empty string.", ConsoleColor.Red);
+        else Logger.Write("Header: " + header, ConsoleColor.Red);
+        Logger.Write(e.Message, ConsoleColor.Red);
+        Logger.Write(e.Source, ConsoleColor.Red);
+        Logger.Write(e.StackTrace, ConsoleColor.Red);
         return "Error! " + e;
       }
     }
@@ -221,7 +164,7 @@ namespace Dbot.Utility {
         r = inputFunc();
       } catch (Exception e) {
         r = "A server somewhere is choking on a hairball";
-        ErrorLog(e);
+        Logger.ErrorLog(e);
       }
       return r;
     }

@@ -157,7 +157,7 @@ namespace Dbot.Processor {
       var match = Regex.Match(_originalText, regex);
       if (match.Success) return match.Groups[1].Value;
       Debug.Assert(match.Success);
-      Tools.ErrorLog("Imgur " + imgurId + " error on " + _message.Nick + " saying " + _originalText);
+      Logger.ErrorLog("Imgur " + imgurId + " error on " + _message.Nick + " saying " + _originalText);
       return "";
     }
 
@@ -175,9 +175,9 @@ namespace Dbot.Processor {
       foreach (var longMessage in longMessages) {
         var delta = Convert.ToInt32(StringTools.Delta(_text, longMessage.SanitizedText) * 100);
         if (delta > Settings.LongSpamSimilarity) {
-          Tools.Log("Muted " + _message.Nick + " for longspam");
-          Tools.Log("Current " + _message.Ordinal + ": " + _originalText);
-          Tools.Log("Previous" + longMessage.Ordinal + ": " + longMessage.SanitizedText);
+          Logger.Write("Muted " + _message.Nick + " for longspam");
+          Logger.Write("Current " + _message.Ordinal + ": " + _originalText);
+          Logger.Write("Previous" + longMessage.Ordinal + ": " + longMessage.SanitizedText);
           if (_message.SanitizedText.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier) {
             return new Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + delta + "% = past text");
           }

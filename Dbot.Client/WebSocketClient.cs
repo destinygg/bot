@@ -42,7 +42,7 @@ namespace Dbot.Client {
     }
 
     public override void Visit(Subonly subonly) {
-      Tools.Log(subonly.Enabled ? "Subonly enabled" : "Subonly disabled"); //todo
+      Logger.Write(subonly.Enabled ? "Subonly enabled" : "Subonly disabled"); //todo
       throw new NotImplementedException("Todo");
       //_websocket.Send(subonly.ToString());
     }

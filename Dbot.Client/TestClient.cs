@@ -55,7 +55,7 @@ namespace Dbot.Client {
 
     private void Print(ISendableVisitable sendableVisitable) {
       _log.Add(sendableVisitable.ToString());
-      Tools.Log(sendableVisitable.ToString());
+      Logger.Write(sendableVisitable.ToString());
     }
   }
 }
