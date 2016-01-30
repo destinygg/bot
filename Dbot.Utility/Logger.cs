@@ -11,8 +11,7 @@ namespace Dbot.Utility {
   public static class Logger {
     static StreamWriter Log;
 
-    public static void Init()
-    {
+    public static void Init() {
       const string folderName = "Logs";
       var fileNamePath = $"{folderName}//{DateTime.UtcNow.Date.ToString("yyyy-MM-dd")}.txt";
 

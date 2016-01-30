@@ -4,6 +4,8 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using Dbot.Main;
+using Dbot.Utility;
 
 namespace Dbot.Service {
   public class PrimaryService : ServiceBase {
@@ -42,6 +44,11 @@ namespace Dbot.Service {
     /// </summary>
     /// <param name="args"></param>
     protected override void OnStart(string[] args) {
+      try {
+        new PrimaryLogic().Run();
+      } catch (Exception e) {
+        Logger.ErrorLog(e);
+      }
       base.OnStart(args);
     }
 
