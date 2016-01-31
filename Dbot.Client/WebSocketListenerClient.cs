@@ -16,6 +16,7 @@ namespace Dbot.Client {
     private IProcessor _processor;
     private readonly List<string> _modList;
     protected PublicMessage LatestPublicMessage;
+    private int _retryCount = 0;
 
     public WebSocketListenerClient(string websocketAuth) {
       _modList = new List<string>();
@@ -110,24 +111,12 @@ namespace Dbot.Client {
     }
 
     private void websocket_Closed(object sender, EventArgs e) {
-      Logger.Write("Connection lost!", ConsoleColor.Red);
-      var retryCount = 0;
-      while (_websocket.State != WebSocketState.Open) {
-        var backoffTime = Math.Min((int) Math.Pow(2, retryCount), 60);
-        Thread.Sleep(TimeSpan.FromSeconds(backoffTime));
-        Logger.Write("retryCount is: " + retryCount + ", backoffTime is " + backoffTime);
-        try {
-          _websocket.Open();
-        } catch {
-          Logger.Write("Error opening socket in websocket_Closed.");
-        }
+      var backoffTime = Math.Min((int) Math.Pow(2, _retryCount), 20);
+      Logger.Write($"Connection lost! _retryCount is {_retryCount} and backoffTime is {backoffTime}", ConsoleColor.Red);
+      Thread.Sleep(TimeSpan.FromSeconds(backoffTime));
+      _retryCount++;
+      _websocket.Open();
 
-        while (_websocket.State != WebSocketState.Closed && _websocket.State != WebSocketState.Open) {
-          Logger.Write("Invalid websockets state: " + _websocket.State);
-          Thread.Sleep(TimeSpan.FromSeconds(1));
-        }
-        retryCount++;
-      }
     }
 
     private void websocket_Error(object sender, ErrorEventArgs e) {
@@ -141,6 +130,7 @@ namespace Dbot.Client {
     }
 
     private void websocket_Opened(object sender, EventArgs e) {
+      _retryCount = 0;
       Logger.Write("Connected!", ConsoleColor.Green);
     }
 
