@@ -19,14 +19,14 @@ namespace Dbot.Client {
       _processor = processor;
       _log = new List<string>();
       foreach (var message in testInput) {
-        processor.ProcessMessage(message);
+        processor.Process(message);
         await Task.Run(() => Task.Delay(100));
       }
       return _log;
     }
 
     public void Forward(PublicMessage message) {
-      _processor.ProcessMessage(message);
+      _processor.Process(message);
     }
 
     public void Visit(PrivateMessage privateMessage) {

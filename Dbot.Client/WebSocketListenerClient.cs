@@ -36,7 +36,7 @@ namespace Dbot.Client {
     }
 
     public override void Forward(PublicMessage message) {
-      _processor.ProcessMessage(message);
+      _processor.Process(message);
     }
 
     private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -57,13 +57,13 @@ namespace Dbot.Client {
             var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
             var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
             if (isMod && !_modList.Contains(msg.Nick)) _modList.Add(msg.Nick);
-            _processor.ProcessMessage(new PublicMessage(msg.Nick, msg.Data) { IsMod = isMod });
+            _processor.Process(new PublicMessage(msg.Nick, msg.Data) { IsMod = isMod });
           }
           break;
         case "PRIVMSG": {
             var privmsg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
             var isMod = _modList.Contains(privmsg.Nick);
-            _processor.ProcessMessage(new PrivateMessage(privmsg.Nick, privmsg.Data) { IsMod = isMod });
+            _processor.Process(new PrivateMessage(privmsg.Nick, privmsg.Data) { IsMod = isMod });
           }
           break;
         case "ERR": {

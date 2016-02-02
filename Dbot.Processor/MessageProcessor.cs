@@ -36,7 +36,7 @@ namespace Dbot.Processor {
       _modCommander = new ActionBlock<Message>(m => ModCommand(m));
     }
 
-    public void ProcessMessage(PublicMessage message) {
+    public void Process(PublicMessage message) {
       message.Ordinal = _contextIndex;
       _contextDictionary.TryAdd(_contextIndex, message);
       _contextIndex++;
@@ -63,7 +63,7 @@ namespace Dbot.Processor {
         Banner.Post(message);
     }
 
-    public void ProcessMessage(PrivateMessage message) {
+    public void Process(PrivateMessage message) {
       if (message.SanitizedText[0] == '!' && message.IsMod) {
         _commander.Post(message);
         _modCommander.Post(message);

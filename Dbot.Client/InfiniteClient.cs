@@ -9,14 +9,14 @@ namespace Dbot.Client {
       _processor = processor;
       long i = -1;
       while (true) {
-        processor.ProcessMessage(new PublicMessage("notBot", i.ToString()));
+        processor.Process(new PublicMessage("notBot", i.ToString()));
         await Task.Run(() => Thread.Sleep(0));
         i++;
       }
     }
 
     public override void Forward(PublicMessage message) {
-      _processor.ProcessMessage(message);
+      _processor.Process(message);
     }
   }
 }

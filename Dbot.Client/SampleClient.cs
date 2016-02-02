@@ -13,13 +13,13 @@ namespace Dbot.Client {
       _processor = processor;
       ParseRawIrc();
       foreach (var message in _messageList) {
-        processor.ProcessMessage(message);
+        processor.Process(message);
         await Task.Run(() => Task.Delay(100));
       }
     }
 
     public override void Forward(PublicMessage message) {
-      _processor.ProcessMessage(message);
+      _processor.Process(message);
     }
 
     private void ParseRawIrc() {
