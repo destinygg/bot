@@ -135,7 +135,7 @@ namespace Dbot.Processor {
           }
           _messageProcessor.Sender.Post(new Mute {
             Duration = banTime,
-            Nick = nick,
+            Victim = nick,
             Reason = reason,
             SilentReason = true,
           });

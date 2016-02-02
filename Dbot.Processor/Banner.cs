@@ -122,7 +122,7 @@ namespace Dbot.Processor {
           hasVictim.Duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * Math.Pow(2, count - 1));
           break;
       }
-      hasVictim.Nick = _message.Nick;
+      hasVictim.Victim = _message.Nick;
       return hasVictim;
     }
 
