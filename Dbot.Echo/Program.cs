@@ -4,14 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Dbot.Client;
+using Dbot.Processor;
+using Dbot.Utility;
 using IrcDotNet;
 
 namespace Dbot.Echo {
   class Program {
+
+    public static string EchoChannel = "#destinyecho";
+
     static void Main(string[] args) {
 
+      Logger.Init();
+
       var server = "irc.rizon.net";
-      var username = "dharma_bot";
+      var username = "II";
 
       using (var client = new StandardIrcClient()) {
         client.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
@@ -41,13 +49,16 @@ namespace Dbot.Echo {
         }
 
         Console.Out.WriteLine("Now registered to '{0}' as '{1}'.", server, username);
-        client.Channels.Join("#destinyecho");
+        client.Channels.Join(EchoChannel);
 
         HandleEventLoop(client);
       }
     }
 
     private static void HandleEventLoop(IrcClient client) {
+      var s = new WebSocketListenerClient(PrivateConstants.TestAccountWebsocketAuth);
+      s.Run(new PassThroughProcessor(x => SendToEcho(client.LocalUser, x)));
+
       bool isExit = false;
       while (!isExit) {
         Console.Write("> ");
@@ -68,6 +79,10 @@ namespace Dbot.Echo {
         }
       }
       client.Disconnect();
+    }
+
+    public static void SendToEcho(IrcLocalUser localUser, string message) {
+      localUser.SendMessage(EchoChannel, message);
     }
 
     private static void IrcClient_Disconnected(object sender, EventArgs e) {

@@ -119,6 +119,7 @@
     <Compile Include="ModCommander.cs" />
     <Compile Include="ModCommands.cs" />
     <Compile Include="Nuke.cs" />
+    <Compile Include="PassThroughProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
