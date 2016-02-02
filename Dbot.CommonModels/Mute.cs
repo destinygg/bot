@@ -6,9 +6,9 @@ namespace Dbot.CommonModels {
   public class Mute : HasVictim {
     public Mute() { }
 
-    public Mute(string nick, TimeSpan duration, string reason) {
+    public Mute(string victim, TimeSpan duration, string reason) {
       Duration = duration;
-      Nick = nick;
+      Victim = victim;
       Reason = reason;
     }
     private TimeSpan _duration;
@@ -24,7 +24,7 @@ namespace Dbot.CommonModels {
     }
 
     public override string ToString() {
-      return "Muted " + Nick + " for " + Tools.PrettyDeltaTime(Duration);
+      return $"Muted {Victim} for {Tools.PrettyDeltaTime(Duration)}";
     }
   }
 }
