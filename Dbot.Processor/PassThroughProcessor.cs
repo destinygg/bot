@@ -18,7 +18,11 @@ namespace Dbot.Processor {
     }
 
     public void Process(PrivateMessage message) {
-      throw new NotImplementedException();
+      //throw new NotImplementedException();
+    }
+
+    public void Process(Mute mute) {
+      _sender.Invoke($"<{mute.Nick}> <=== just muted {mute.Victim}");
     }
   }
 }

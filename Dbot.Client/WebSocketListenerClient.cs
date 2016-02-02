@@ -86,8 +86,14 @@ namespace Dbot.Client {
           break;
         case "MUTE": {
             var mute = JsonConvert.DeserializeObject<MuteReceiver>(jsonMessage);
+            _processor.Process(
+              new Mute {
+                Nick = mute.Nick,
+                Victim = mute.Data,
+              }
+            );
+            break;
           }
-          break;
         case "BAN": {
             var ban = JsonConvert.DeserializeObject<BanReceiver>(jsonMessage);
           }

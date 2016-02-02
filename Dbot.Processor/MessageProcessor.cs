@@ -70,6 +70,8 @@ namespace Dbot.Processor {
       }
     }
 
+    public void Process(Mute mute) { }
+
     private void Command(Message message) {
       var output = new Commander(message, this).Run();
       if (output != null)
