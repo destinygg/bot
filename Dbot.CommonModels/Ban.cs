@@ -7,16 +7,16 @@ namespace Dbot.CommonModels {
 
     public Ban() { }
 
-    public Ban(string nick, TimeSpan duration, string reason) {
+    public Ban(string victim, TimeSpan duration, string reason) {
       Duration = duration;
-      Nick = nick;
+      Victim = victim;
       Reason = reason;
     }
 
-    protected Ban(bool perm, string nick) {
+    protected Ban(bool perm, string victim) {
       if (!perm) throw new Exception("Use the other ctor."); // todo get rid of this somehow.
       Perm = perm;
-      Nick = nick;
+      Victim = victim;
     }
 
     private TimeSpan _duration;
@@ -38,15 +38,15 @@ namespace Dbot.CommonModels {
     public override string ToString() {
       if (Ip) {
         if (Perm) {
-          return "Permanently ipbanned " + Nick + " for " + Reason;
+          return $"Permanently ipbanned {Victim} for {Reason}";
         } else {
-          return "Ipbanned " + Nick + " for " + Tools.PrettyDeltaTime(Duration);
+          return $"Ipbanned {Victim} for {Tools.PrettyDeltaTime(Duration)}";
         }
       } else {
         if (Perm) {
-          return "Permanently banned " + Nick + " for " + Reason;
+          return $"Permanently banned {Victim} for {Reason}";
         } else {
-          return "Banned " + Nick + " for " + Tools.PrettyDeltaTime(Duration);
+          return $"Banned {Victim} for {Tools.PrettyDeltaTime(Duration)}";
         }
       }
     }
