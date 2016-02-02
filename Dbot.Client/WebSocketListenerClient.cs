@@ -96,6 +96,12 @@ namespace Dbot.Client {
           }
         case "BAN": {
             var ban = JsonConvert.DeserializeObject<BanReceiver>(jsonMessage);
+            _processor.Process(
+              new Ban {
+                Nick = ban.Nick,
+                Victim = ban.Data,
+              }
+            );
           }
           break;
         case "UNMUTE": {
