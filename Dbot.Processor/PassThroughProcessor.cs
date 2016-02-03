@@ -28,5 +28,9 @@ namespace Dbot.Processor {
     public void Process(Ban ban) {
       _sender.Invoke($"<{ban.Nick}> <=== just banned {ban.Victim}");
     }
+
+    public void Process(UnMuteBan unMuteBan) {
+      _sender.Invoke($"<{unMuteBan.Nick}> <=== just unmutebanned {unMuteBan.Beneficiary}");
+    }
   }
 }

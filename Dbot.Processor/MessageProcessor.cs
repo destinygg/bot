@@ -72,6 +72,7 @@ namespace Dbot.Processor {
 
     public void Process(Mute mute) { }
     public void Process(Ban ban) { }
+    public void Process(UnMuteBan unMuteBan) { }
 
     private void Command(Message message) {
       var output = new Commander(message, this).Run();

@@ -37,7 +37,7 @@ namespace Dbot.Client {
     }
 
     public override void Visit(UnMuteBan unMuteBan) {
-      var obj = new UnMuteBanSender(unMuteBan.Nick);
+      var obj = new UnMuteBanSender(unMuteBan.Beneficiary);
       _websocket.Send("UNBAN " + JsonConvert.SerializeObject(obj));
     }
 

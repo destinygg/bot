@@ -47,7 +47,7 @@ namespace Dbot.Client {
       var jsonMessage = e.Message.Substring(spaceIndex + 1, e.Message.Length - actionMessage.Length - 1);
       //Log(jsonMessage, ConsoleColor.Magenta);
 
-      switch (actionMessage) {
+      switch (actionMessage) { //todo case/switch is a great place to introduce polymorphism you tard
         case "NAMES": {
             var names = JsonConvert.DeserializeObject<NamesReceiver>(jsonMessage);
             Logger.Write(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
