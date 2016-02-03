@@ -18,7 +18,7 @@ namespace Dbot.Echo {
 
       Logger.Init();
 
-      var server = "irc.rizon.net";
+      var server = "irc.rizon.sexy";
       var username = "II";
 
       using (var client = new StandardIrcClient()) {
@@ -30,17 +30,20 @@ namespace Dbot.Echo {
           using (var connectedEvent = new ManualResetEventSlim(false)) {
             client.Connected += (sender2, e2) => connectedEvent.Set();
             client.Registered += (sender2, e2) => registeredEvent.Set();
-            client.Connect(server, 6667, false, 
+            client.Connect(server, 6667, false,
                 new IrcUserRegistrationInfo() {
                   NickName = username,
                   UserName = username,
                   RealName = username,
+                  Password = PrivateConstants.IrcFloodBypassPassword,
                 });
             if (!connectedEvent.Wait(10000)) {
               Console.WriteLine($"Connection to '{server}' timed out.");
               return;
             }
           }
+          client.LocalUser.NoticeReceived += IrcClient_LocalUser_NoticeReceived;
+
           Console.Out.WriteLine($"Now connected to '{server}'.");
           if (!registeredEvent.Wait(10000)) {
             Console.WriteLine($"Could not register to '{server}'.");
@@ -91,8 +94,6 @@ namespace Dbot.Echo {
 
     private static void IrcClient_Registered(object sender, EventArgs e) {
       var client = (IrcClient) sender;
-
-      client.LocalUser.NoticeReceived += IrcClient_LocalUser_NoticeReceived;
       client.LocalUser.MessageReceived += IrcClient_LocalUser_MessageReceived;
       client.LocalUser.JoinedChannel += IrcClient_LocalUser_JoinedChannel;
       client.LocalUser.LeftChannel += IrcClient_LocalUser_LeftChannel;
