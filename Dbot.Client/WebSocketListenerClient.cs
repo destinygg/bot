@@ -21,7 +21,7 @@ namespace Dbot.Client {
     public WebSocketListenerClient(string websocketAuth) {
       _modList = new List<string>();
       var header = new List<KeyValuePair<string, string>> {
-        new KeyValuePair<string, string>("Cookie", websocketAuth)
+        new KeyValuePair<string, string>("Cookie", $"authtoken={websocketAuth}")
       };
       _websocket = new WebSocket("ws://www.destiny.gg:9998/ws", customHeaderItems: header);
       _websocket.Opened += websocket_Opened;
