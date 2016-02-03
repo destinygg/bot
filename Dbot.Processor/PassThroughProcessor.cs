@@ -17,9 +17,7 @@ namespace Dbot.Processor {
       _sender.Invoke($"<{message.Nick}> {message.OriginalText}");
     }
 
-    public void Process(PrivateMessage message) {
-      //throw new NotImplementedException();
-    }
+    public void Process(PrivateMessage message) { }
 
     public void Process(Mute mute) {
       _sender.Invoke($"<{mute.Nick}> <=== just muted {mute.Victim}");
@@ -31,6 +29,10 @@ namespace Dbot.Processor {
 
     public void Process(UnMuteBan unMuteBan) {
       _sender.Invoke($"<{unMuteBan.Nick}> <=== just unmutebanned {unMuteBan.Beneficiary}");
+    }
+
+    public void Process(Broadcast broadcast) {
+      _sender.Invoke($"<{broadcast.Nick}> <=== just broadcasted: {broadcast.OriginalText}");
     }
   }
 }
