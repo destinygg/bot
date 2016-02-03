@@ -123,7 +123,10 @@ namespace Dbot.Client {
           }
           break;
         case "BROADCAST": {
-            var mute = JsonConvert.DeserializeObject<BroadcastReceiver>(jsonMessage);
+            var broadcast = JsonConvert.DeserializeObject<BroadcastReceiver>(jsonMessage);
+            _processor.Process(
+              new Broadcast(broadcast.Nick, broadcast.Data)
+            );
           }
           break;
         default:
