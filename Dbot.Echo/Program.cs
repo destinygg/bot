@@ -14,7 +14,7 @@ namespace Dbot.Echo {
 
     public static string EchoChannel = "#destinyecho";
 
-    static void Main(string[] args) {
+    static void Main() {
 
       Logger.Init();
 
@@ -37,18 +37,18 @@ namespace Dbot.Echo {
                   RealName = username,
                 });
             if (!connectedEvent.Wait(10000)) {
-              Console.WriteLine("Connection to '{0}' timed out.", server);
+              Console.WriteLine($"Connection to '{server}' timed out.");
               return;
             }
           }
-          Console.Out.WriteLine("Now connected to '{0}'.", server);
+          Console.Out.WriteLine($"Now connected to '{server}'.");
           if (!registeredEvent.Wait(10000)) {
-            Console.WriteLine("Could not register to '{0}'.", server);
+            Console.WriteLine($"Could not register to '{server}'.");
             return;
           }
         }
 
-        Console.Out.WriteLine("Now registered to '{0}' as '{1}'.", server, username);
+        Console.Out.WriteLine($"Now registered to '{server}' as '{username}'.");
         client.Channels.Join(EchoChannel);
 
         HandleEventLoop(client);
@@ -72,7 +72,7 @@ namespace Dbot.Echo {
               if (command.StartsWith("/") && command.Length > 1) {
                 client.SendRawMessage(command.Substring(1));
               } else {
-                Console.WriteLine("unknown command '{0}'", command);
+                Console.WriteLine($"Unknown command '{command}'");
               }
             }
             break;
