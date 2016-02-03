@@ -105,11 +105,21 @@ namespace Dbot.Client {
           }
           break;
         case "UNMUTE": {
-            var mute = JsonConvert.DeserializeObject<MuteReceiver>(jsonMessage);
+            var unmute = JsonConvert.DeserializeObject<UnMuteReceiver>(jsonMessage);
+            _processor.Process(
+              new UnMuteBan(unmute.Data) {
+                Nick = unmute.Nick
+              }
+            );
           }
           break;
         case "UNBAN": {
-            var ban = JsonConvert.DeserializeObject<BanReceiver>(jsonMessage);
+            var unban = JsonConvert.DeserializeObject<UnBanReceiver>(jsonMessage);
+            _processor.Process(
+              new UnMuteBan(unban.Data) {
+                Nick = unban.Nick,
+              }
+            );
           }
           break;
         case "BROADCAST": {
