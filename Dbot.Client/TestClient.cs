@@ -53,6 +53,10 @@ namespace Dbot.Client {
       Print(ban);
     }
 
+    public void Visit(Broadcast broadcast) {
+      Print(broadcast);
+    }
+
     private void Print(ISendableVisitable sendableVisitable) {
       _log.Add(sendableVisitable.ToString());
       Logger.Write(sendableVisitable.ToString());
