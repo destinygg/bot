@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ban.cs" />
+    <Compile Include="Broadcast.cs" />
     <Compile Include="IClientVisitor.cs" />
     <Compile Include="IProcessor.cs" />
     <Compile Include="Mute.cs" />
