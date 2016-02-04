@@ -1,4 +1,6 @@
 ﻿
 namespace Dbot.CommonModels {
-  public abstract class ISent : User { }
+  public interface ISent {
+    string Nick { get; set; }
+  }
 }
