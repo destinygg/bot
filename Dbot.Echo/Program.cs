@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Dbot.Client;
+using Dbot.CommonModels;
 using Dbot.Processor;
 using Dbot.Utility;
 using IrcDotNet;
@@ -16,6 +17,7 @@ namespace Dbot.Echo {
     private static Dictionary<string, WebSocketListenerClient> _hostNameToWebSockets = new Dictionary<string, WebSocketListenerClient>();
     private static IrcLocalUser _ircLocaluser;
     private static PassThroughProcessor sendToIrcProcessor = new PassThroughProcessor(SendToEcho);
+    private static PassThroughProcessor doNothingProcessor = new PassThroughProcessor(_ => { });
 
     static void Main() {
 
@@ -156,6 +158,19 @@ namespace Dbot.Echo {
       if (e.Source is IrcUser) {
         // Read message.
         Console.WriteLine("[{0}]({1}): {2}.", channel.Name, e.Source.Name, e.Text);
+        var user = (IrcUser) e.Source;
+        var hostName = user.HostName;
+        var text = e.Text;
+        if (PrivateConstants.HostNameToDggKey.ContainsKey(hostName)) {
+          if (!_hostNameToWebSockets.ContainsKey(hostName)) {
+            _hostNameToWebSockets.Add(hostName, new WebSocketClient(PrivateConstants.HostNameToDggKey[hostName]));
+            SendToEcho($"Connecting {user.NickName} with {hostName}...");
+            _hostNameToWebSockets[hostName].Run(doNothingProcessor);
+            Thread.Sleep(3000); // TODO fix, this is hacky
+          }
+          _hostNameToWebSockets[hostName].Visit(new PublicMessage(text));
+        }
+
       } else {
         Console.WriteLine("[{0}]({1}) Message: {2}.", channel.Name, e.Source.Name, e.Text);
       }
