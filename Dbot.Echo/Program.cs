@@ -22,7 +22,7 @@ namespace Dbot.Echo {
       var username = "II";
 
       using (var client = new StandardIrcClient()) {
-        client.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
+        //client.FloodPreventer = new IrcStandardFloodPreventer(4, 2000);
         client.Disconnected += IrcClient_Disconnected;
         client.Registered += IrcClient_Registered;
         // Wait until connection has succeeded or timed out.
