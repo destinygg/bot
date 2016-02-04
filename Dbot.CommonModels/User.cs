@@ -1,9 +1,12 @@
 ﻿namespace Dbot.CommonModels {
-  public abstract class User {
+  public class User {
+    public User(string nick) {
+      _nick = nick;
+    }
+
     private string _nick;
 
-    public string Nick
-    {
+    public string Nick {
       get { return _nick; }
       set { _nick = value.ToLower(); }
     }
