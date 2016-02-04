@@ -14,6 +14,7 @@ namespace Dbot.Echo {
 
     public static string EchoChannel = "#destinyecho";
     private static Dictionary<string, WebSocketListenerClient> _hostNameToWebSockets = new Dictionary<string, WebSocketListenerClient>();
+    private static IrcLocalUser _ircLocaluser;
     private static PassThroughProcessor sendToIrcProcessor = new PassThroughProcessor(SendToEcho);
 
     static void Main() {
@@ -61,6 +62,7 @@ namespace Dbot.Echo {
     }
 
     private static void HandleEventLoop(IrcClient client) {
+      _ircLocaluser = client.LocalUser;
       _hostNameToWebSockets.Add("", new WebSocketListenerClient(PrivateConstants.TestAccountWebsocketAuth));
       _hostNameToWebSockets[""].Run(sendToIrcProcessor);
 
@@ -86,8 +88,8 @@ namespace Dbot.Echo {
       client.Disconnect();
     }
 
-    public static void SendToEcho(IrcLocalUser localUser, string message) {
-      localUser.SendMessage(EchoChannel, message);
+    public static void SendToEcho(string message) {
+      _ircLocaluser.SendMessage(EchoChannel, message);
     }
 
     private static void IrcClient_Disconnected(object sender, EventArgs e) {
