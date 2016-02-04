@@ -13,6 +13,8 @@ namespace Dbot.Echo {
   class Program {
 
     public static string EchoChannel = "#destinyecho";
+    private static Dictionary<string, WebSocketListenerClient> _hostNameToWebSockets = new Dictionary<string, WebSocketListenerClient>();
+    private static PassThroughProcessor sendToIrcProcessor = new PassThroughProcessor(SendToEcho);
 
     static void Main() {
 
@@ -59,8 +61,8 @@ namespace Dbot.Echo {
     }
 
     private static void HandleEventLoop(IrcClient client) {
-      var s = new WebSocketListenerClient(PrivateConstants.TestAccountWebsocketAuth);
-      s.Run(new PassThroughProcessor(x => SendToEcho(client.LocalUser, x)));
+      _hostNameToWebSockets.Add("", new WebSocketListenerClient(PrivateConstants.TestAccountWebsocketAuth));
+      _hostNameToWebSockets[""].Run(sendToIrcProcessor);
 
       bool isExit = false;
       while (!isExit) {
