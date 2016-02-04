@@ -124,6 +124,7 @@ namespace Dbot.Client {
           break;
         case "BROADCAST": {
             var broadcast = JsonConvert.DeserializeObject<BroadcastReceiver>(jsonMessage);
+            broadcast.Data = broadcast.Data.Replace("\r", "").Replace("\n", "").Replace("\0", "");
             if (string.IsNullOrWhiteSpace(broadcast.Nick)) {
               broadcast.Nick = "CHANNEL BROADCAST";
             }
