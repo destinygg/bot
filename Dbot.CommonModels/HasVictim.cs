@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Dbot.CommonModels {
-  public abstract class HasVictim : TargetedSendable, ISendableVisitable {
+  public abstract class HasVictim : ISent, ISendableVisitable {
     public string Victim { get; set; }
     public virtual TimeSpan Duration { get; set; }
     public string Reason { get; set; }
