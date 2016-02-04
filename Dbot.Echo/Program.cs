@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Dbot.Client;
@@ -156,11 +157,24 @@ namespace Dbot.Echo {
     private static void IrcClient_Channel_MessageReceived(object sender, IrcMessageEventArgs e) {
       var channel = (IrcChannel) sender;
       if (e.Source is IrcUser) {
-        // Read message.
-        Console.WriteLine("[{0}]({1}): {2}.", channel.Name, e.Source.Name, e.Text);
         var user = (IrcUser) e.Source;
         var hostName = user.HostName;
         var text = e.Text;
+        if (user.HostName == "head.against.the.heart" && e.Text[0] == '~') {
+          hostName = "heart.against.the.head";
+          text = e.Text.Substring(1);
+        }
+        Console.WriteLine("[{0}]({1}): {2}.", channel.Name, e.Source.Name, text);
+
+        if (text[0] == '<') {
+          return;
+        }
+
+        var meDetection = new Regex(@"\u0001ACTION (.*)\u0001").Match(text);
+        if (meDetection.Success) {
+          text = $"/me {meDetection.Groups[1]}";
+        }
+
         if (PrivateConstants.HostNameToDggKey.ContainsKey(hostName)) {
           if (!_hostNameToWebSockets.ContainsKey(hostName)) {
             _hostNameToWebSockets.Add(hostName, new WebSocketClient(PrivateConstants.HostNameToDggKey[hostName]));
