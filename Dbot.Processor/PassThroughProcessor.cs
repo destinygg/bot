@@ -14,25 +14,25 @@ namespace Dbot.Processor {
       _sender = action;
     }
     public void Process(PublicMessage message) {
-      _sender.Invoke($"<{message.SenderName}> {message.OriginalText}");
+      _sender.Invoke($"<{message.Sender.OriginalNick}> {message.OriginalText}");
     }
 
     public void Process(PrivateMessage message) { }
 
     public void Process(Mute mute) {
-      _sender.Invoke($"<{mute.SenderName}> <=== just muted {mute.Victim}");
+      _sender.Invoke($"<{mute.Sender.OriginalNick}> <=== just muted {mute.Victim}");
     }
 
     public void Process(Ban ban) {
-      _sender.Invoke($"<{ban.SenderName}> <=== just banned {ban.Victim}");
+      _sender.Invoke($"<{ban.Sender.OriginalNick}> <=== just banned {ban.Victim}");
     }
 
     public void Process(UnMuteBan unMuteBan) {
-      _sender.Invoke($"<{unMuteBan.SenderName}> <=== just unmutebanned {unMuteBan.Beneficiary}");
+      _sender.Invoke($"<{unMuteBan.Sender.OriginalNick}> <=== just unmutebanned {unMuteBan.Beneficiary}");
     }
 
     public void Process(Broadcast broadcast) {
-      _sender.Invoke($"<{broadcast.SenderName}> <=== just broadcasted: {broadcast.OriginalText}");
+      _sender.Invoke($"<{broadcast.Sender.OriginalNick}> <=== just broadcasted: {broadcast.OriginalText}");
     }
   }
 }

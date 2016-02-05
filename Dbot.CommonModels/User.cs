@@ -6,9 +6,14 @@ namespace Dbot.CommonModels {
       Nick = nick;
     }
 
+    public string OriginalNick { get; private set; }
+
     public string Nick {
       get { return _nick; }
-      set { _nick = value.ToLower(); }
+      set {
+        OriginalNick = value;
+        _nick = value.ToLower();
+      }
     }
     private string _nick;
 
