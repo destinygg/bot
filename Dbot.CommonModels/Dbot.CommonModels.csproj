@@ -46,6 +46,7 @@
     <Compile Include="Ban.cs" />
     <Compile Include="Broadcast.cs" />
     <Compile Include="ConnectedUsers.cs" />
+    <Compile Include="HasVictimBuilder.cs" />
     <Compile Include="IClientVisitor.cs" />
     <Compile Include="IProcessor.cs" />
     <Compile Include="Mute.cs" />

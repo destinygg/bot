@@ -35,7 +35,7 @@ namespace Dbot.Processor {
       var count = hardcodedLogic[sectionName];
       hardcodedLogic[sectionName] = count + 1;
       Datastore.SaveUserHistory(userHistory, wait);
-      return (Mute) HasVictimDurationIncreaser(TimeSpan.FromMinutes(10), count, reason, new Mute());
+      return (Mute) new HasVictimBuilder(new Mute(), _message.SenderName).IncreaseDuration(TimeSpan.FromMinutes(10), count, reason).Build();
     }
 
     public HasVictim BanParser(bool wait = false) {
@@ -104,26 +104,7 @@ namespace Dbot.Processor {
         words.Add(word, 0);
       words[word]++;
       Datastore.SaveUserHistory(userHistory, wait);
-      return HasVictimDurationIncreaser(duration, words[word], "prohibited phrase", hasVictim);
-    }
-
-    public HasVictim HasVictimDurationIncreaser(TimeSpan baseDuration, int count, string reason, HasVictim hasVictim) {
-      switch (count) {
-        case 1:
-          hasVictim.Reason = Tools.PrettyDeltaTime(baseDuration) + " for " + reason;
-          hasVictim.Duration = baseDuration;
-          break;
-        case 2:
-          var duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * 2);
-          hasVictim.Reason = Tools.PrettyDeltaTime(duration) + " for " + reason + "; your time has doubled. Future sanctions will not be explicitly justified."; ;
-          hasVictim.Duration = duration;
-          break;
-        default:
-          hasVictim.Duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * Math.Pow(2, count - 1));
-          break;
-      }
-      hasVictim.Victim = _message.SenderName;
-      return hasVictim;
+      return new HasVictimBuilder(hasVictim, _message.SenderName).IncreaseDuration(duration, words[word], "prohibited phrase").Build();
     }
 
     #region ImgurNsfw
