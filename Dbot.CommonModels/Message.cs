@@ -8,10 +8,10 @@ namespace Dbot.CommonModels {
 
     public abstract void Accept(IClientVisitor visitor);
 
-    private string _nick;
-    public string Nick {
-      get { return _nick; }
-      set { _nick = value.ToLower(); }
+    private string _sender;
+    public string Sender {
+      get { return _sender; }
+      set { _sender = value.ToLower(); }
     }
 
     public bool IsMod { get; set; }
@@ -37,14 +37,14 @@ namespace Dbot.CommonModels {
 
     public int Ordinal { get; set; }
 
-    protected Message(string nick, string originalText) {
-      this.Nick = nick;
+    protected Message(string sender, string originalText) {
+      this.Sender = sender;
       this.OriginalText = originalText;
     }
 
     public bool Equals(Message that) {
       return
-        this.Nick == that.Nick &&
+        this.Sender == that.Sender &&
         this.SanitizedText == that.SanitizedText &&
         this.IsMod == that.IsMod &&
         this.Ordinal == that.Ordinal;

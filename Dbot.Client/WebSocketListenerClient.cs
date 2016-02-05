@@ -88,7 +88,7 @@ namespace Dbot.Client {
             var mute = JsonConvert.DeserializeObject<MuteReceiver>(jsonMessage);
             _processor.Process(
               new Mute {
-                Nick = mute.Nick,
+                Sender = mute.Nick,
                 Victim = mute.Data,
               }
             );
@@ -98,7 +98,7 @@ namespace Dbot.Client {
             var ban = JsonConvert.DeserializeObject<BanReceiver>(jsonMessage);
             _processor.Process(
               new Ban {
-                Nick = ban.Nick,
+                Sender = ban.Nick,
                 Victim = ban.Data,
               }
             );
@@ -108,7 +108,7 @@ namespace Dbot.Client {
             var unmute = JsonConvert.DeserializeObject<UnMuteReceiver>(jsonMessage);
             _processor.Process(
               new UnMuteBan(unmute.Data) {
-                Nick = unmute.Nick
+                Sender = unmute.Nick
               }
             );
           }
@@ -117,7 +117,7 @@ namespace Dbot.Client {
             var unban = JsonConvert.DeserializeObject<UnBanReceiver>(jsonMessage);
             _processor.Process(
               new UnMuteBan(unban.Data) {
-                Nick = unban.Nick,
+                Sender = unban.Nick,
               }
             );
           }

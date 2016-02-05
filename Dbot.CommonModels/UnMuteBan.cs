@@ -9,10 +9,10 @@ namespace Dbot.CommonModels {
 
     public string Beneficiary { get; set; }
 
-    private string _nick;
-    public string Nick {
-      get { return _nick; }
-      set { _nick = value.ToLower(); }
+    private string _sender;
+    public string Sender {
+      get { return _sender; }
+      set { _sender = value.ToLower(); }
     }
 
 

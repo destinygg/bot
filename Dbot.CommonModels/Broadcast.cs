@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Dbot.CommonModels {
   public class Broadcast : Message {
-    public Broadcast(string nick, string originalText)
-      : base(nick, originalText) { }
+    public Broadcast(string sender, string originalText)
+      : base(sender, originalText) { }
 
     public override void Accept(IClientVisitor visitor) {
       visitor.Visit(this);

@@ -4,8 +4,8 @@
     public PublicMessage(string text)
       : this("MyNick", text) { }
 
-    public PublicMessage(string nick, string originalText)
-      : base(nick, originalText) { }
+    public PublicMessage(string sender, string originalText)
+      : base(sender, originalText) { }
 
     public override void Accept(IClientVisitor visitor) {
       foreach (var submessage in OriginalText.Split('\n')) {
