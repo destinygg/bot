@@ -105,7 +105,7 @@ namespace Dbot.Processor {
 
     private void Log(Message message) {
 #if DEBUG
-      Logger.Write(message.Ordinal + " " + message.Sender + ": " + message.OriginalText);
+      Logger.Write(message.Ordinal + " " + message.SenderName + ": " + message.OriginalText);
 #endif
       Datastore.InsertMessage(message);
     }

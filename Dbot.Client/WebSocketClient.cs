@@ -13,7 +13,7 @@ namespace Dbot.Client {
     }
 
     public override void Visit(PrivateMessage privateMessage) {
-      var obj = new PrivateMessageSender(privateMessage.Sender, privateMessage.OriginalText);
+      var obj = new PrivateMessageSender(privateMessage.SenderName, privateMessage.OriginalText);
       _websocket.Send("PRIVMSG " + JsonConvert.SerializeObject(obj));
     }
 
@@ -32,7 +32,7 @@ namespace Dbot.Client {
     }
 
     public override void Visit(Mute mute) {
-      var obj = new MuteSender(mute.Sender, mute.Duration);
+      var obj = new MuteSender(mute.SenderName, mute.Duration);
       _websocket.Send("MUTE " + JsonConvert.SerializeObject(obj));
     }
 
@@ -48,7 +48,7 @@ namespace Dbot.Client {
     }
 
     public override void Visit(Ban ban) {
-      var obj = ban.Duration == TimeSpan.Zero ? new BanSender(ban.Sender, ban.Ip, true, ban.Reason) : new BanSender(ban.Sender, ban.Ip, ban.Duration, ban.Reason);
+      var obj = ban.Duration == TimeSpan.Zero ? new BanSender(ban.SenderName, ban.Ip, true, ban.Reason) : new BanSender(ban.SenderName, ban.Ip, ban.Duration, ban.Reason);
       _websocket.Send("BAN " + JsonConvert.SerializeObject(obj));
     }
   }

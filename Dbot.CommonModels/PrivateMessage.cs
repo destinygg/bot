@@ -3,15 +3,15 @@ using Newtonsoft.Json;
 
 namespace Dbot.CommonModels {
   public class PrivateMessage : Message {
-    public PrivateMessage(string sender, string originalText)
-      : base(sender, originalText) { }
+    public PrivateMessage(string senderName, string originalText)
+      : base(senderName, originalText) { }
 
     public override void Accept(IClientVisitor visitor) {
       visitor.Visit(this);
     }
 
     public override string ToString() {
-      return "Private Messaged " + Sender + " with: " + OriginalText;
+      return "Private Messaged " + SenderName + " with: " + OriginalText;
     }
   }
 }

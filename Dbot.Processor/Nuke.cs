@@ -34,7 +34,7 @@ namespace Dbot.Processor {
       VictimList = new List<string>();
       Cancel = false;
 
-      PreordainedVictims = context.Where(c => !c.IsMod).Where(s => Predicate(s.SanitizedText) || Predicate(s.OriginalText)).Select(x => x.Sender).Distinct().ToList();
+      PreordainedVictims = context.Where(c => !c.IsMod).Where(s => Predicate(s.SanitizedText) || Predicate(s.OriginalText)).Select(x => x.SenderName).Distinct().ToList();
       Logger.Write(string.Join(",", PreordainedVictims), ConsoleColor.Cyan);
 
       try {

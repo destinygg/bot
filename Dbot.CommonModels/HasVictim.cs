@@ -3,10 +3,11 @@
 namespace Dbot.CommonModels {
   public abstract class HasVictim : ISendable, ISendableVisitable {
 
-    private string _sender;
-    public string Sender {
-      get { return _sender; }
-      set { _sender = value.ToLower(); }
+    public User Sender { get; set; }
+
+    public string SenderName {
+      get { return Sender.Nick; }
+      set { Sender.Nick = value; }
     }
 
     public string Victim { get; set; }

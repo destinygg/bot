@@ -5,13 +5,18 @@ using Dbot.CommonModels.Users;
 namespace Dbot.CommonModels {
   [DebuggerDisplay("{Ordinal}. {OriginalText}")]
   public abstract class Message : ISendable, ISendableVisitable, IEquatable<Message> {
+    protected Message(string senderName, string originalText) {
+      Sender = new User(senderName);
+      OriginalText = originalText;
+    }
 
     public abstract void Accept(IClientVisitor visitor);
 
-    private string _sender;
-    public string Sender {
-      get { return _sender; }
-      set { _sender = value.ToLower(); }
+    public User Sender { get; set; }
+
+    public string SenderName {
+      get { return Sender.Nick; }
+      set { Sender.Nick = value; }
     }
 
     public bool IsMod { get; set; }
@@ -36,11 +41,6 @@ namespace Dbot.CommonModels {
     private string _sanitizedText;
 
     public int Ordinal { get; set; }
-
-    protected Message(string sender, string originalText) {
-      this.Sender = sender;
-      this.OriginalText = originalText;
-    }
 
     public bool Equals(Message that) {
       return
