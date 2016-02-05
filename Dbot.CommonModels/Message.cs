@@ -8,6 +8,14 @@ namespace Dbot.CommonModels {
 
     public abstract void Accept(IClientVisitor visitor);
 
+    private string _nick;
+    public string Nick {
+      get { return _nick; }
+      set { _nick = value.ToLower(); }
+    }
+
+    public bool IsMod { get; set; }
+
     public IUser From { get; private set; }
 
     public bool FromModerator => From is Moderator;

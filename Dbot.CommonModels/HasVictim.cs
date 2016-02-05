@@ -2,6 +2,13 @@
 
 namespace Dbot.CommonModels {
   public abstract class HasVictim : ISent, ISendableVisitable {
+
+    private string _nick;
+    public string Nick {
+      get { return _nick; }
+      set { _nick = value.ToLower(); }
+    }
+
     public string Victim { get; set; }
     public virtual TimeSpan Duration { get; set; }
     public string Reason { get; set; }

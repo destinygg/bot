@@ -9,6 +9,13 @@ namespace Dbot.CommonModels {
 
     public string Beneficiary { get; set; }
 
+    private string _nick;
+    public string Nick {
+      get { return _nick; }
+      set { _nick = value.ToLower(); }
+    }
+
+
     public void Accept(IClientVisitor visitor) {
       visitor.Visit(this);
     }

@@ -773,8 +773,8 @@ namespace Dbot.UnitTest {
       });
       await Task.Delay(1000);
 
-      Assert.IsTrue(r.Count(x => x.Contains("Unbanned usera")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Unbanned userb")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Unbanned userA")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains("Unbanned userB")) == 1);
     }
 
     [TestMethod]
