@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Dbot.CommonModels {
-  public abstract class HasVictim : ISent, ISendableVisitable {
+  public abstract class HasVictim : ISendable, ISendableVisitable {
 
     private string _nick;
     public string Nick {

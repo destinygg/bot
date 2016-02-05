@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 
 namespace Dbot.CommonModels {
-  public class UnMuteBan : ISent, ISendableVisitable {
+  public class UnMuteBan : ISendable, ISendableVisitable {
     public UnMuteBan(string beneficiary) {
       this.Beneficiary = beneficiary;
     }
