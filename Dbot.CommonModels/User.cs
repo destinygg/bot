@@ -1,5 +1,7 @@
-﻿namespace Dbot.CommonModels {
-  public class User {
+﻿using System;
+
+namespace Dbot.CommonModels {
+  public class User : IEquatable<User> {
     public User(string nick) {
       _nick = nick;
     }
@@ -12,5 +14,11 @@
     }
 
     public bool IsMod { get; set; }
+
+    public bool Equals(User other) {
+      return
+        this.Nick == other.Nick &&
+        this.IsMod == other.IsMod;
+    }
   }
 }

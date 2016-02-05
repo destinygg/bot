@@ -44,7 +44,7 @@ namespace Dbot.CommonModels {
 
     public bool Equals(Message that) {
       return
-        this.Sender == that.Sender &&
+        this.Sender.Equals(that.Sender) &&
         this.SanitizedText == that.SanitizedText &&
         this.IsMod == that.IsMod &&
         this.Ordinal == that.Ordinal;
