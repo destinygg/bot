@@ -21,10 +21,6 @@ namespace Dbot.CommonModels {
 
     public bool IsMod { get; set; }
 
-    public IUser From { get; private set; }
-
-    public bool FromModerator => From is Moderator;
-
     public string OriginalText {
       get { return _originalText; }
       set {
