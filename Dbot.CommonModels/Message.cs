@@ -14,10 +14,7 @@ namespace Dbot.CommonModels {
 
     public User Sender { get; set; }
 
-    public string SenderName {
-      get { return Sender.Nick; }
-      set { Sender.Nick = value; }
-    }
+    public string SenderName => Sender.Nick;
 
     public bool IsMod { get; set; }
 
