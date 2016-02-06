@@ -26,7 +26,7 @@ namespace Dbot.Processor {
     private void Send(string message) {
       if (_message is PrivateMessage) {
         var pm = (PrivateMessage) _message;
-        _messageProcessor.Sender.Post(new PrivateMessage(pm.Nick, message));
+        _messageProcessor.Sender.Post(new PrivateMessage(pm.SenderName, message));
       } else {
         _messageProcessor.Sender.Post(new PublicMessage(message));
       }
@@ -135,7 +135,7 @@ namespace Dbot.Processor {
           }
           _messageProcessor.Sender.Post(new Mute {
             Duration = banTime,
-            Nick = nick,
+            Victim = nick,
             Reason = reason,
             SilentReason = true,
           });

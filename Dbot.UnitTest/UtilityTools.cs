@@ -179,6 +179,20 @@ namespace Dbot.UnitTest {
     }
 
     [TestMethod]
+    public void PublicMessageEquality() {
+      var pm1 = new PublicMessage("bork");
+      var pm2 = new PublicMessage("bork");
+      Assert.IsTrue(pm1.Equals(pm2));
+    }
+
+    [TestMethod]
+    public void UserEquality() {
+      var u1 = new User("Nick");
+      var u2 = new User("Nick");
+      Assert.IsTrue(u1.Equals(u2));
+    }
+
+    [TestMethod]
     public void StringNormalize() {
       var test = StringTools.RemoveDiacritics("NeoDéstiny е ё ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｑｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＱＸＹＺАнастасияäöüÄÖÜОльгаТатьяна");
       Assert.AreEqual(test, "NeoDestiny e e abcdefghijklmnopqrstuvqxyzABCDEFGHIJKLMNOPQRSTUVQXYZAnastasiyaaouAOUOl'gaTat'yana");

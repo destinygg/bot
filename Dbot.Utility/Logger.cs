@@ -10,8 +10,10 @@ using System.Threading.Tasks;
 namespace Dbot.Utility {
   public static class Logger {
     static StreamWriter Log;
+    public static bool SaveToFile = true;
 
     public static void Init() {
+      if (!SaveToFile) return;
       const string folderName = "Logs";
       var fileNamePath = $"{folderName}//{DateTime.UtcNow.Date.ToString("yyyy-MM-dd")}.txt";
 
@@ -30,11 +32,22 @@ namespace Dbot.Utility {
     public static void Write(string text, ConsoleColor color = ConsoleColor.White) {
       var processCount = Process.GetCurrentProcess().Threads.Count;
       var timestamp = DateTime.UtcNow.ToString("T");
-      Log.WriteLine($"{processCount} {timestamp} {text}");
+
+      Console.ForegroundColor = ConsoleColor.Cyan;
+      Console.Write($"{processCount} ");
+      Console.ForegroundColor = ConsoleColor.DarkCyan;
+      Console.Write(timestamp);
+      Console.ForegroundColor = color;
+      Console.WriteLine($" {text}");
+      Console.ResetColor();
+
+      if (SaveToFile)
+        Log.WriteLine($"{processCount} {timestamp} {text}");
     }
 
     public static void Close() {
-      Log.Close();
+      if (SaveToFile)
+        Log.Close();
     }
 
     public static void ErrorLog(string text) {

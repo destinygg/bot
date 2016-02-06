@@ -159,5 +159,9 @@ namespace Dbot.Client {
     public void Visit(Ban ban) {
       throw new NotImplementedException();
     }
+
+    public void Visit(Broadcast broadcast) {
+      throw new NotImplementedException();
+    }
   }
 }

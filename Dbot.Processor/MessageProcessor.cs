@@ -36,7 +36,7 @@ namespace Dbot.Processor {
       _modCommander = new ActionBlock<Message>(m => ModCommand(m));
     }
 
-    public void ProcessMessage(PublicMessage message) {
+    public void Process(PublicMessage message) {
       message.Ordinal = _contextIndex;
       _contextDictionary.TryAdd(_contextIndex, message);
       _contextIndex++;
@@ -63,12 +63,17 @@ namespace Dbot.Processor {
         Banner.Post(message);
     }
 
-    public void ProcessMessage(PrivateMessage message) {
+    public void Process(PrivateMessage message) {
       if (message.SanitizedText[0] == '!' && message.IsMod) {
         _commander.Post(message);
         _modCommander.Post(message);
       }
     }
+
+    public void Process(Mute mute) { }
+    public void Process(Ban ban) { }
+    public void Process(UnMuteBan unMuteBan) { }
+    public void Process(Broadcast broadcast) { }
 
     private void Command(Message message) {
       var output = new Commander(message, this).Run();
@@ -100,7 +105,7 @@ namespace Dbot.Processor {
 
     private void Log(Message message) {
 #if DEBUG
-      Logger.Write(message.Ordinal + " " + message.Nick + ": " + message.OriginalText);
+      Logger.Write(message.Ordinal + " " + message.SenderName + ": " + message.OriginalText);
 #endif
       Datastore.InsertMessage(message);
     }

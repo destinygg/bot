@@ -21,7 +21,7 @@ namespace Dbot.Client {
     public WebSocketListenerClient(string websocketAuth) {
       _modList = new List<string>();
       var header = new List<KeyValuePair<string, string>> {
-        new KeyValuePair<string, string>("Cookie", websocketAuth)
+        new KeyValuePair<string, string>("Cookie", $"authtoken={websocketAuth}")
       };
       _websocket = new WebSocket("ws://www.destiny.gg:9998/ws", customHeaderItems: header);
       _websocket.Opened += websocket_Opened;
@@ -36,7 +36,7 @@ namespace Dbot.Client {
     }
 
     public override void Forward(PublicMessage message) {
-      _processor.ProcessMessage(message);
+      _processor.Process(message);
     }
 
     private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e) {
@@ -47,7 +47,7 @@ namespace Dbot.Client {
       var jsonMessage = e.Message.Substring(spaceIndex + 1, e.Message.Length - actionMessage.Length - 1);
       //Log(jsonMessage, ConsoleColor.Magenta);
 
-      switch (actionMessage) {
+      switch (actionMessage) { //todo case/switch is a great place to introduce polymorphism you tard
         case "NAMES": {
             var names = JsonConvert.DeserializeObject<NamesReceiver>(jsonMessage);
             Logger.Write(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
@@ -57,13 +57,13 @@ namespace Dbot.Client {
             var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
             var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
             if (isMod && !_modList.Contains(msg.Nick)) _modList.Add(msg.Nick);
-            _processor.ProcessMessage(new PublicMessage(msg.Nick, msg.Data) { IsMod = isMod });
+            _processor.Process(new PublicMessage(msg.Nick, msg.Data) { IsMod = isMod });
           }
           break;
         case "PRIVMSG": {
             var privmsg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
             var isMod = _modList.Contains(privmsg.Nick);
-            _processor.ProcessMessage(new PrivateMessage(privmsg.Nick, privmsg.Data) { IsMod = isMod });
+            _processor.Process(new PrivateMessage(privmsg.Nick, privmsg.Data) { IsMod = isMod });
           }
           break;
         case "ERR": {
@@ -86,22 +86,51 @@ namespace Dbot.Client {
           break;
         case "MUTE": {
             var mute = JsonConvert.DeserializeObject<MuteReceiver>(jsonMessage);
+            _processor.Process(
+              new Mute {
+                Sender = new CommonModels.User(mute.Nick),
+                Victim = mute.Data,
+              }
+            );
+            break;
           }
-          break;
         case "BAN": {
             var ban = JsonConvert.DeserializeObject<BanReceiver>(jsonMessage);
+            _processor.Process(
+              new Ban {
+                Sender = new CommonModels.User(ban.Nick),
+                Victim = ban.Data,
+              }
+            );
           }
           break;
         case "UNMUTE": {
-            var mute = JsonConvert.DeserializeObject<MuteReceiver>(jsonMessage);
+            var unmute = JsonConvert.DeserializeObject<UnMuteReceiver>(jsonMessage);
+            _processor.Process(
+              new UnMuteBan(unmute.Data) {
+                Sender = new CommonModels.User(unmute.Nick),
+              }
+            );
           }
           break;
         case "UNBAN": {
-            var ban = JsonConvert.DeserializeObject<BanReceiver>(jsonMessage);
+            var unban = JsonConvert.DeserializeObject<UnBanReceiver>(jsonMessage);
+            _processor.Process(
+              new UnMuteBan(unban.Data) {
+                Sender = new CommonModels.User(unban.Nick),
+              }
+            );
           }
           break;
         case "BROADCAST": {
-            var mute = JsonConvert.DeserializeObject<BroadcastReceiver>(jsonMessage);
+            var broadcast = JsonConvert.DeserializeObject<BroadcastReceiver>(jsonMessage);
+            broadcast.Data = broadcast.Data.Replace("\r", "").Replace("\n", "").Replace("\0", "");
+            if (string.IsNullOrWhiteSpace(broadcast.Nick)) {
+              broadcast.Nick = "CHANNEL BROADCAST";
+            }
+            _processor.Process(
+              new Broadcast(broadcast.Nick, broadcast.Data)
+            );
           }
           break;
         default:

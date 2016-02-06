@@ -35,11 +35,11 @@ namespace Dbot.Processor {
       var count = hardcodedLogic[sectionName];
       hardcodedLogic[sectionName] = count + 1;
       Datastore.SaveUserHistory(userHistory, wait);
-      return (Mute) HasVictimDurationIncreaser(TimeSpan.FromMinutes(10), count, reason, new Mute());
+      return (Mute) new HasVictimBuilder(new Mute(), _message.SenderName).IncreaseDuration(TimeSpan.FromMinutes(10), count, reason).Build();
     }
 
     public HasVictim BanParser(bool wait = false) {
-      var userHistory = Datastore.UserHistory(_message.Nick) ?? new UserHistory { Nick = _message.Nick }; // todo maKe this lazy
+      var userHistory = Datastore.UserHistory(_message.SenderName) ?? new UserHistory { Nick = _message.SenderName }; // todo maKe this lazy
 
       var fullWidthCharacters = new[] { 'ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｑ', 'ｘ', 'ｙ', 'ｚ', 'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ', 'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｑ', 'Ｘ', 'Ｙ', 'Ｚ' };
       if (fullWidthCharacters.Sum(c => _originalText.Count(ot => ot == c)) > 5)
@@ -88,8 +88,8 @@ namespace Dbot.Processor {
       if (lineSpam != null) return lineSpam;
 
       foreach (var nuke in _messageProcessor.Nukes.Where(x => x.Predicate(_message.SanitizedText) || x.Predicate(_message.OriginalText))) {
-        nuke.VictimList.Add(_message.Nick);
-        return new Mute(_message.Nick, nuke.Duration, null);
+        nuke.VictimList.Add(_message.SenderName);
+        return new Mute(_message.SenderName, nuke.Duration, null);
       }
       return null;
     }
@@ -104,26 +104,7 @@ namespace Dbot.Processor {
         words.Add(word, 0);
       words[word]++;
       Datastore.SaveUserHistory(userHistory, wait);
-      return HasVictimDurationIncreaser(duration, words[word], "prohibited phrase", hasVictim);
-    }
-
-    public HasVictim HasVictimDurationIncreaser(TimeSpan baseDuration, int count, string reason, HasVictim hasVictim) {
-      switch (count) {
-        case 1:
-          hasVictim.Reason = Tools.PrettyDeltaTime(baseDuration) + " for " + reason;
-          hasVictim.Duration = baseDuration;
-          break;
-        case 2:
-          var duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * 2);
-          hasVictim.Reason = Tools.PrettyDeltaTime(duration) + " for " + reason + "; your time has doubled. Future sanctions will not be explicitly justified."; ;
-          hasVictim.Duration = duration;
-          break;
-        default:
-          hasVictim.Duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * Math.Pow(2, count - 1));
-          break;
-      }
-      hasVictim.Nick = _message.Nick;
-      return hasVictim;
+      return new HasVictimBuilder(hasVictim, _message.SenderName).IncreaseDuration(duration, words[word], "prohibited phrase").Build();
     }
 
     #region ImgurNsfw
@@ -136,7 +117,7 @@ namespace Dbot.Processor {
       if (match.Success) {
         var imgurId = match.Groups[1].Value;
         if (IsNsfw(imgurId))
-          return new Mute(_message.Nick, TimeSpan.FromMinutes(5), "5m, please label nsfw, ambiguous links as such");
+          return new Mute(_message.SenderName, TimeSpan.FromMinutes(5), "5m, please label nsfw, ambiguous links as such");
       }
       return null;
     }
@@ -157,7 +138,7 @@ namespace Dbot.Processor {
       var match = Regex.Match(_originalText, regex);
       if (match.Success) return match.Groups[1].Value;
       Debug.Assert(match.Success);
-      Logger.ErrorLog("Imgur " + imgurId + " error on " + _message.Nick + " saying " + _originalText);
+      Logger.ErrorLog("Imgur " + imgurId + " error on " + _message.SenderName + " saying " + _originalText);
       return "";
     }
 
@@ -175,24 +156,24 @@ namespace Dbot.Processor {
       foreach (var longMessage in longMessages) {
         var delta = Convert.ToInt32(StringTools.Delta(_text, longMessage.SanitizedText) * 100);
         if (delta > Settings.LongSpamSimilarity) {
-          Logger.Write("Muted " + _message.Nick + " for longspam");
+          Logger.Write("Muted " + _message.SenderName + " for longspam");
           Logger.Write("Current " + _message.Ordinal + ": " + _originalText);
           Logger.Write("Previous" + longMessage.Ordinal + ": " + longMessage.SanitizedText);
           if (_message.SanitizedText.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier) {
-            return new Mute(_message.Nick, TimeSpan.FromMinutes(10), "10m " + _message.Nick + ": " + delta + "% = past text");
+            return new Mute(_message.SenderName, TimeSpan.FromMinutes(10), "10m " + _message.SenderName + ": " + delta + "% = past text");
           }
-          return new Mute(_message.Nick, TimeSpan.FromMinutes(1), "1m " + _message.Nick + ": " + delta + "% = past text");
+          return new Mute(_message.SenderName, TimeSpan.FromMinutes(1), "1m " + _message.SenderName + ": " + delta + "% = past text");
         }
       }
       return null;
     }
 
     public Mute SelfSpam() {
-      var shortMessages = _context.TakeLast(Settings.SelfSpamContextLength).Where(x => x.Nick == _message.Nick).ToList();
+      var shortMessages = _context.TakeLast(Settings.SelfSpamContextLength).Where(x => x.SenderName == _message.SenderName).ToList();
       if (shortMessages.Count >= 2) {
         var percentList = shortMessages.Select(sm => Convert.ToInt32(StringTools.Delta(sm.SanitizedText, _text) * 100)).Where(x => x >= Settings.SelfSpamSimilarity).ToList();
         if (percentList.Count >= 2) {
-          return new Mute(_message.Nick, TimeSpan.FromMinutes(2), "2m " + _message.Nick + ": " + percentList.Average() + "% = your past text");
+          return new Mute(_message.SenderName, TimeSpan.FromMinutes(2), "2m " + _message.SenderName + ": " + percentList.Average() + "% = your past text");
         }
       }
       return null;
@@ -201,19 +182,19 @@ namespace Dbot.Processor {
     private Mute NumberSpam() {
       var numberRegex = new Regex(@"^.{0,2}\d+.{0,5}$");
       if (!numberRegex.Match(_message.SanitizedText).Success) return null;
-      var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(m => numberRegex.Match(m.SanitizedText).Success && _message.Nick == m.Nick) + 1; // To include the latest message that isn't in context yet.
-      return numberMessages >= Settings.NumberSpamTriggerLength ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Counting down to your ban? 10m") : null;
+      var numberMessages = _context.TakeLast(Settings.NumberSpamContextLength).Count(m => numberRegex.Match(m.SanitizedText).Success && _message.SenderName == m.SenderName) + 1; // To include the latest message that isn't in context yet.
+      return numberMessages >= Settings.NumberSpamTriggerLength ? new Mute(_message.SenderName, TimeSpan.FromMinutes(10), "Counting down to your ban? 10m") : null;
     }
 
     private Mute RepeatCharacterSpam() { //todo find a way to apply this to CTRL V as well
       var match = new Regex(@"(.)\1{" + Settings.RepeatCharacterSpamLimit + ",}").Match(_message.SanitizedText);
-      return match.Success ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Let go of that poor " + match.Groups[1].Value + "; 10m") : null;
+      return match.Success ? new Mute(_message.SenderName, TimeSpan.FromMinutes(10), "Let go of that poor " + match.Groups[1].Value + "; 10m") : null;
     }
 
     private Mute LineSpam() {
-      var shortMessages = _context.TakeLast(Settings.LineSpamLimit).Where(x => x.Nick == _message.Nick).ToList();
+      var shortMessages = _context.TakeLast(Settings.LineSpamLimit).Where(x => x.SenderName == _message.SenderName).ToList();
       return shortMessages.Count == Settings.LineSpamLimit
-        ? new Mute(_message.Nick, TimeSpan.FromMinutes(10), "Let someone else talk; 10m")
+        ? new Mute(_message.SenderName, TimeSpan.FromMinutes(10), "Let someone else talk; 10m")
         : null;
     }
   }

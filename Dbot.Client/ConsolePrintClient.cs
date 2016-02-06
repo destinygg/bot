@@ -32,6 +32,10 @@ namespace Dbot.Client {
       Print(ban);
     }
 
+    public void Visit(Broadcast broadcast) {
+      Print(broadcast);
+    }
+
     private void Print(ISendableVisitable sendableVisitable) {
       Logger.Write(sendableVisitable.ToString());
     }

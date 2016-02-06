@@ -11,6 +11,6 @@ namespace Dbot.CommonModels {
     void Visit(UnMuteBan unMuteBan);
     void Visit(Subonly subonly);
     void Visit(Ban ban);
-
+    void Visit(Broadcast broadcast);
   }
 }

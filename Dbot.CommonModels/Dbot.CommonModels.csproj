@@ -30,9 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -44,6 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ban.cs" />
+    <Compile Include="Broadcast.cs" />
+    <Compile Include="ConnectedUsers.cs" />
+    <Compile Include="HasVictimBuilder.cs" />
     <Compile Include="IClientVisitor.cs" />
     <Compile Include="IProcessor.cs" />
     <Compile Include="Mute.cs" />
@@ -56,7 +59,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublicMessage.cs" />
     <Compile Include="Subonly.cs" />
-    <Compile Include="TargetedSendable.cs" />
+    <Compile Include="ISendable.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="UnMuteBan.cs" />
     <Compile Include="User.cs" />
@@ -70,6 +73,9 @@
       <Project>{B5EACEA0-BA29-4FA5-A692-27BD699FCDAD}</Project>
       <Name>Dbot.WebSocketModels</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
