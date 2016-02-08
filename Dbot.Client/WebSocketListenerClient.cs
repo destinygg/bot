@@ -50,7 +50,8 @@ namespace Dbot.Client {
       switch (actionMessage) { //todo case/switch is a great place to introduce polymorphism you tard
         case "NAMES": {
             var names = JsonConvert.DeserializeObject<NamesReceiver>(jsonMessage);
-            Logger.Write(names.Connectioncount + " " + string.Join(",", names.Users.Select(x => x.Nick)));
+            var userList = names.Users.Select(x => new CommonModels.User(x.Nick)).ToList();
+            _processor.Process(new ConnectedUsers(userList));
           }
           break;
         case "MSG": {

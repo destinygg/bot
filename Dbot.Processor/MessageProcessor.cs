@@ -75,6 +75,10 @@ namespace Dbot.Processor {
     public void Process(UnMuteBan unMuteBan) { }
     public void Process(Broadcast broadcast) { }
 
+    public void Process(ConnectedUsers connectedUsers) {
+      Logger.Write($"Websocket connection established for mod bot! {connectedUsers.Users.Count} users signed in.");
+    }
+
     private void Command(Message message) {
       var output = new Commander(message, this).Run();
       if (output != null)

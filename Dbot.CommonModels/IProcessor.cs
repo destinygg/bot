@@ -6,5 +6,6 @@
     void Process(Ban ban);
     void Process(UnMuteBan unMuteBan);
     void Process(Broadcast broadcast);
+    void Process(ConnectedUsers connectedUsers);
   }
 }

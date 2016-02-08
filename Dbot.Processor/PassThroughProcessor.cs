@@ -13,6 +13,7 @@ namespace Dbot.Processor {
     public PassThroughProcessor(Action<string> action) {
       _sender = action;
     }
+
     public void Process(PublicMessage message) {
       _sender.Invoke($"<{message.Sender.OriginalNick}> {message.OriginalText}");
     }
@@ -33,6 +34,10 @@ namespace Dbot.Processor {
 
     public void Process(Broadcast broadcast) {
       _sender.Invoke($"<{broadcast.Sender.OriginalNick}> <=== just broadcasted: {broadcast.OriginalText}");
+    }
+
+    public void Process(ConnectedUsers connectedUsers) {
+      _sender.Invoke($"Websocket connection established! {connectedUsers.Users.Count} users signed in.");
     }
   }
 }
