@@ -11,6 +11,7 @@ namespace Dbot.Twitch {
   class Program {
     static void Main() {
       Logger.Init();
+      InitializeDatastore.Run();
       //var server = "irc.rizon.net";
       //const int port = 6667;
       //const string channel = "#destinyecho2";

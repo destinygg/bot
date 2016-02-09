@@ -74,10 +74,14 @@ namespace Dbot.Client {
           Send($"CAP REQ :twitch.tv/tags");
           Send($"JOIN {_channel}");
         }
-        
+
         var privmsgMatch = new Regex(@"\S+mod=([0|1]);\S+ :(\S+)!\S+ PRIVMSG #\w+ :(.*)").Match(data);
         if (privmsgMatch.Success) {
           Console.WriteLine(privmsgMatch.Groups[1].Value + privmsgMatch.Groups[2].Value + privmsgMatch.Groups[3].Value);
+          var isMod = privmsgMatch.Groups[1].Value == "1";
+          var nick = privmsgMatch.Groups[2].Value;
+          var msg = privmsgMatch.Groups[3].Value;
+          processor.Process(new PublicMessage(nick, msg) { IsMod = isMod });
         }
 
       }
