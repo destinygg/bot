@@ -57,14 +57,6 @@ namespace Dbot.Main {
       }
     }
 
-    public async Task<IList<string>> TestRun(IEnumerable<PublicMessage> testInput) {
-      Logger.SaveToFile = false;
-      InitializeDatastore.Run();
-      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret));
-      var testClient = new TestClient();
-      return await testClient.Run(new MessageProcessor(testClient), testInput);
-    }
-
     private void TweetDetected(ITweet tweet) {
       _messageProcessor.Sender.Post(new ModPublicMessage("twitter.com/OmniDestiny just tweeted: " + Tools.TweetPrettier(tweet)));
     }
