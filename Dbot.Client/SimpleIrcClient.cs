@@ -67,6 +67,12 @@ namespace Dbot.Client {
           .Success) {
           Send($"PONG {pingMatch.Groups[1].Value}");
         }
+
+        var motdEndMatch = new Regex(@"^\S+ 376 .*").Match(data);
+        if (motdEndMatch.Success) {
+          Send($"CAP REQ :twitch.tv/tags");
+          Send($"JOIN {_channel}");
+        }
       }
     }
 
