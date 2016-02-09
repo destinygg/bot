@@ -6,10 +6,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Dbot.CommonModels;
 using Dbot.Utility;
 
 namespace Dbot.Client {
-  public class SimpleIrcClient : IDisposable {
+  public class SimpleIrcClient : ConsolePrintClient, IDisposable {
     private readonly string _server;
     private readonly int _port;
     private readonly string _channel;
@@ -56,7 +57,7 @@ namespace Dbot.Client {
       Logger.Write($"< {data}");
     }
 
-    public void Run() {
+    public override void Run(IProcessor processor) {
       while (true) {
         var data = _streamReader.ReadLine();
         Logger.Write($"> {data}");
@@ -87,6 +88,10 @@ namespace Dbot.Client {
       _streamWriter?.Close();
       _networkStream?.Close();
       _tcpClient?.Close();
+    }
+
+    public override void Forward(PublicMessage message) {
+      Send($"PRIVMSG {_channel} {message.OriginalText}");
     }
   }
 }

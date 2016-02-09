@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dbot.Client;
+using Dbot.Processor;
 using Dbot.Utility;
 
 namespace Dbot.Twitch {
@@ -22,7 +23,7 @@ namespace Dbot.Twitch {
       const string pass = PrivateConstants.TwitchOauth;
       using (var bot = new SimpleIrcClient(server, port, channel, nick, pass)) {
         bot.Connect();
-        bot.Run();
+        bot.Run(new MessageProcessor(bot));
       }
     }
   }
