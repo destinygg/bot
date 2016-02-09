@@ -86,6 +86,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dbot.Client\Dbot.Client.csproj">
+      <Project>{063691B4-0283-46A9-8EAA-19FE0DB0628A}</Project>
+      <Name>Dbot.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dbot.CommonModels\Dbot.CommonModels.csproj">
+      <Project>{65D520B2-5739-4908-90B0-739CB4DAAC4D}</Project>
+      <Name>Dbot.CommonModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dbot.Main\Dbot.Main.csproj">
       <Project>{2D7C9BBC-6FE8-4734-B045-A7E4A6C1F2A9}</Project>
       <Name>Dbot.Main</Name>

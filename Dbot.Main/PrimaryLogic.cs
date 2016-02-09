@@ -12,11 +12,11 @@ using Tweetinvi.Core.Interfaces;
 
 namespace Dbot.Main {
   public class PrimaryLogic {
-    private readonly IClientVisitor _client = new WebSocketListenerClient(PrivateConstants.BotWebsocketAuth);
-    //private readonly IClientVisitor _client = new WebSocketListenerClient();
+    private readonly IClientVisitor _client;
     private readonly MessageProcessor _messageProcessor;
 
-    public PrimaryLogic() {
+    public PrimaryLogic(IClientVisitor client) {
+      _client = client;
       _messageProcessor = new MessageProcessor(_client);
     }
 
