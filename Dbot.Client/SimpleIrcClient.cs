@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Dbot.Utility;
 
@@ -58,11 +59,11 @@ namespace Dbot.Client {
         var data = _streamReader.ReadLine();
         Logger.Write($"> {data}");
         if (data == null) continue;
-        var charSeparator = new [] { ' ' };
-        var ex = data.Split(charSeparator, 5);
 
-        if (ex[0] == "PING") {
-          Send($"PONG {ex[1]}");
+        var pingMatch = new Regex(@"^PING (.*)").Match(data);
+        if (pingMatch
+          .Success) {
+          Send($"PONG {pingMatch.Groups[1].Value}");
         }
       }
     }
