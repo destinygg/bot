@@ -58,6 +58,10 @@ namespace Dbot.Client {
       Logger.Write($"< {data}");
     }
 
+    public void SendMsg(string message) {
+      Send($"PRIVMSG {_channel} :{message}");
+    }
+
     public override void Run(IProcessor processor) {
       _processor = processor;
       while (true) {

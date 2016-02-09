@@ -22,7 +22,7 @@ namespace Dbot.Twitch {
       const string channel = "#destiny";
       const string nick = "destiny_bot";
       const string pass = PrivateConstants.TwitchOauth;
-      using (var bot = new SimpleIrcListenerClient(server, port, channel, nick, pass)) {
+      using (var bot = new SimpleIrcClient(server, port, channel, nick, pass)) {
         bot.Connect();
         bot.Run(new MessageProcessor(bot));
       }
