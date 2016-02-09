@@ -11,11 +11,16 @@ namespace Dbot.Twitch {
     static void Main() {
       Logger.Init();
       //var server = "irc.rizon.net";
+      //const int port = 6667;
+      //const string channel = "#destinyecho2";
+      //const string nick = "destiny_botboop";
+      //const string pass = null;
       const string server = "irc.twitch.tv";
       const int port = 6667;
+      const string channel = "#destiny";
       const string nick = "destiny_bot";
       const string pass = PrivateConstants.TwitchOauth;
-      using (var bot = new SimpleIrcClient(server, port, nick, pass)) {
+      using (var bot = new SimpleIrcClient(server, port, channel, nick, pass)) {
         bot.Connect();
         bot.Run();
       }

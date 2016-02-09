@@ -12,6 +12,7 @@ namespace Dbot.Client {
   public class SimpleIrcClient : IDisposable {
     private readonly string _server;
     private readonly int _port;
+    private readonly string _channel;
     private readonly string _nick;
     private readonly string _pass;
     private TcpClient _tcpClient;
@@ -19,9 +20,10 @@ namespace Dbot.Client {
     private StreamReader _streamReader;
     private StreamWriter _streamWriter;
 
-    public SimpleIrcClient(string server, int port, string nick, string pass = null) {
+    public SimpleIrcClient(string server, int port, string channel, string nick, string pass = null) {
       _server = server;
       _port = port;
+      _channel = channel;
       _nick = nick;
       _pass = pass;
     }
