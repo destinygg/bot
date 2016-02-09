@@ -20,6 +20,7 @@ namespace Dbot.Client {
     private NetworkStream _networkStream;
     private StreamReader _streamReader;
     private StreamWriter _streamWriter;
+    private IProcessor _processor;
 
     public SimpleIrcListenerClient(string server, int port, string channel, string nick, string pass = null) {
       _server = server;
@@ -58,14 +59,14 @@ namespace Dbot.Client {
     }
 
     public override void Run(IProcessor processor) {
+      _processor = processor;
       while (true) {
         var data = _streamReader.ReadLine();
         Logger.Write($"> {data}");
         if (data == null) continue;
 
         var pingMatch = new Regex(@"^PING (.*)").Match(data);
-        if (pingMatch
-          .Success) {
+        if (pingMatch.Success) {
           Send($"PONG {pingMatch.Groups[1].Value}");
         }
 
@@ -77,7 +78,6 @@ namespace Dbot.Client {
 
         var privmsgMatch = new Regex(@"\S+mod=([0|1]);\S+ :(\S+)!\S+ PRIVMSG #\w+ :(.*)").Match(data);
         if (privmsgMatch.Success) {
-          Console.WriteLine(privmsgMatch.Groups[1].Value + privmsgMatch.Groups[2].Value + privmsgMatch.Groups[3].Value);
           var isMod = privmsgMatch.Groups[1].Value == "1";
           var nick = privmsgMatch.Groups[2].Value;
           var msg = privmsgMatch.Groups[3].Value;
@@ -95,7 +95,7 @@ namespace Dbot.Client {
     }
 
     public override void Forward(PublicMessage message) {
-      Send($"PRIVMSG {_channel} {message.OriginalText}");
+      _processor.Process(message);
     }
   }
 }
