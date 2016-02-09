@@ -10,7 +10,7 @@ using Dbot.CommonModels;
 using Dbot.Utility;
 
 namespace Dbot.Client {
-  public class SimpleIrcClient : ConsolePrintClient, IDisposable {
+  public class SimpleIrcListenerClient : ConsolePrintClient, IDisposable {
     private readonly string _server;
     private readonly int _port;
     private readonly string _channel;
@@ -21,7 +21,7 @@ namespace Dbot.Client {
     private StreamReader _streamReader;
     private StreamWriter _streamWriter;
 
-    public SimpleIrcClient(string server, int port, string channel, string nick, string pass = null) {
+    public SimpleIrcListenerClient(string server, int port, string channel, string nick, string pass = null) {
       _server = server;
       _port = port;
       _channel = channel;
