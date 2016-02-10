@@ -64,6 +64,7 @@ namespace Dbot.Client {
 
     public override void Run(IProcessor processor) {
       _processor = processor;
+      Connect();
       while (true) {
         var data = _streamReader.ReadLine();
         Logger.Write($"> {data}");

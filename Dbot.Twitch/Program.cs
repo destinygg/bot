@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dbot.Client;
+using Dbot.Main;
 using Dbot.Processor;
 using Dbot.Utility;
 
 namespace Dbot.Twitch {
   class Program {
     static void Main() {
-      Logger.Init();
-      InitializeDatastore.Run();
       //var server = "irc.rizon.net";
       //const int port = 6667;
       //const string channel = "#destinyecho2";
@@ -23,8 +22,7 @@ namespace Dbot.Twitch {
       const string nick = "destiny_bot";
       const string pass = PrivateConstants.TwitchOauth;
       using (var bot = new SimpleIrcClient(server, port, channel, nick, pass)) {
-        bot.Connect();
-        bot.Run(new MessageProcessor(bot));
+        new PrimaryLogic(bot).Run();
       }
     }
   }
