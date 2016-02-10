@@ -15,7 +15,8 @@ namespace Dbot.UnitTest {
         new ModPublicMessage("!sing"),
       };
 
-      messageList.AddRange(Enumerable.Range(1, 0).Select(i => new PublicMessage("UserX", "Wait... " + Tools.RandomString(10))).ToList());
+      messageList.AddRange(Enumerable.Range(1, 0).Select(i => new PublicMessage("UserX",
+        $"Wait... {Tools.RandomString(10)}")).ToList());
 
       var r = await new TestLogic().Run(messageList);
 
@@ -229,11 +230,11 @@ namespace Dbot.UnitTest {
 
       const int beginningBufferSize = 3;
       foreach (var i in Enumerable.Range(0, beginningBufferSize)) {
-        messageList.Insert(i, new PublicMessage("User" + i, i.ToString()));
+        messageList.Insert(i, new PublicMessage($"User{i}", i.ToString()));
       }
       var endingBufferSize = Settings.SelfSpamContextLength - messageList.Count + 3;
       foreach (var i in Enumerable.Range(beginningBufferSize, endingBufferSize)) {
-        messageList.Add(new PublicMessage("User" + i, i.ToString()));
+        messageList.Add(new PublicMessage($"User{i}", i.ToString()));
       }
       messageList.Add(new PublicMessage("BanVictimA", "playing a longer game"));
       messageList.AddRange(new List<PublicMessage> {
@@ -259,7 +260,7 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Any(x => x.Contains("Muted banvictima")));
       Assert.IsTrue(r.Any(x => x.Contains("Muted banvictimb")));
       foreach (var i in Enumerable.Range(1, beginningBufferSize + endingBufferSize)) {
-        Assert.IsTrue(!r.Any(x => x.Contains("Muted user" + i.ToString())));
+        Assert.IsTrue(!r.Any(x => x.Contains($"Muted user{i.ToString()}")));
       }
     }
 
@@ -272,26 +273,27 @@ namespace Dbot.UnitTest {
         new PublicMessage("red1", "red"),
         new PublicMessage("red2", "red"),
         new PublicMessage("red3", "red"),
-        
+
         new PublicMessage("yellow1", "yellow"),
         new PublicMessage("yellow2", "yellow"),
         new PublicMessage("yellow3", "yellow"),
-        
+
         new ModPublicMessage("!nuke10m red"),
         new ModPublicMessage("!nuke30m yellow"),
       };
-      messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage($"User{i}", "test")));
       messageList.AddRange(new List<PublicMessage>{
         new PublicMessage("red4", "red"),
         new PublicMessage("red5", "red"),
         new PublicMessage("red6", "red"),
-        
+
         new PublicMessage("yellow4", "yellow"),
         new PublicMessage("yellow5", "yellow"),
         new PublicMessage("yellow6", "yellow"),
         //new ModPublicMessage("!mute User26"),
       });
-      messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => new PublicMessage("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => new PublicMessage(
+        $"User{i}", "test")));
       messageList.AddRange(new List<PublicMessage>{
         new ModPublicMessage("!aegis"),
         new PublicMessage("red7", "red"),
@@ -305,22 +307,23 @@ namespace Dbot.UnitTest {
         new PublicMessage("transparent5", "transparent"),
 
       });
-      messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => new PublicMessage("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => new PublicMessage(
+        $"User{i}", "test")));
 
       var r = await new TestLogic().Run(messageList);
 
       foreach (var i in Enumerable.Range(2, 4)) {
-        Assert.IsTrue(r.Count(x => x.Contains("Muted red" + i.ToString())) == 1);
-        Assert.IsTrue(r.Count(x => x.Contains("Muted yellow" + i.ToString())) == 1);
-        Assert.IsTrue(r.Count(x => x.Contains("Unbanned red" + i.ToString())) == 1);
-        Assert.IsTrue(r.Count(x => x.Contains("Unbanned yellow" + i.ToString())) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains($"Muted red{i.ToString()}")) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains($"Muted yellow{i.ToString()}")) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains($"Unbanned red{i.ToString()}")) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains($"Unbanned yellow{i.ToString()}")) == 1);
       }
       Assert.IsTrue(r.Count(x => x.Contains("Muted red1")) >= 1);
       Assert.IsTrue(r.Count(x => x.Contains("Muted yellow1")) >= 1);
       Assert.IsTrue(r.Count(x => x.Contains("Unbanned red1")) >= 1);
       Assert.IsTrue(r.Count(x => x.Contains("Unbanned yellow1")) >= 1);
       foreach (var i in Enumerable.Range(1, firstBufferSize + secondBufferSize + thirdBufferSize)) {
-        Assert.IsTrue(!r.Any(x => x.Contains("Muted user" + i.ToString())));
+        Assert.IsTrue(!r.Any(x => x.Contains($"Muted user{i.ToString()}")));
       }
       Assert.IsTrue(!r.Any(x => x.Contains("Muted red7")));
       Assert.IsTrue(!r.Any(x => x.Contains("Muted yellow7")));
@@ -396,10 +399,10 @@ namespace Dbot.UnitTest {
 
     private async Task AutoMuteBanRegexTest(string normal, string capsPasttense) {
       var r = await new TestLogic().Run(new List<PublicMessage> {
-        new ModPublicMessage("!add" + normal + @"9m r(e|3)g\dx"),
-        new ModPublicMessage("!add" + normal + @"1m ^begin *end$"),
-        new ModPublicMessage("!add" + normal + @"m cAsEsEnSiTiViTy MaTtErS"),
-        new ModPublicMessage("!add" + normal + @"m (?i:DOES NOT MATTER)"),
+        new ModPublicMessage($"!add{normal}9m r(e|3)g\\dx"),
+        new ModPublicMessage($"!add{normal}1m ^begin *end$"),
+        new ModPublicMessage($"!add{normal}m cAsEsEnSiTiViTy MaTtErS"),
+        new ModPublicMessage($"!add{normal}m (?i:DOES NOT MATTER)"),
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserR", Tools.RandomString(20)),
@@ -435,10 +438,10 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserR", Tools.RandomString(20)),
-        new ModPublicMessage("!del" + normal + @" r(e|3)g\dx"),
-        new ModPublicMessage("!del" + normal + @" ^begin *end$"),
-        new ModPublicMessage("!del" + normal + @" cAsEsEnSiTiViTy MaTtErS"),
-        new ModPublicMessage("!del" + normal + @" (?i:DOES NOT MATTER)"),
+        new ModPublicMessage($"!del{normal} r(e|3)g\\dx"),
+        new ModPublicMessage($"!del{normal} ^begin *end$"),
+        new ModPublicMessage($"!del{normal} cAsEsEnSiTiViTy MaTtErS"),
+        new ModPublicMessage($"!del{normal} (?i:DOES NOT MATTER)"),
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserR", Tools.RandomString(20)),
@@ -455,9 +458,9 @@ namespace Dbot.UnitTest {
 
     private async Task AutoMuteBanTest(string normal, string capsPasttense) {
       var r = await new TestLogic().Run(new List<PublicMessage> {
-        new ModPublicMessage("!Add" + normal + "9m teST"),
-        new ModPublicMessage("!aDd" + normal + "m boRK"),
-        new ModPublicMessage("!adD" + normal + "1m heRP"),
+        new ModPublicMessage($"!Add{normal}9m teST"),
+        new ModPublicMessage($"!aDd{normal}m boRK"),
+        new ModPublicMessage($"!adD{normal}1m heRP"),
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserR", Tools.RandomString(20)),
@@ -509,41 +512,41 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserR", Tools.RandomString(20)),
-        new ModPublicMessage("!del" + normal + " test"),
-        new ModPublicMessage("!del" + normal + " bork"),
-        new ModPublicMessage("!del" + normal + " herp"),
+        new ModPublicMessage($"!del{normal} test"),
+        new ModPublicMessage($"!del{normal} bork"),
+        new ModPublicMessage($"!del{normal} herp"),
         new PublicMessage("UserD", "test"),
         new PublicMessage("UserD", "bork"),
-        new ModPublicMessage("!add" + normal + "13m repeat"),
+        new ModPublicMessage($"!add{normal}13m repeat"),
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserE", "repeat"),
         new PublicMessage("UserR", Tools.RandomString(20)),
-        new ModPublicMessage("!add" + normal + "30m repeat"),
+        new ModPublicMessage($"!add{normal}30m repeat"),
         new PublicMessage("UserR", Tools.RandomString(20)),
         new PublicMessage("UserF", "repeat"),
         new PublicMessage("UserR", Tools.RandomString(20)),
-        new ModPublicMessage("!delete" + normal + " ghost"),
-        new ModPublicMessage("!delete" + normal + " repeat"),
+        new ModPublicMessage($"!delete{normal} ghost"),
+        new ModPublicMessage($"!delete{normal} repeat"),
         new PublicMessage("UserR", Tools.RandomString(20)),
       });
 
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " usera for 9m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userb for 9m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 10m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 20m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 40m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 1m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 2m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 4m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 8m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 16m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 32m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userc for 1h 4m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userd")) == 0);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " usere for 13m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("repeat already in the auto" + normal + " list; its duration has been updated to 30m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains(capsPasttense + " userf for 30m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("ghost not found in the auto" + normal + " list")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} usera for 9m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userb for 9m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userc for 10m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userc for 20m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userc for 40m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userc for 1m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userc for 2m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userc for 4m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userc for 8m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userc for 16m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userc for 32m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userc for 1h 4m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userd")) == 0);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} usere for 13m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"repeat already in the auto{normal} list; its duration has been updated to 30m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"{capsPasttense} userf for 30m")) == 1);
+      Assert.IsTrue(r.Count(x => x.Contains($"ghost not found in the auto{normal} list")) == 1);
     }
 
     [TestMethod]
@@ -566,13 +569,13 @@ namespace Dbot.UnitTest {
         new PublicMessage("UserB", "#4."),
         new PublicMessage("UserB", "#5."),
         new PublicMessage("UserB", "#6."),
-        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
-        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
-        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
+        new PublicMessage("UserC", $"#9inevolt {Tools.RandomString(15)}"),
+        new PublicMessage("UserC", $"#9inevolt {Tools.RandomString(15)}"),
+        new PublicMessage("UserC", $"#9inevolt {Tools.RandomString(15)}"),
         new PublicMessage("UserZ", "Buffer"),
-        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
-        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
-        new PublicMessage("UserC", "#9inevolt " + Tools.RandomString(15)),
+        new PublicMessage("UserC", $"#9inevolt {Tools.RandomString(15)}"),
+        new PublicMessage("UserC", $"#9inevolt {Tools.RandomString(15)}"),
+        new PublicMessage("UserC", $"#9inevolt {Tools.RandomString(15)}"),
         new PublicMessage("UserX", "Buffer"),
         new PublicMessage("UserY", "Buffer"),
         new PublicMessage("UserZ", "Buffer"),
@@ -600,11 +603,11 @@ namespace Dbot.UnitTest {
         new ModPublicMessage("!addEMOTE FaceA"),
         new ModPublicMessage("!ADDemote MyEmoteB"),
         new ModPublicMessage("!listemote"),
-        new PublicMessage("1Spam", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
-        new PublicMessage("User1", "facea facea facea facea facea facea facea facea facea facea" + Tools.RandomString(20)),
+        new PublicMessage("1Spam", $"FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA{Tools.RandomString(20)}"),
+        new PublicMessage("User1", $"facea facea facea facea facea facea facea facea facea facea{Tools.RandomString(20)}"),
         new ModPublicMessage("!delemote FaceA"),
-        new PublicMessage("User2", "FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA" + Tools.RandomString(20)),
-        new PublicMessage("2Spam", "MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB " + Tools.RandomString(20)),
+        new PublicMessage("User2", $"FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA{Tools.RandomString(20)}"),
+        new PublicMessage("2Spam", $"MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB {Tools.RandomString(20)}"),
       });
       await Task.Delay(400);
 
@@ -614,7 +617,7 @@ namespace Dbot.UnitTest {
 
     private static void SpamAndUserAssert(IList<string> returns, int spamMax) {
       foreach (var i in Enumerable.Range(1, spamMax)) {
-        Assert.IsTrue(returns.Count(x => x.Contains("Muted " + i + "spam")) == 1 || returns.Count(x => x.Contains("Banned " + i + "spam")) == 1);
+        Assert.IsTrue(returns.Count(x => x.Contains($"Muted {i}spam")) == 1 || returns.Count(x => x.Contains($"Banned {i}spam")) == 1);
       }
       Assert.IsTrue(returns.Count(x => x.Contains("Muted user")) == 0 && returns.Count(x => x.Contains("Banned user")) == 0);
     }
@@ -650,11 +653,11 @@ namespace Dbot.UnitTest {
         new PublicMessage("red1", "red1"),
         new PublicMessage("red2", "red2"),
         new PublicMessage("red3", "red3"),
-        
+
         new PublicMessage("yellow1", "yellow1"),
         new PublicMessage("yellow2", "yellow2"),
         new PublicMessage("yellow3", "yellow3"),
-        
+
         new PublicMessage("CAP1", "CAP1"),
         new PublicMessage("CAP2", "CAP2"),
         new PublicMessage("CAP3", "CAP3"),
@@ -667,7 +670,7 @@ namespace Dbot.UnitTest {
         new ModPublicMessage(@"!nukeregex30m yell..\d"),
         new ModPublicMessage(@"!nukeregex 20m CAP"),
       };
-      messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(1, firstBufferSize).Select(i => new PublicMessage($"User{i}", "test")));
       messageList.AddRange(new List<PublicMessage>{
 
         new PublicMessage("CAP4", "CAP4"),
@@ -681,13 +684,14 @@ namespace Dbot.UnitTest {
         new PublicMessage("red4", "red4"),
         new PublicMessage("red5", "red5"),
         new PublicMessage("red6", "red6"),
-        
+
         new PublicMessage("yellow4", "yellow4"),
         new PublicMessage("yellow5", "yellow5"),
         new PublicMessage("yellow6", "yellow6"),
         //new ModPublicMessage("!mute User26"),
       });
-      messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => new PublicMessage("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(firstBufferSize, secondBufferSize).Select(i => new PublicMessage(
+        $"User{i}", "test")));
       messageList.AddRange(new List<PublicMessage>{
         new ModPublicMessage("!aegis"),
         new PublicMessage("red7", "red7"),
@@ -700,20 +704,21 @@ namespace Dbot.UnitTest {
         new PublicMessage("transparent4", "transparent4"),
         new PublicMessage("transparent5", "transparent5"),
       });
-      messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => new PublicMessage("User" + i, "test")));
+      messageList.AddRange(Enumerable.Range(firstBufferSize + secondBufferSize, thirdBufferSize).Select(i => new PublicMessage(
+        $"User{i}", "test")));
 
       var r = await new TestLogic().Run(messageList);
 
       foreach (var i in Enumerable.Range(1, 6)) {
-        Assert.IsTrue(r.Count(x => x.Contains("Muted red" + i.ToString())) == 1);
-        Assert.IsTrue(r.Count(x => x.Contains("Muted yellow" + i.ToString())) == 1);
-        Assert.IsTrue(r.Count(x => x.Contains("Muted cap" + i.ToString())) == 1);
-        Assert.IsTrue(r.Count(x => x.Contains("Unbanned red" + i.ToString())) == 1);
-        Assert.IsTrue(r.Count(x => x.Contains("Unbanned yellow" + i.ToString())) == 1);
-        Assert.IsTrue(r.Count(x => x.Contains("Unbanned cap" + i.ToString())) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains($"Muted red{i.ToString()}")) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains($"Muted yellow{i.ToString()}")) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains($"Muted cap{i.ToString()}")) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains($"Unbanned red{i.ToString()}")) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains($"Unbanned yellow{i.ToString()}")) == 1);
+        Assert.IsTrue(r.Count(x => x.Contains($"Unbanned cap{i.ToString()}")) == 1);
       }
       foreach (var i in Enumerable.Range(1, firstBufferSize + secondBufferSize + thirdBufferSize)) {
-        Assert.IsTrue(!r.Any(x => x.Contains("Muted user" + i.ToString())));
+        Assert.IsTrue(!r.Any(x => x.Contains($"Muted user{i.ToString()}")));
       }
       Assert.IsTrue(!r.Any(x => x.Contains("Muted red7")));
       Assert.IsTrue(!r.Any(x => x.Contains("Muted yellow7")));
@@ -737,15 +742,15 @@ namespace Dbot.UnitTest {
         new ModPublicMessage(Tools.RandomString(20)),
         new ModPublicMessage(Tools.RandomString(20)),
         new ModPublicMessage(Tools.RandomString(20)),
-        new PublicMessage("UserX", "!bUrP" + Tools.RandomString(20)),
+        new PublicMessage("UserX", $"!bUrP{Tools.RandomString(20)}"),
         new ModPublicMessage(Tools.RandomString(20)),
         new ModPublicMessage(Tools.RandomString(20)),
         new ModPublicMessage(Tools.RandomString(20)),
-        new PublicMessage("UserX", "!otherword" + Tools.RandomString(20)),
+        new PublicMessage("UserX", $"!otherword{Tools.RandomString(20)}"),
         new ModPublicMessage(Tools.RandomString(20)),
         new ModPublicMessage(Tools.RandomString(20)),
         new ModPublicMessage(Tools.RandomString(20)),
-        new ModPublicMessage("!otherword" + Tools.RandomString(20)),
+        new ModPublicMessage($"!otherword{Tools.RandomString(20)}"),
         new ModPublicMessage(Tools.RandomString(20)),
         new ModPublicMessage(Tools.RandomString(20)),
         new ModPublicMessage(Tools.RandomString(20)),
@@ -824,7 +829,7 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 1h 20m")) == 1);
       Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 2h 40m")) == 1);
     }
-    
+
     [TestMethod]
     public async Task UnicodeTest() {
       var r = await new TestLogic().Run(new List<PublicMessage> {

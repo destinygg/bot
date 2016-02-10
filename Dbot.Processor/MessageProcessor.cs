@@ -46,7 +46,7 @@ namespace Dbot.Processor {
         var contextTest = _contextDictionary.TryRemove(_dequeueIndex, out removed);
         Debug.Assert(contextTest);
 #if DEBUG
-        Console.Write("d " + _dequeueIndex + ".");
+        Console.Write("d {0}.", _dequeueIndex);
 #endif
         _dequeueIndex++;
       }
@@ -109,7 +109,7 @@ namespace Dbot.Processor {
 
     private void Log(Message message) {
 #if DEBUG
-      Logger.Write(message.Ordinal + " " + message.SenderName + ": " + message.OriginalText);
+      Logger.Write($"{message.Ordinal} {message.SenderName}: {message.OriginalText}");
 #endif
       Datastore.InsertMessage(message);
     }

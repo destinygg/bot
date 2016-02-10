@@ -22,15 +22,15 @@ namespace Dbot.Processor {
         await Task.Delay(Settings.NukeDissipateTime);
 
       if (nuke.Word != null)
-        Logger.Write(nuke.Word + " dissipated.", ConsoleColor.Red);
+        Logger.Write($"{nuke.Word} dissipated.", ConsoleColor.Red);
       else
-        Logger.Write(nuke.Regex + " dissipated.", ConsoleColor.Red);
+        Logger.Write($"{nuke.Regex} dissipated.", ConsoleColor.Red);
       if (CancellationTokenSource.IsCancellationRequested) {
         CancellationTokenSource = new CancellationTokenSource();
         return;
       }
       _messageProcessor.Nukes.Remove(nuke);
-      Logger.Write("NukeDictionary " + _messageProcessor.Nukes.Count + ", NukeVictims " + nuke.VictimList.Count, ConsoleColor.Red);
+      Logger.Write($"NukeDictionary {_messageProcessor.Nukes.Count}, NukeVictims {nuke.VictimList.Count}", ConsoleColor.Red);
     }
 
     public async void Aegis() {

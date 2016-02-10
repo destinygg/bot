@@ -69,11 +69,11 @@ namespace Dbot.Client {
           break;
         case "ERR": {
             if (jsonMessage == "\"duplicate\"") {
-              LatestPublicMessage.OriginalText = LatestPublicMessage.OriginalText + ".";
+              LatestPublicMessage.OriginalText = $"{LatestPublicMessage.OriginalText}.";
               Send(LatestPublicMessage);
-              Logger.Write("Duplicate, sending: " + LatestPublicMessage.OriginalText, ConsoleColor.Magenta);
+              Logger.Write($"Duplicate, sending: {LatestPublicMessage.OriginalText}", ConsoleColor.Magenta);
             } else {
-              Logger.Write("Server reports error: " + jsonMessage, ConsoleColor.Red);
+              Logger.Write($"Server reports error: {jsonMessage}", ConsoleColor.Red);
             }
           }
           break;
@@ -166,7 +166,7 @@ namespace Dbot.Client {
 
     public void Send(PublicMessage publicMessage) {
       LatestPublicMessage = publicMessage;
-      Logger.Write("Messaged " + publicMessage.OriginalText);
+      Logger.Write($"Messaged {publicMessage.OriginalText}");
     }
   }
 }

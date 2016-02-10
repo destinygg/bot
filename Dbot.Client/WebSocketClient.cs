@@ -14,7 +14,7 @@ namespace Dbot.Client {
 
     public override void Visit(PrivateMessage privateMessage) {
       var obj = new PrivateMessageSender(privateMessage.SenderName, privateMessage.OriginalText);
-      _websocket.Send("PRIVMSG " + JsonConvert.SerializeObject(obj));
+      _websocket.Send($"PRIVMSG {JsonConvert.SerializeObject(obj)}");
     }
 
     public override void Visit(PublicMessage publicMessage) {
@@ -23,22 +23,22 @@ namespace Dbot.Client {
         if (publicMessage.OriginalText.EndsWith(".")) {
           publicMessage.OriginalText = publicMessage.OriginalText.TrimEnd('.');
         } else {
-          publicMessage.OriginalText = publicMessage.OriginalText + ".";
+          publicMessage.OriginalText = $"{publicMessage.OriginalText}.";
         }
       }
       var obj = new MessageSender(publicMessage.OriginalText);
-      _websocket.Send("MSG " + JsonConvert.SerializeObject(obj));
+      _websocket.Send($"MSG {JsonConvert.SerializeObject(obj)}");
       _previousSend = publicMessage.OriginalText;
     }
 
     public override void Visit(Mute mute) {
       var obj = new MuteSender(mute.SenderName, mute.Duration);
-      _websocket.Send("MUTE " + JsonConvert.SerializeObject(obj));
+      _websocket.Send($"MUTE {JsonConvert.SerializeObject(obj)}");
     }
 
     public override void Visit(UnMuteBan unMuteBan) {
       var obj = new UnMuteBanSender(unMuteBan.Beneficiary);
-      _websocket.Send("UNBAN " + JsonConvert.SerializeObject(obj));
+      _websocket.Send($"UNBAN {JsonConvert.SerializeObject(obj)}");
     }
 
     public override void Visit(Subonly subonly) {
@@ -49,7 +49,7 @@ namespace Dbot.Client {
 
     public override void Visit(Ban ban) {
       var obj = ban.Duration == TimeSpan.Zero ? new BanSender(ban.SenderName, ban.Ip, true, ban.Reason) : new BanSender(ban.SenderName, ban.Ip, ban.Duration, ban.Reason);
-      _websocket.Send("BAN " + JsonConvert.SerializeObject(obj));
+      _websocket.Send($"BAN {JsonConvert.SerializeObject(obj)}");
     }
   }
 }

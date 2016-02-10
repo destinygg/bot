@@ -42,12 +42,12 @@ namespace Dbot.Processor {
         var cancelToken = nuke.CancellationTokenSource.Token;
         await Task.Run(() => nuke.Dissipate(this), cancelToken);
       } catch (TaskCanceledException e) {
-        Logger.Write("Cancelled!" + Word + Regex);
+        Logger.Write($"Cancelled!{Word}{Regex}");
         Logger.Write(e.Message);
       }
 
       _messageProcessor.Nukes.Add(this);
-      _messageProcessor.Sender.Post(new PublicMessage(Tools.PrettyDeltaTime(duration) + " missiles away!"));
+      _messageProcessor.Sender.Post(new PublicMessage($"{Tools.PrettyDeltaTime(duration)} missiles away!"));
 
       while (PreordainedVictims.Except(VictimList).Any()) {
         if (!Cancel) {
@@ -59,7 +59,8 @@ namespace Dbot.Processor {
           return;
         }
       }
-      _messageProcessor.Sender.Post(new PublicMessage(VictimList.Count + " souls were vaporized in a single blinding instant"));
+      _messageProcessor.Sender.Post(new PublicMessage(
+        $"{VictimList.Count} souls were vaporized in a single blinding instant"));
     }
 
     public bool Predicate(string input) {

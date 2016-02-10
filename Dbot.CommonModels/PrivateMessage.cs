@@ -11,7 +11,7 @@ namespace Dbot.CommonModels {
     }
 
     public override string ToString() {
-      return "Private Messaged " + SenderName + " with: " + OriginalText;
+      return $"Private Messaged {SenderName} with: {OriginalText}";
     }
   }
 }

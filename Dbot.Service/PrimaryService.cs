@@ -72,7 +72,7 @@ namespace Dbot.Service {
       var indent = new string(' ', level);
 
       if (level > 0) {
-        builderToFill.AppendLine(indent + "=== INNER EXCEPTION ===");
+        builderToFill.AppendLine($"{indent}=== INNER EXCEPTION ===");
       }
 
       Action<string> append = (prop) => {

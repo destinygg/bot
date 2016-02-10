@@ -129,16 +129,16 @@ namespace Dbot.Processor {
         imgurId = GetImgurId(imgurId, @".*imgur\.com/r/\w+/(\w+).*");
       if (imgurId == "a") {
         imgurId = GetImgurId(imgurId, @".*imgur\.com/a/(\w+).*");
-        return IsNsfwApi("https://api.imgur.com/3/album/" + imgurId);
+        return IsNsfwApi($"https://api.imgur.com/3/album/{imgurId}");
       }
-      return IsNsfwApi("https://api.imgur.com/3/image/" + imgurId);
+      return IsNsfwApi($"https://api.imgur.com/3/image/{imgurId}");
     }
 
     private string GetImgurId(string imgurId, string regex) {
       var match = Regex.Match(_originalText, regex);
       if (match.Success) return match.Groups[1].Value;
       Debug.Assert(match.Success);
-      Logger.ErrorLog("Imgur " + imgurId + " error on " + _message.SenderName + " saying " + _originalText);
+      Logger.ErrorLog($"Imgur {imgurId} error on {_message.SenderName} saying {_originalText}");
       return "";
     }
 
@@ -156,13 +156,13 @@ namespace Dbot.Processor {
       foreach (var longMessage in longMessages) {
         var delta = Convert.ToInt32(StringTools.Delta(_text, longMessage.SanitizedText) * 100);
         if (delta > Settings.LongSpamSimilarity) {
-          Logger.Write("Muted " + _message.SenderName + " for longspam");
-          Logger.Write("Current " + _message.Ordinal + ": " + _originalText);
-          Logger.Write("Previous" + longMessage.Ordinal + ": " + longMessage.SanitizedText);
+          Logger.Write($"Muted {_message.SenderName} for longspam");
+          Logger.Write($"Current {_message.Ordinal}: {_originalText}");
+          Logger.Write($"Previous{longMessage.Ordinal}: {longMessage.SanitizedText}");
           if (_message.SanitizedText.Length > Settings.LongSpamMinimumLength * Settings.LongSpamLongerBanMultiplier) {
-            return new Mute(_message.SenderName, TimeSpan.FromMinutes(10), "10m " + _message.SenderName + ": " + delta + "% = past text");
+            return new Mute(_message.SenderName, TimeSpan.FromMinutes(10), $"10m {_message.SenderName}: {delta}% = past text");
           }
-          return new Mute(_message.SenderName, TimeSpan.FromMinutes(1), "1m " + _message.SenderName + ": " + delta + "% = past text");
+          return new Mute(_message.SenderName, TimeSpan.FromMinutes(1), $"1m {_message.SenderName}: {delta}% = past text");
         }
       }
       return null;
@@ -173,7 +173,7 @@ namespace Dbot.Processor {
       if (shortMessages.Count >= 2) {
         var percentList = shortMessages.Select(sm => Convert.ToInt32(StringTools.Delta(sm.SanitizedText, _text) * 100)).Where(x => x >= Settings.SelfSpamSimilarity).ToList();
         if (percentList.Count >= 2) {
-          return new Mute(_message.SenderName, TimeSpan.FromMinutes(2), "2m " + _message.SenderName + ": " + percentList.Average() + "% = your past text");
+          return new Mute(_message.SenderName, TimeSpan.FromMinutes(2), $"2m {_message.SenderName}: {percentList.Average()}% = your past text");
         }
       }
       return null;
@@ -187,8 +187,8 @@ namespace Dbot.Processor {
     }
 
     private Mute RepeatCharacterSpam() { //todo find a way to apply this to CTRL V as well
-      var match = new Regex(@"(.)\1{" + Settings.RepeatCharacterSpamLimit + ",}").Match(_message.SanitizedText);
-      return match.Success ? new Mute(_message.SenderName, TimeSpan.FromMinutes(10), "Let go of that poor " + match.Groups[1].Value + "; 10m") : null;
+      var match = new Regex($@"(.)\1{{{Settings.RepeatCharacterSpamLimit},}}").Match(_message.SanitizedText);
+      return match.Success ? new Mute(_message.SenderName, TimeSpan.FromMinutes(10), $"Let go of that poor {match.Groups[1].Value}; 10m") : null;
     }
 
     private Mute LineSpam() {

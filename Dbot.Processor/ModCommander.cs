@@ -88,20 +88,20 @@ namespace Dbot.Processor {
         { _compiledRegex.AddEmote, (g,c) => {
           var emoteToAdd = g[1].Value;
           if (Datastore.AddToStateString(Ms.ThirdPartyEmotes, emoteToAdd, Datastore.ThirdPartyEmotesList)) {
-            Send(emoteToAdd + " added to third party emotes list");
+            Send($"{emoteToAdd} added to third party emotes list");
             Datastore.GenerateEmoteRegex();
           }
           else
-            Send(emoteToAdd + " already in third party emotes list.");
+            Send($"{emoteToAdd} already in third party emotes list.");
         } },
         { _compiledRegex.DelEmote, (g,c) => {
           var emoteToDelete = g[1].Value;
           if (Datastore.DeleteFromStateString(Ms.ThirdPartyEmotes, emoteToDelete, Datastore.ThirdPartyEmotesList)) {
             Datastore.GenerateEmoteRegex();
-            Send(emoteToDelete + " deleted from third party emotes list");
+            Send($"{emoteToDelete} deleted from third party emotes list");
           }
           else
-            Send(emoteToDelete + " not in third party emotes list.");
+            Send($"{emoteToDelete} not in third party emotes list.");
         } },
         { _compiledRegex.ListEmote, (g,c) => {
           Send(string.Join(", ", Datastore.GetStateString_StringList(MagicStrings.ThirdPartyEmotes)));
@@ -168,16 +168,16 @@ namespace Dbot.Processor {
           var command = g[1].Value.ToLower();
           var text = g[2].Value;
           if (Datastore.AddToStateString(MagicStrings.CustomCommands, command, text, Datastore.CustomCommands))
-            Send("!" + command + " added");
+            Send($"!{command} added");
           else
-            Send("!" + command + " already exists; its corresponding text has been updated");
+            Send($"!{command} already exists; its corresponding text has been updated");
         } },
         { _compiledRegex.DelCommand, (g,c) => {
           var command = g[1].Value.ToLower();
           if (Datastore.DeleteFromStateString(MagicStrings.CustomCommands, command, Datastore.CustomCommands))
-            Send("!" + command + " deleted");
+            Send($"!{command} deleted");
           else
-            Send("!" + command + " is not a recognized command");
+            Send($"!{command} is not a recognized command");
         } },
         { _compiledRegex.SubOnly, (g,c) => {
           var enabled = g[1].Value;
@@ -210,9 +210,9 @@ namespace Dbot.Processor {
       var wordToDelete = g[1].Value;
       if (!category.Contains("Regex")) wordToDelete = wordToDelete.ToLower();
       if (Datastore.DeleteFromStateString(category, wordToDelete, externalDictionary))
-        Send(wordToDelete + " deleted from the " + name + " list");
+        Send($"{wordToDelete} deleted from the {name} list");
       else
-        Send(wordToDelete + " not found in the " + name + " list");
+        Send($"{wordToDelete} not found in the {name} list");
     }
 
     private TimeSpan BanTime(string stringInt, string s, bool ip = false) {
@@ -242,7 +242,7 @@ namespace Dbot.Processor {
         if (ip && stringInt == "") return TimeSpan.Zero;
         return TimeSpan.FromMinutes(i);
       }
-      Logger.Write("Somehow an invalid time passed the regex. StringInt:" + stringInt + ", s:" + s + ", ip:" + ip, ConsoleColor.Red);
+      Logger.Write($"Somehow an invalid time passed the regex. StringInt:{stringInt}, s:{s}, ip:{ip}", ConsoleColor.Red);
       return TimeSpan.FromMinutes(10);
     }
 
