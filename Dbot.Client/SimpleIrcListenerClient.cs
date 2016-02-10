@@ -16,6 +16,7 @@ namespace Dbot.Client {
     private readonly string _channel;
     private readonly string _nick;
     private readonly string _pass;
+    private readonly string _broadcaster;
     private TcpClient _tcpClient;
     private NetworkStream _networkStream;
     private StreamReader _streamReader;
@@ -28,6 +29,7 @@ namespace Dbot.Client {
       _channel = channel;
       _nick = nick;
       _pass = pass;
+      _broadcaster = server.Contains("twitch") ? _channel.Substring(1) : "";
     }
 
     public void Connect() {
@@ -86,6 +88,7 @@ namespace Dbot.Client {
           var isMod = privmsgMatch.Groups[1].Value == "1";
           var nick = privmsgMatch.Groups[2].Value;
           var msg = privmsgMatch.Groups[3].Value;
+          if (nick == _broadcaster) isMod = true;
 
           var meMatch = new Regex(@"\u0001ACTION (.*)\u0001").Match(msg);
           if (meMatch.Success) {
