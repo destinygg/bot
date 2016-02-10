@@ -49,6 +49,7 @@
     <Compile Include="HasVictimBuilder.cs" />
     <Compile Include="IClientVisitor.cs" />
     <Compile Include="IProcessor.cs" />
+    <Compile Include="ModPrivateMessage.cs" />
     <Compile Include="Mute.cs" />
     <Compile Include="HasVictim.cs" />
     <Compile Include="ISendableVisitable.cs" />
