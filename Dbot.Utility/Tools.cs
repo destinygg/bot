@@ -22,24 +22,24 @@ namespace Dbot.Utility {
       int minute = Convert.ToInt32(span.ToString("%m"));
 
       if (span.CompareTo(TimeSpan.Zero) == -1) {
-        Logger.ErrorLog("Time to sync the clock?" + span);
+        Logger.ErrorLog($"Time to sync the clock?{span}");
         return "a few seconds";
       }
 
       if (day > 1) {
-        if (hour == 0) return day + " days";
-        return day + " days " + hour + "h";
+        if (hour == 0) return $"{day} days";
+        return $"{day} days {hour}h";
       }
 
       if (day == 1) {
         if (hour == 0) return "1 day";
-        return "1 day " + hour + "h";
+        return $"1 day {hour}h";
       }
 
-      if (hour == 0) return rough + minute + "m";
-      if (minute == 0) return rough + hour + "h";
+      if (hour == 0) return $"{rough}{minute}m";
+      if (minute == 0) return $"{rough}{hour}h";
 
-      return rough + hour + "h " + minute + "m";
+      return $"{rough}{hour}h {minute}m";
     }
 
     public static DateTime Epoch() {
@@ -103,12 +103,12 @@ namespace Dbot.Utility {
 
       if (liveStatus && Datastore.OnTime() != 0) { //we've been live for some time
         Datastore.UpdateStateVariable(MagicStrings.OffTime, 0, wait);
-        return "Live with " + Datastore.Viewers + " viewers for " + PrettyDeltaTime(onTimeDelta, "~");
+        return $"Live with {Datastore.Viewers} viewers for {PrettyDeltaTime(onTimeDelta, "~")}";
       }
       if (liveStatus && Datastore.OnTime() == 0) { // we just went live
         Datastore.UpdateStateVariable(MagicStrings.OnTime, time, wait);
         Datastore.UpdateStateVariable(MagicStrings.OffTime, 0, wait);
-        return "Destiny is live! With " + Datastore.Viewers + " viewers for ~0m";
+        return $"Destiny is live! With {Datastore.Viewers} viewers for ~0m";
       }
       if (!liveStatus && Datastore.OnTime() != 0 && Datastore.OffTime() == 0) { //we've just gone offline
         Datastore.UpdateStateVariable(MagicStrings.OffTime, time, wait);
@@ -119,7 +119,7 @@ namespace Dbot.Utility {
       }
       if (!liveStatus && Datastore.OffTime() != 0) { //we've been not live for a while
         Datastore.UpdateStateVariable(MagicStrings.OnTime, 0, wait);
-        return "Stream offline for " + PrettyDeltaTime(offTimeDelta, "~");
+        return $"Stream offline for {PrettyDeltaTime(offTimeDelta, "~")}";
       }
       Logger.ErrorLog($"LiveStatus()'s ifs failed. LiveStatus: {liveStatus}. In minutes: OnTimeΔ {onTimeDelta.TotalMinutes}. OffTimeΔ {offTimeDelta.TotalMinutes}");
       return "Live check failed";
@@ -127,9 +127,9 @@ namespace Dbot.Utility {
 
     public static string Stalk(string user) {
       var msg = Datastore.Stalk(user.ToLower());
-      if (msg == null) return user + " not found";
+      if (msg == null) return $"{user} not found";
       var baseTime = DateTime.UtcNow - Epoch();
-      return PrettyDeltaTime(TimeSpan.FromSeconds(baseTime.TotalSeconds - msg.Time)) + " ago: " + msg.Text;
+      return $"{PrettyDeltaTime(TimeSpan.FromSeconds(baseTime.TotalSeconds - msg.Time))} ago: {msg.Text}";
     }
 
     // http://stackoverflow.com/questions/13240915/converting-a-webclient-method-to-async-await
@@ -142,13 +142,13 @@ namespace Dbot.Utility {
         return await client.DownloadStringTaskAsync(url);
       } catch (Exception e) {
         Logger.Write("An error in DownloadData!", ConsoleColor.Red);
-        Logger.Write("Url   : " + url, ConsoleColor.Red);
+        Logger.Write($"Url   : {url}", ConsoleColor.Red);
         if (header == "") Logger.Write("Header is empty string.", ConsoleColor.Red);
-        else Logger.Write("Header: " + header, ConsoleColor.Red);
+        else Logger.Write($"Header: {header}", ConsoleColor.Red);
         Logger.Write(e.Message, ConsoleColor.Red);
         Logger.Write(e.Source, ConsoleColor.Red);
         Logger.Write(e.StackTrace, ConsoleColor.Red);
-        return "Error! " + e;
+        return $"Error! {e}";
       }
     }
 

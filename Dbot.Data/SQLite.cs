@@ -200,7 +200,7 @@ namespace SQLite
 
 			Handle = handle;
 			if (r != SQLite3.Result.OK) {
-				throw SQLiteException.New (r, String.Format ("Could not open database file: {0} ({1})", DatabasePath, r));
+				throw SQLiteException.New (r, $"Could not open database file: {DatabasePath} ({r})");
 			}
 			_open = true;
 
@@ -323,7 +323,7 @@ namespace SQLite
 		{
 			var map = GetMapping (typeof (T));
 
-			var query = string.Format("drop table if exists \"{0}\"", map.TableName);
+			var query = $"drop table if exists \"{map.TableName}\"";
 
 			return Execute (query);
 		}
@@ -612,7 +612,7 @@ namespace SQLite
 			if (TimeExecution) {
 				_sw.Stop ();
 				_elapsedMilliseconds += _sw.ElapsedMilliseconds;
-				Debug.WriteLine (string.Format ("Finished in {0} ms ({1:0.0} s total)", _sw.ElapsedMilliseconds, _elapsedMilliseconds / 1000.0));
+				Debug.WriteLine ($"Finished in {_sw.ElapsedMilliseconds} ms ({_elapsedMilliseconds/1000.0:0.0} s total)");
 			}
 			
 			return r;
@@ -635,7 +635,7 @@ namespace SQLite
 			if (TimeExecution) {
 				_sw.Stop ();
 				_elapsedMilliseconds += _sw.ElapsedMilliseconds;
-				Debug.WriteLine (string.Format ("Finished in {0} ms ({1:0.0} s total)", _sw.ElapsedMilliseconds, _elapsedMilliseconds / 1000.0));
+				Debug.WriteLine ($"Finished in {_sw.ElapsedMilliseconds} ms ({_elapsedMilliseconds/1000.0:0.0} s total)");
 			}
 			
 			return r;
@@ -1352,8 +1352,8 @@ namespace SQLite
 				select c.GetValue (obj);
 			var ps = new List<object> (vals);
 			ps.Add (pk.GetValue (obj));
-			var q = string.Format ("update \"{0}\" set {1} where {2} = ? ", map.TableName, string.Join (",", (from c in cols
-				select "\"" + c.Name + "\" = ? ").ToArray ()), pk.Name);
+			var q =
+			  $"update \"{map.TableName}\" set {string.Join(",", (from c in cols select "\"" + c.Name + "\" = ? ").ToArray())} where {pk.Name} = ? ";
 
 			try {
 				rowsAffected = Execute (q, ps.ToArray ());
@@ -1406,7 +1406,7 @@ namespace SQLite
 			if (pk == null) {
 				throw new NotSupportedException ("Cannot delete " + map.TableName + ": it has no PK");
 			}
-			var q = string.Format ("delete from \"{0}\" where \"{1}\" = ?", map.TableName, pk.Name);
+			var q = $"delete from \"{map.TableName}\" where \"{pk.Name}\" = ?";
 			return Execute (q, pk.GetValue (objectToDelete));
 		}
 
@@ -1429,7 +1429,7 @@ namespace SQLite
 			if (pk == null) {
 				throw new NotSupportedException ("Cannot delete " + map.TableName + ": it has no PK");
 			}
-			var q = string.Format ("delete from \"{0}\" where \"{1}\" = ?", map.TableName, pk.Name);
+			var q = $"delete from \"{map.TableName}\" where \"{pk.Name}\" = ?";
 			return Execute (q, primaryKey);
 		}
 
@@ -1447,7 +1447,7 @@ namespace SQLite
 		public int DeleteAll<T> ()
 		{
 			var map = GetMapping (typeof (T));
-			var query = string.Format("delete from \"{0}\"", map.TableName);
+			var query = $"delete from \"{map.TableName}\"";
 			return Execute (query);
 		}
 
@@ -1667,11 +1667,11 @@ namespace SQLite
 			HasAutoIncPK = _autoPk != null;
 
 			if (PK != null) {
-				GetByPrimaryKeySql = string.Format ("select * from \"{0}\" where \"{1}\" = ?", TableName, PK.Name);
+				GetByPrimaryKeySql = $"select * from \"{TableName}\" where \"{PK.Name}\" = ?";
 			}
 			else {
 				// People should not be calling Get/Find without a PK
-				GetByPrimaryKeySql = string.Format ("select * from \"{0}\" limit 1", TableName);
+				GetByPrimaryKeySql = $"select * from \"{TableName}\" limit 1";
 			}
 		}
 
@@ -2121,7 +2121,7 @@ namespace SQLite
 			parts [0] = CommandText;
 			var i = 1;
 			foreach (var b in _bindings) {
-				parts [i] = string.Format ("  {0}: {1}", i - 1, b.Value);
+				parts [i] = $"  {i - 1}: {b.Value}";
 				i++;
 			}
 			return string.Join (Environment.NewLine, parts);

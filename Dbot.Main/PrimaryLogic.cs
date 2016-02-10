@@ -12,15 +12,12 @@ using Tweetinvi.Core.Interfaces;
 
 namespace Dbot.Main {
   public class PrimaryLogic {
-    private readonly IClientVisitor _client = new WebSocketListenerClient(PrivateConstants.BotWebsocketAuth);
-    private readonly IClientVisitor _twitchClient = new TwitchListenerClient();
-    //private readonly IClientVisitor _client = new WebSocketListenerClient();
+    private readonly IClientVisitor _client;
     private readonly MessageProcessor _messageProcessor;
-    private readonly MessageProcessor _messageTwitchProcessor;
 
-    public PrimaryLogic() {
+    public PrimaryLogic(IClientVisitor client) {
+      _client = client;
       _messageProcessor = new MessageProcessor(_client);
-      _messageTwitchProcessor = new MessageProcessor(_twitchClient);
     }
 
     public void Run() {
@@ -36,7 +33,6 @@ namespace Dbot.Main {
       PeriodicTask.Run(InitializeDatastore.UpdateEmotes, TimeSpan.FromMinutes(5));
 
       _client.Run(_messageProcessor);
-      _twitchClient.Run(_messageTwitchProcessor);
       Console.CancelKeyPress += Console_CancelKeyPress;
       //http://stackoverflow.com/questions/14255655/tpl-dataflow-producerconsumer-pattern
       //http://msdn.microsoft.com/en-us/library/hh228601(v=vs.110).aspx
@@ -61,17 +57,9 @@ namespace Dbot.Main {
       }
     }
 
-    public async Task<IList<string>> TestRun(IEnumerable<PublicMessage> testInput) {
-      Logger.SaveToFile = false;
-      InitializeDatastore.Run();
-      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret));
-      var testClient = new TestClient();
-      return await testClient.Run(new MessageProcessor(testClient), testInput);
-    }
-
     private void TweetDetected(ITweet tweet) {
-      _messageProcessor.Sender.Post(new ModPublicMessage("twitter.com/OmniDestiny just tweeted: " + Tools.TweetPrettier(tweet)));
-      _messageTwitchProcessor.Sender.Post(new ModPublicMessage("twitter.com/OmniDestiny just tweeted: " + Tools.TweetPrettier(tweet)));
+      _messageProcessor.Sender.Post(new ModPublicMessage(
+        $"twitter.com/OmniDestiny just tweeted: {Tools.TweetPrettier(tweet)}"));
     }
 
     private void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {

@@ -19,7 +19,7 @@ namespace Dbot.CommonModels {
     }
 
     public override string ToString() {
-      return "Unbanned " + Beneficiary;
+      return $"Unbanned {Beneficiary}";
     }
   }
 }

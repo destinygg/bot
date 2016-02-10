@@ -17,12 +17,13 @@ namespace Dbot.CommonModels {
     public HasVictimBuilder IncreaseDuration(TimeSpan baseDuration, int count, string reason) {
       switch (count) {
         case 1:
-          _baseHasVictim.Reason = Tools.PrettyDeltaTime(baseDuration) + " for " + reason;
+          _baseHasVictim.Reason = $"{Tools.PrettyDeltaTime(baseDuration)} for {reason}";
           _baseHasVictim.Duration = baseDuration;
           break;
         case 2:
           var duration = TimeSpan.FromSeconds(baseDuration.TotalSeconds * 2);
-          _baseHasVictim.Reason = Tools.PrettyDeltaTime(duration) + " for " + reason + "; your time has doubled. Future sanctions will not be explicitly justified."; ;
+          _baseHasVictim.Reason =
+            $"{Tools.PrettyDeltaTime(duration)} for {reason}; your time has doubled. Future sanctions will not be explicitly justified."; ;
           _baseHasVictim.Duration = duration;
           break;
         default:

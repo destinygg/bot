@@ -6,6 +6,7 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using Dbot.Client;
 using Dbot.Main;
 using Dbot.Utility;
 
@@ -55,7 +56,8 @@ namespace Dbot.Service {
       using (var writer = new StreamWriter(fileNamePath)) {
         writer.AutoFlush = true;
         try {
-          new PrimaryLogic().Run();
+          var client = new WebSocketClient(PrivateConstants.BotWebsocketAuth);
+          new PrimaryLogic(client).Run();
         } catch (Exception e) {
           var sb = new StringBuilder();
           WriteExceptionDetails(e, sb, 0);
@@ -70,7 +72,7 @@ namespace Dbot.Service {
       var indent = new string(' ', level);
 
       if (level > 0) {
-        builderToFill.AppendLine(indent + "=== INNER EXCEPTION ===");
+        builderToFill.AppendLine($"{indent}=== INNER EXCEPTION ===");
       }
 
       Action<string> append = (prop) => {

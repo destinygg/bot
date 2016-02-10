@@ -16,7 +16,7 @@ namespace Dbot.UnitTest {
       var client = new WebSocketClient(PrivateConstants.TestAccountWebsocketAuth);
       client.Run(new MessageProcessor(client));
       await Task.Delay(2000);
-      client.Send(new PublicMessage("test" + Tools.RandomString(3)));
+      client.Send(new PublicMessage($"test{Tools.RandomString(3)}"));
     }
 
     [TestMethod]

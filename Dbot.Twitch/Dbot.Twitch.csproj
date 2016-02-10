@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EE5D6C87-675B-43A6-8F7D-9ED227968DEA}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <ProjectGuid>{471BC995-6B96-4632-AEA1-DA4CCCF1A108}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dbot.Service</RootNamespace>
-    <AssemblyName>Dbot.Service</AssemblyName>
+    <RootNamespace>Dbot.Twitch</RootNamespace>
+    <AssemblyName>Dbot.Twitch</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -48,7 +48,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -60,29 +59,19 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PrimaryService.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="PrimaryServiceInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +86,10 @@
     <ProjectReference Include="..\Dbot.Main\Dbot.Main.csproj">
       <Project>{2D7C9BBC-6FE8-4734-B045-A7E4A6C1F2A9}</Project>
       <Name>Dbot.Main</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dbot.Processor\Dbot.Processor.csproj">
+      <Project>{70D90913-35AE-4502-90E7-8C1316A92CF2}</Project>
+      <Name>Dbot.Processor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
       <Project>{E27FAB2D-880D-4137-B32A-23E7DB585BF3}</Project>

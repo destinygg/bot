@@ -79,7 +79,7 @@ namespace Dbot.Utility {
     private Regex GenerateRegex(string triggers, bool allowPerm, bool hasReason) {
       var times = allowPerm ? AllUnits : AllButPerm;
       var user = hasReason ? @" +(\S+) *" : " +";
-      return Tools.CompiledIgnoreCaseRegex("^!(?:" + triggers + @") *(?:(\d*)(" + string.Join("|", times) + ")?)?" + user + "(.*)");
+      return Tools.CompiledIgnoreCaseRegex($"^!(?:{triggers}) *(?:(\\d*)({string.Join("|", times)})?)?{user}(.*)");
     }
   }
 }

@@ -14,7 +14,7 @@
     }
 
     public override string ToString() {
-      return "Messaged " + OriginalText;
+      return $"Messaged {OriginalText}";
     }
   }
 }

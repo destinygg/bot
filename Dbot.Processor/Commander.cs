@@ -35,7 +35,9 @@ namespace Dbot.Processor {
       { new List<string> { "irc" },
         () => "IRC will be implemented Soon™. For now, chat is echoed to Rizon IRC at qchat.rizon.net/?channels=#destinyecho . Forwarding of IRC chat to Destiny.gg Chat is available" },
       { new List<string> { "time" },
-        () => TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Settings.Timezone).ToShortTimeString() + " Central Steven Time" },
+        () =>
+          $"{TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Settings.Timezone).ToShortTimeString()} Central Steven Time"
+      },
       { new List<string> { "live" },
         () => Tools.LiveStatus() },
       { new List<string> { "blog", "blag" },
@@ -92,7 +94,7 @@ namespace Dbot.Processor {
         reader.ReadToFollowing("pubDate");
         var pubdateString = reader.ReadElementContentAsString();
         var pubdate = Convert.ToDateTime(pubdateString).ToUniversalTime();
-        return "\"" + title + "\" posted " + Tools.PrettyDeltaTime(DateTime.UtcNow - pubdate) + " ago " + link;
+        return $"\"{title}\" posted {Tools.PrettyDeltaTime(DateTime.UtcNow - pubdate)} ago {link}";
       }
     }
 
@@ -112,26 +114,28 @@ namespace Dbot.Processor {
       } else {
         decision = "played";
       }
-      return "Destiny " + decision + " a " + type + " game on " + map + " " + delta + " ago us.battle.net/sc2/en/profile/310150/1/Destiny/";
+      return $"Destiny {decision} a {type} game on {map} {delta} ago us.battle.net/sc2/en/profile/310150/1/Destiny/";
     }
 
     private string Song() {
-      var json = Tools.DownloadData("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=stevenbonnellii&api_key=" + PrivateConstants.LastFmApiKey + "&format=json");
+      var json = Tools.DownloadData(
+        $"http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=stevenbonnellii&api_key={PrivateConstants.LastFmApiKey}&format=json");
       var dyn = (JObject) JsonConvert.DeserializeObject(json.Result);
       var artist = dyn.SelectToken("recenttracks.track[0].artist.#text");
       var name = dyn.SelectToken("recenttracks.track[0].name");
       if (dyn.SelectToken("recenttracks.track[0].@attr.nowplaying") != null) {
-        return name + " - " + artist + " last.fm/user/stevenbonnellii";
+        return $"{name} - {artist} last.fm/user/stevenbonnellii";
       }
       var epochStringTime = dyn.SelectToken("recenttracks.track[0].date.uts").Value<string>();
       var epochTime = Convert.ToInt32(epochStringTime);
       var delta = Tools.Epoch(DateTime.UtcNow) - TimeSpan.FromSeconds(epochTime);
       var prettyDelta = Tools.PrettyDeltaTime(delta);
-      return "No song played/scrobbled. Played " + prettyDelta + " ago: " + name + " - " + artist;
+      return $"No song played/scrobbled. Played {prettyDelta} ago: {name} - {artist}";
     }
 
     private string EarlierSong() {
-      var json = Tools.DownloadData("http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=stevenbonnellii&api_key=" + PrivateConstants.LastFmApiKey + "&format=json");
+      var json = Tools.DownloadData(
+        $"http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=stevenbonnellii&api_key={PrivateConstants.LastFmApiKey}&format=json");
       var dyn = (JObject) JsonConvert.DeserializeObject(json.Result);
       var artist = dyn.SelectToken("recenttracks.track[0].artist.#text");
       var name = dyn.SelectToken("recenttracks.track[0].name");
@@ -141,7 +145,7 @@ namespace Dbot.Processor {
       var epochTime = Convert.ToInt32(epochStringTime);
       var delta = Tools.Epoch(DateTime.UtcNow) - TimeSpan.FromSeconds(epochTime);
       var prettyDelta = Tools.PrettyDeltaTime(delta);
-      return name2 + " - " + artist2 + " played before " + name + " - " + artist + " ~" + prettyDelta + " ago";
+      return $"{name2} - {artist2} played before {name} - {artist} ~{prettyDelta} ago";
     }
 
     private string Twitter(string twitterNick) {
@@ -151,22 +155,23 @@ namespace Dbot.Processor {
         var timeline = user.GetUserTimeline(1);
         var tweet = timeline.First();
         var delta = Tools.PrettyDeltaTime(tweet.TweetLocalCreationDate - tweet.CreatedAt);
-        return "twitter.com/" + twitterNick + " " + delta + " ago: " + Tools.TweetPrettier(tweet);
+        return $"twitter.com/{twitterNick} {delta} ago: {Tools.TweetPrettier(tweet)}";
       } catch (TwitterException e) {
         if (!string.IsNullOrWhiteSpace(e.WebException?.Message))
-          return "Twitter borked: " + e.WebException.Message;
+          return $"Twitter borked: {e.WebException.Message}";
         return "Twitter borked.";
       }
     }
 
     private string Youtube() {
-      var json = Tools.DownloadData("https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=1&playlistId=UU554eY5jNUfDq3yDOJYirOQ&key=" + PrivateConstants.Youtube);
+      var json = Tools.DownloadData(
+        $"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=1&playlistId=UU554eY5jNUfDq3yDOJYirOQ&key={PrivateConstants.Youtube}");
       var jObject = (JObject) JsonConvert.DeserializeObject(json.Result);
       var publishedAt = jObject.SelectToken("items[0].snippet.publishedAt").Value<DateTime>();
       var videoId = jObject.SelectToken("items[0].snippet.resourceId.videoId").Value<string>();
       var title = jObject.SelectToken("items[0].snippet.title").Value<string>();
       var delta = Tools.PrettyDeltaTime(DateTime.UtcNow - publishedAt);
-      return "\"" + title + "\" posted " + delta + " ago youtu.be/" + videoId;
+      return $"\"{title}\" posted {delta} ago youtu.be/{videoId}";
     }
 
     private string Overrustle() {
@@ -200,7 +205,7 @@ namespace Dbot.Processor {
       dynamic dyn = JsonConvert.DeserializeObject(json.Result);
       var imageCount = (int) dyn.data.images_count - 1;
       var link = dyn.data.images[Tools.RandomInclusiveInt(0, imageCount)].link;
-      return "ASLAN ! " + link;
+      return $"ASLAN ! {"ARG0"}" + link;
     }
   }
 }
