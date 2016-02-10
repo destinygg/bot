@@ -901,8 +901,7 @@ namespace Dbot.UnitTest {
       });
       await Task.Delay(2000);
 
-      Assert.AreEqual(1, r.Count(x => x.Contains("justified")));
-      Assert.AreEqual(0, r.Count(x => x.Contains("Manual")));
+      Assert.AreEqual(1, r.Count(x => x.Contains("silent")));
     }
   }
 }

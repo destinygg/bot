@@ -48,7 +48,8 @@ namespace Dbot.CommonModels {
         if (Perm) {
           return $"Permanently banned {Victim} for {Reason}";
         } else {
-          return $"Banned {Victim} for {Tools.PrettyDeltaTime(Duration)}";
+          var isSilent = SilentReason ? " silent " : "";
+          return $"Banned {Victim} for {Tools.PrettyDeltaTime(Duration)} with the{isSilent}reason {Reason}";
         }
       }
     }
