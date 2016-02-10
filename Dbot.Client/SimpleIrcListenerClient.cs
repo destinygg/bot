@@ -86,6 +86,12 @@ namespace Dbot.Client {
           var isMod = privmsgMatch.Groups[1].Value == "1";
           var nick = privmsgMatch.Groups[2].Value;
           var msg = privmsgMatch.Groups[3].Value;
+
+          var meMatch = new Regex(@"\u0001ACTION (.*)\u0001").Match(msg);
+          if (meMatch.Success) {
+            msg = $"/me {meMatch.Groups[1]}";
+          }
+
           processor.Process(new PublicMessage(nick, msg) { IsMod = isMod });
         }
 
