@@ -890,5 +890,19 @@ namespace Dbot.UnitTest {
 
       Assert.IsTrue(r.Count(x => x.Contains("twitter.com/AslanVondran")) == 1); // todo make these use Assert.IsEqual or NUnit
     }
+
+    [TestMethod]
+    public async Task SilentBanAfterFinalWarning() {
+      var r = await new TestLogic().Run(new List<PublicMessage> {
+        new ModPublicMessage(@"!addbanregex 10m (^|\s)test($|\s)"),
+        new PublicMessage(@"test"),
+        new PublicMessage(@"test"),
+        new PublicMessage(@"test"),
+      });
+      await Task.Delay(2000);
+
+      Assert.AreEqual(1, r.Count(x => x.Contains("justified")));
+      Assert.AreEqual(0, r.Count(x => x.Contains("Manual")));
+    }
   }
 }
