@@ -95,7 +95,7 @@ namespace Dbot.Client {
             msg = $"/me {meMatch.Groups[1]}";
           }
 
-          processor.Process(new PublicMessage(nick, msg) { IsMod = isMod });
+          processor.Process(new PublicMessage(nick, msg) { Sender = { IsMod = isMod } });
         }
 
       }

@@ -52,7 +52,7 @@ namespace Dbot.Main {
           _client.Visit(new PublicMessage(input.Substring(1)));
         }
         if (input[0] == '!') {
-          _client.Forward(new PublicMessage("SYSTEM CONSOLE", input) { IsMod = true });
+          _client.Forward(new ModPublicMessage("SYSTEM CONSOLE", input));
         }
       }
     }
