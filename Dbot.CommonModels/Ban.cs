@@ -38,17 +38,17 @@ namespace Dbot.CommonModels {
     }
 
     public override string ToString() {
+      var isSilent = SilentReason ? " silent " : "";
       if (Ip) {
         if (Perm) {
-          return $"Permanently ipbanned {Victim} for {Reason}";
+          return $"Permanently ipbanned {Victim} with the{isSilent}reason {Reason}";
         } else {
-          return $"Ipbanned {Victim} for {Tools.PrettyDeltaTime(Duration)}";
+          return $"Ipbanned {Victim} for {Tools.PrettyDeltaTime(Duration)} with the{isSilent}reason {Reason}";
         }
       } else {
         if (Perm) {
-          return $"Permanently banned {Victim} for {Reason}";
+          return $"Permanently banned {Victim} with the{isSilent}reason {Reason}";
         } else {
-          var isSilent = SilentReason ? " silent " : "";
           return $"Banned {Victim} for {Tools.PrettyDeltaTime(Duration)} with the{isSilent}reason {Reason}";
         }
       }
