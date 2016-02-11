@@ -135,7 +135,7 @@ namespace Dbot.Utility {
     // http://stackoverflow.com/questions/13240915/converting-a-webclient-method-to-async-await
     public static async Task<string> DownloadData(string url, string header = "") {
       try {
-        var client = new WebClient();
+        var client = new WebClient { Encoding = Encoding.UTF8 };
         if (header != "") {
           client.Headers = new WebHeaderCollection { header };
         }
