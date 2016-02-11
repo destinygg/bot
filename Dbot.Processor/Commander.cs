@@ -205,7 +205,7 @@ namespace Dbot.Processor {
       dynamic dyn = JsonConvert.DeserializeObject(json.Result);
       var imageCount = (int) dyn.data.images_count - 1;
       var link = dyn.data.images[Tools.RandomInclusiveInt(0, imageCount)].link;
-      return $"ASLAN ! {"ARG0"}" + link;
+      return $"ASLAN ! {link}";
     }
   }
 }
