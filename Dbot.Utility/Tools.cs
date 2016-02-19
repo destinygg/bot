@@ -199,5 +199,15 @@ namespace Dbot.Utility {
     public static int RandomInclusiveInt(int min, int max) {
       return Random.Next(min, max + 1);
     }
+
+    public static string YoutubeString() {
+      var json = Tools.DownloadData($"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=1&playlistId=UU554eY5jNUfDq3yDOJYirOQ&key={PrivateConstants.Youtube}");
+      var jObject = (JObject) JsonConvert.DeserializeObject(json.Result);
+      var publishedAt = jObject.SelectToken("items[0].snippet.publishedAt").Value<DateTime>();
+      var videoId = jObject.SelectToken("items[0].snippet.resourceId.videoId").Value<string>();
+      var title = jObject.SelectToken("items[0].snippet.title").Value<string>();
+      var delta = Tools.PrettyDeltaTime(DateTime.UtcNow - publishedAt);
+      return $"\"{title}\" posted {delta} ago youtu.be/{videoId}";
+    }
   }
 }
