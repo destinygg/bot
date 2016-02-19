@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Echo", "Dbot.Echo\Dbot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.Twitch", "Dbot.Twitch\Dbot.Twitch.csproj", "{471BC995-6B96-4632-AEA1-DA4CCCF1A108}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dbot.JsonModels", "Dbot.JsonModels\Dbot.JsonModels.csproj", "{0E696F9F-2874-454E-AE25-35822B3F8EB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{471BC995-6B96-4632-AEA1-DA4CCCF1A108}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{471BC995-6B96-4632-AEA1-DA4CCCF1A108}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{471BC995-6B96-4632-AEA1-DA4CCCF1A108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E696F9F-2874-454E-AE25-35822B3F8EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E696F9F-2874-454E-AE25-35822B3F8EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E696F9F-2874-454E-AE25-35822B3F8EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E696F9F-2874-454E-AE25-35822B3F8EB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,5 +99,6 @@ Global
 		{EE5D6C87-675B-43A6-8F7D-9ED227968DEA} = {963F2F72-3CC6-4975-BFD3-00471FCC004A}
 		{7FBAFD80-4B76-4D3B-A87E-C134D080A879} = {963F2F72-3CC6-4975-BFD3-00471FCC004A}
 		{471BC995-6B96-4632-AEA1-DA4CCCF1A108} = {963F2F72-3CC6-4975-BFD3-00471FCC004A}
+		{0E696F9F-2874-454E-AE25-35822B3F8EB2} = {D5C9D8F2-D660-41B9-AE22-E1732127FB13}
 	EndGlobalSection
 EndGlobal
