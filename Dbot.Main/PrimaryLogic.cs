@@ -12,6 +12,7 @@ namespace Dbot.Main {
   public class PrimaryLogic {
     private readonly IClientVisitor _client;
     private readonly MessageProcessor _messageProcessor;
+    private IDisposable _twitterStream;
 
     public PrimaryLogic(IClientVisitor client) {
       _client = client;
@@ -21,10 +22,9 @@ namespace Dbot.Main {
     public void Run() {
       Logger.Init();
       InitializeDatastore.Run();
-      //Auth.SetCredentials(new TwitterCredentials(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret));
-      //var stream = Stream.CreateUserStream();
-      //stream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet);
-      //stream.StartStreamAsync();
+
+      var tokens = Tokens.Create(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret);
+      _twitterStream = tokens.Streaming.UserAsObservable().Subscribe(new TweetObserver(_messageProcessor));
 
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
       Tools.LiveStatus();
@@ -65,6 +65,7 @@ namespace Dbot.Main {
     }
 
     private void Exit() {
+      _twitterStream.Dispose();
       Datastore.Terminate();
     }
   }

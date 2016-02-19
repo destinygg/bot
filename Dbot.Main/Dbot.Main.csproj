@@ -61,6 +61,7 @@
     <Compile Include="PrimaryLogic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TweetObserver.cs" />
     <Compile Include="TestLogic.cs" />
   </ItemGroup>
   <ItemGroup>
