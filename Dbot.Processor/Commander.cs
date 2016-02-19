@@ -4,15 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using CoreTweet;
 using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Tweetinvi;
-using Tweetinvi.Core.Exceptions;
-using Message = Dbot.CommonModels.Message;
-using User = Tweetinvi.User;
 
 namespace Dbot.Processor {
   public class Commander {
@@ -49,7 +46,7 @@ namespace Dbot.Processor {
       { new List<string> { "pastsong", "lastsong", "previoussong", "earliersong" },
         () => Tools.FallibleCode(EarlierSong) },
       { new List<string> { "twitter", "tweet", "twatter" },
-        () => Twitter("OmniDestiny") },
+        () => Tools.FallibleCode(() => Twitter("OmniDestiny")) },
       { new List<string> { "youtube", "yt" },
         () => Tools.FallibleCode(Youtube) },
       { new List<string> { "strim", "stream", "overrustle" },
@@ -149,18 +146,10 @@ namespace Dbot.Processor {
     }
 
     private string Twitter(string twitterNick) {
-      ExceptionHandler.SwallowWebExceptions = false;
-      try {
-        var user = User.GetUserFromScreenName(twitterNick);
-        var timeline = user.GetUserTimeline(1);
-        var tweet = timeline.First();
-        var delta = Tools.PrettyDeltaTime(tweet.TweetLocalCreationDate - tweet.CreatedAt);
-        return $"twitter.com/{twitterNick} {delta} ago: {Tools.TweetPrettier(tweet)}";
-      } catch (TwitterException e) {
-        if (!string.IsNullOrWhiteSpace(e.WebException?.Message))
-          return $"Twitter borked: {e.WebException.Message}";
-        return "Twitter borked.";
-      }
+      var tokens = Tokens.Create(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret);
+      var tweet = tokens.Statuses.UserTimeline(twitterNick, 1).First();
+      var delta = Tools.PrettyDeltaTime(DateTime.UtcNow - tweet.CreatedAt.UtcDateTime);
+      return $"twitter.com/{twitterNick} {delta} ago: {Tools.TweetPrettier(tweet)}";
     }
 
     private string Youtube() {

@@ -8,10 +8,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using CoreTweet;
 using Dbot.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Tweetinvi.Core.Interfaces;
 
 namespace Dbot.Utility {
   public static class Tools {
@@ -169,9 +169,14 @@ namespace Dbot.Utility {
       return r;
     }
 
-    public static string TweetPrettier(ITweet tweet) {
+    public static string TweetPrettier(Status tweet) {
       var text = HttpUtility.HtmlDecode(tweet.Text);
-      foreach (var x in tweet.Urls.ToDictionary(x => x.URL, y => y.ExpandedURL)) {
+      if (tweet.Entities.Media != null) {
+        foreach (var x in tweet.Entities.Media.ToDictionary(x => x.Url, y => y.ExpandedUrl)) {
+          text = text.Replace(x.Key, x.Value);
+        }
+      }
+      foreach (var x in tweet.Entities.Urls.ToDictionary(x => x.Url, y => y.ExpandedUrl)) {
         text = text.Replace(x.Key, x.Value);
       }
       return text.Replace("\n\n", "\n");
