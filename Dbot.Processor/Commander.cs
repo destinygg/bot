@@ -153,7 +153,7 @@ namespace Dbot.Processor {
     }
 
     private string Youtube() {
-      return Tools.YoutubeString();
+      return Tools.LatestYoutube();
     }
 
     private string Overrustle() {
