@@ -58,7 +58,10 @@ namespace Dbot.Client {
             var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
             var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
             if (isMod && !_modList.Contains(msg.Nick)) _modList.Add(msg.Nick);
-            _processor.Process(new ModPublicMessage(msg.Nick, msg.Data));
+            if (isMod)
+              _processor.Process(new ModPublicMessage(msg.Nick, msg.Data));
+            else
+              _processor.Process(new PublicMessage(msg.Nick, msg.Data));
           }
           break;
         case "PRIVMSG": {

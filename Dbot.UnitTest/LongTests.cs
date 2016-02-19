@@ -903,5 +903,17 @@ namespace Dbot.UnitTest {
 
       Assert.AreEqual(1, r.Count(x => x.Contains("silent")));
     }
+
+    [TestMethod]
+    public async Task UsersCannotUseAdminCommands() {
+      var r = await new TestLogic().Run(new List<PublicMessage> {
+        new PublicMessage("NonMod", @"!ip user"),
+        new PublicMessage("NonMod", @"!addbanregex 10m .*"),
+        new PublicMessage("NonMod", @"!sing"),
+      });
+      await Task.Delay(2000);
+
+      Assert.AreEqual(0, r.Count());
+    }
   }
 }

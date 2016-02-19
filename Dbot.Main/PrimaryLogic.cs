@@ -13,6 +13,7 @@ namespace Dbot.Main {
     private readonly IClientVisitor _client;
     private readonly MessageProcessor _messageProcessor;
     private IDisposable _twitterStream;
+    private static int i = 0;
 
     public PrimaryLogic(IClientVisitor client) {
       _client = client;
@@ -29,6 +30,7 @@ namespace Dbot.Main {
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
       Tools.LiveStatus();
       PeriodicTask.Run(InitializeDatastore.UpdateEmotes, TimeSpan.FromMinutes(5));
+      PeriodicTask.Run(PeriodicMessage, TimeSpan.FromMinutes(10));
 
       _client.Run(_messageProcessor);
       Console.CancelKeyPress += Console_CancelKeyPress;
@@ -55,9 +57,24 @@ namespace Dbot.Main {
       }
     }
 
-    private void TweetDetected(Status tweet) {
-      _messageProcessor.Sender.Post(new ModPublicMessage(
-        $"twitter.com/OmniDestiny just tweeted: {Tools.TweetPrettier(tweet)}"));
+    private void PeriodicMessage() {
+      _messageProcessor.Sender.Post(new ModPublicMessage(GetPeriodicMessage()));
+    }
+
+    public static string GetPeriodicMessage() {
+      var messages = new List<string> {
+        "Destiny has a new Twitter! twitter.com/OmniDestiny",
+        "Robot Lady will read your message for at least $5 donations twitchalerts.com/donate/destiny",
+        "Use Destiny's Amazon referral link! destiny.gg/amazon",
+        "Destiny actually updates YouTube now! youtube.com/destiny",
+        //$"Destiny actually uses YouTube now! {Tools.YoutubeString()}",
+      };
+
+      if (i + 1 < messages.Count)
+        i++;
+      else
+        i = 0;
+      return messages[i];
     }
 
     private void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e) {
