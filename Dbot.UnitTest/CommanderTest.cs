@@ -4,8 +4,6 @@ using Dbot.CommonModels;
 using Dbot.Processor;
 using Dbot.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tweetinvi;
-using Tweetinvi.Core.Credentials;
 
 namespace Dbot.UnitTest {
   [TestClass]
@@ -13,7 +11,6 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public void CommanderTests() {
       InitializeDatastore.Run();
-      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret));
 
       var message = new Commander(new PublicMessage("!playlist"), new MessageProcessor(null)).Run();
       Assert.IsTrue(message.OriginalText == "Playlist at last.fm/user/StevenBonnellII");

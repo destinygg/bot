@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CoreTweet;
 using Dbot.Client;
 using Dbot.CommonModels;
 using Dbot.Data;
 using Dbot.Processor;
 using Dbot.Utility;
-using Tweetinvi;
-using Tweetinvi.Core.Credentials;
-using Tweetinvi.Core.Interfaces;
 
 namespace Dbot.Main {
   public class PrimaryLogic {
@@ -23,10 +21,10 @@ namespace Dbot.Main {
     public void Run() {
       Logger.Init();
       InitializeDatastore.Run();
-      Auth.SetCredentials(new TwitterCredentials(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret));
-      var stream = Stream.CreateUserStream();
-      stream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet);
-      stream.StartStreamAsync();
+      //Auth.SetCredentials(new TwitterCredentials(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret));
+      //var stream = Stream.CreateUserStream();
+      //stream.TweetCreatedByFriend += (sender, args) => TweetDetected(args.Tweet);
+      //stream.StartStreamAsync();
 
       PeriodicTask.Run(() => Tools.LiveStatus(), TimeSpan.FromMinutes(2));
       Tools.LiveStatus();
@@ -57,7 +55,7 @@ namespace Dbot.Main {
       }
     }
 
-    private void TweetDetected(ITweet tweet) {
+    private void TweetDetected(Status tweet) {
       _messageProcessor.Sender.Post(new ModPublicMessage(
         $"twitter.com/OmniDestiny just tweeted: {Tools.TweetPrettier(tweet)}"));
     }
