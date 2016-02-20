@@ -216,5 +216,11 @@ namespace Dbot.UnitTest {
       var reply = Tools.LatestYoutube();
       Assert.IsTrue(reply.Contains("youtu.be"));
     }
+
+    [TestMethod]
+    public void ScStandingReturns() {
+      var reply = Tools.ScStanding();
+      Assert.IsTrue(reply.Contains("rank"));
+    }
   }
 }

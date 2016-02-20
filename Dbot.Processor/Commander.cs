@@ -96,7 +96,7 @@ namespace Dbot.Processor {
     }
 
     private string Starcraft() {
-      var json = Tools.DownloadData("http://us.battle.net/api/sc2/profile/310150/1/Destiny/matches");
+      var json = Tools.DownloadData($"https://us.api.battle.net/sc2/profile/310150/1/Destiny/matches?locale=en_US&apikey={PrivateConstants.BattleNet}");
       dynamic dyn = JsonConvert.DeserializeObject(json.Result);
       var date = (int) dyn.matches[0].date;
       var map = (string) dyn.matches[0].map;
@@ -111,7 +111,8 @@ namespace Dbot.Processor {
       } else {
         decision = "played";
       }
-      return $"Destiny {decision} a {type} game on {map} {delta} ago us.battle.net/sc2/en/profile/310150/1/Destiny/";
+      var standing = Tools.ScStanding();
+      return $"Destiny {decision} a {type} game on {map} {delta} ago and is a {standing} us.battle.net/sc2/en/profile/310150/1/Destiny/";
     }
 
     private string Song() {
