@@ -56,7 +56,7 @@ namespace Dbot.JsonModels {
     }
 
     public class Snippet {
-      public string publishedAt { get; set; }
+      public DateTime publishedAt { get; set; }
       public string channelId { get; set; }
       public string title { get; set; }
       public string description { get; set; }
