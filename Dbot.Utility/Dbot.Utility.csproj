@@ -77,6 +77,10 @@
       <Project>{1e2409c3-c544-4ec2-aa93-9c0f5a4b02ec}</Project>
       <Name>Dbot.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dbot.JsonModels\Dbot.JsonModels.csproj">
+      <Project>{0e696f9f-2874-454e-ae25-35822b3f8eb2}</Project>
+      <Name>Dbot.JsonModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

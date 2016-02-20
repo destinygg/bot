@@ -2,14 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using CoreTweet;
 using Dbot.Data;
+using Dbot.JsonModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -152,6 +155,17 @@ namespace Dbot.Utility {
       }
     }
 
+    // http://www.newtonsoft.com/json/help/html/Performance.htm
+    public static T JsonDeserializer<T>(string url) {
+      var client = new HttpClient();
+      using (var s = client.GetStreamAsync(url).Result)
+      using (var sr = new StreamReader(s))
+      using (var reader = new JsonTextReader(sr)) {
+        var serializer = new JsonSerializer();
+        return serializer.Deserialize<T>(reader);
+      }
+    }
+
     public static List<string> GetEmotes() {
       var answer = DownloadData("http://www.destiny.gg/chat/emotes.json").Result;
       var deserializeObject = (JArray) JsonConvert.DeserializeObject(answer);
@@ -200,14 +214,13 @@ namespace Dbot.Utility {
       return Random.Next(min, max + 1);
     }
 
-    public static string YoutubeString() {
-      var json = Tools.DownloadData($"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=1&playlistId=UU554eY5jNUfDq3yDOJYirOQ&key={PrivateConstants.Youtube}");
-      var jObject = (JObject) JsonConvert.DeserializeObject(json.Result);
-      var publishedAt = jObject.SelectToken("items[0].snippet.publishedAt").Value<DateTime>();
-      var videoId = jObject.SelectToken("items[0].snippet.resourceId.videoId").Value<string>();
-      var title = jObject.SelectToken("items[0].snippet.title").Value<string>();
-      var delta = Tools.PrettyDeltaTime(DateTime.UtcNow - publishedAt);
-      return $"\"{title}\" posted {delta} ago youtu.be/{videoId}";
+    public static string LatestYoutube() {
+      var rootObject = Tools.JsonDeserializer<Youtube.RootObject>($"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=UU554eY5jNUfDq3yDOJYirOQ&key={PrivateConstants.Youtube}");
+      var videoDictionary = rootObject.items.ToDictionary(i => i.snippet.publishedAt, item => item);
+      var latestTime = videoDictionary.Keys.Max(x => x);
+      var latestVideo = videoDictionary[latestTime].snippet;
+      var delta = Tools.PrettyDeltaTime(DateTime.UtcNow - latestTime);
+      return $"\"{latestVideo.title}\" posted {delta} ago youtu.be/{latestVideo.resourceId.videoId}";
     }
   }
 }

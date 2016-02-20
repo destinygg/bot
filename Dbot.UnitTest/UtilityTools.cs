@@ -210,5 +210,11 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(list.Contains(6));
       Assert.IsFalse(list.Contains(7));
     }
+
+    [TestMethod]
+    public void LatestYoutubeReturns() {
+      var reply = Tools.LatestYoutube();
+      Assert.IsTrue(reply.Contains("youtu.be"));
+    }
   }
 }
