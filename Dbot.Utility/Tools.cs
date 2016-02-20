@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -153,6 +155,17 @@ namespace Dbot.Utility {
       }
     }
 
+    // http://www.newtonsoft.com/json/help/html/Performance.htm
+    public static T JsonDeserializer<T>(string url) {
+      var client = new HttpClient();
+      using (var s = client.GetStreamAsync(url).Result)
+      using (var sr = new StreamReader(s))
+      using (var reader = new JsonTextReader(sr)) {
+        var serializer = new JsonSerializer();
+        return serializer.Deserialize<T>(reader);
+      }
+    }
+
     public static List<string> GetEmotes() {
       var answer = DownloadData("http://www.destiny.gg/chat/emotes.json").Result;
       var deserializeObject = (JArray) JsonConvert.DeserializeObject(answer);
@@ -202,9 +215,8 @@ namespace Dbot.Utility {
     }
 
     public static string LatestYoutube() {
-      var json = Tools.DownloadData($"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=UU554eY5jNUfDq3yDOJYirOQ&key={PrivateConstants.Youtube}");
-      var rootObject = JsonConvert.DeserializeObject<Youtube.RootObject>(json.Result);
-      var videoDictionary = rootObject.items.ToDictionary(i => DateTime.Parse(i.snippet.publishedAt, null, System.Globalization.DateTimeStyles.RoundtripKind), item => item);
+      var rootObject = Tools.JsonDeserializer<Youtube.RootObject>($"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=UU554eY5jNUfDq3yDOJYirOQ&key={PrivateConstants.Youtube}");
+      var videoDictionary = rootObject.items.ToDictionary(i => i.snippet.publishedAt, item => item);
       var latestTime = videoDictionary.Keys.Max(x => x);
       var latestVideo = videoDictionary[latestTime].snippet;
       var delta = Tools.PrettyDeltaTime(DateTime.UtcNow - latestTime);
