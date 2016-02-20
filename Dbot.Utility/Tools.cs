@@ -222,5 +222,13 @@ namespace Dbot.Utility {
       var delta = Tools.PrettyDeltaTime(DateTime.UtcNow - latestTime);
       return $"\"{latestVideo.title}\" posted {delta} ago youtu.be/{latestVideo.resourceId.videoId}";
     }
+
+    public static string ScStanding() {
+      var rootObject = Tools.JsonDeserializer<StarcraftProfileLadder.RootObject>($"https://us.api.battle.net/sc2/profile/310150/1/Destiny/ladders?locale=en_US&apikey={PrivateConstants.BattleNet}");
+      var rank = rootObject.currentSeason[0].ladder[0].rank;
+      var league = rootObject.currentSeason[0].ladder[0].league.ToLower();
+      if (league == "grandmaster") league = "GM";
+      return $"rank {rank} {league}";
+    }
   }
 }
