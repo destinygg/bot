@@ -66,7 +66,7 @@ namespace Dbot.Main {
         "Destiny has a new Twitter! twitter.com/OmniDestiny",
         "Robot Lady will read your message for $5 or more donations twitchalerts.com/donate/destiny",
         "Remember to use Destiny's Amazon referral link! destiny.gg/amazon",
-        $"Destiny updates YouTube reguarly now! {Tools.LatestYoutube()}",
+        $"Destiny updates YouTube regularly now! {Tools.LatestYoutube()}",
       };
 
       if (i + 1 < messages.Count)
