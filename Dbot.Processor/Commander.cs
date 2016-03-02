@@ -112,7 +112,7 @@ namespace Dbot.Processor {
         decision = "played";
       }
       var standing = Tools.ScStanding();
-      return $"Destiny {decision} a {type} game on {map} {delta} ago and is a {standing} us.battle.net/sc2/en/profile/310150/1/Destiny/";
+      return $"Destiny {decision} a {type} game on {map} {delta} ago and is {standing} us.battle.net/sc2/en/profile/310150/1/Destiny/";
     }
 
     private string Song() {

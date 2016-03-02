@@ -225,10 +225,16 @@ namespace Dbot.Utility {
 
     public static string ScStanding() {
       var rootObject = Tools.JsonDeserializer<StarcraftProfileLadder.RootObject>($"https://us.api.battle.net/sc2/profile/310150/1/Destiny/ladders?locale=en_US&apikey={PrivateConstants.BattleNet}");
-      var rank = rootObject.currentSeason[0].ladder[0].rank;
-      var league = rootObject.currentSeason[0].ladder[0].league.ToLower();
-      if (league == "grandmaster") league = "GM";
-      return $"rank {rank} {league}";
+      foreach (var currentSeason in rootObject.currentSeason) {
+        var ladder = currentSeason.ladder.FirstOrDefault(x => x.matchMakingQueue == "LOTV_SOLO");
+        if (ladder != null) {
+          var rank = ladder.rank;
+          var league = ladder.league.ToLower();
+          if (league == "grandmaster") league = "GM";
+          return $"rank {rank} {league}";
+        }
+      }
+      return "missing a LotV solo rank";
     }
   }
 }
