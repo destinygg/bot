@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dbot.CommonModels;
-using Dbot.Main;
+using Dbot.Logic;
 using Dbot.Utility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

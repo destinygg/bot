@@ -7,7 +7,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using Dbot.Client;
-using Dbot.Main;
+using Dbot.Logic;
 using Dbot.Utility;
 
 namespace Dbot.Service {

@@ -4,14 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{471BC995-6B96-4632-AEA1-DA4CCCF1A108}</ProjectGuid>
+    <ProjectGuid>{04FE3C3C-3158-410B-B1A5-2CFF155024DC}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Dbot.Twitch</RootNamespace>
-    <AssemblyName>Dbot.Twitch</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <RootNamespace>Dbot.GGListener</RootNamespace>
+    <AssemblyName>Dbot.GGListener</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -86,10 +87,6 @@
     <ProjectReference Include="..\Dbot.Logic\Dbot.Logic.csproj">
       <Project>{EDC2E12E-39C1-4D58-9F1D-10CD908C6D82}</Project>
       <Name>Dbot.Logic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dbot.Processor\Dbot.Processor.csproj">
-      <Project>{70D90913-35AE-4502-90E7-8C1316A92CF2}</Project>
-      <Name>Dbot.Processor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
       <Project>{E27FAB2D-880D-4137-B32A-23E7DB585BF3}</Project>
