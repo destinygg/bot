@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using CoreTweet;
-using Dbot.Client;
-using Dbot.CommonModels;
-using Dbot.Data;
-using Dbot.Processor;
-using Dbot.Utility;
 
-namespace Dbot.Main {
+namespace Dbot.Logic {
   public class PrimaryLogic {
     private readonly IClientVisitor _client;
     private readonly MessageProcessor _messageProcessor;

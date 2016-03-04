@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using CoreTweet;
-using CoreTweet.Core;
-using CoreTweet.Streaming;
-using Dbot.CommonModels;
-using Dbot.Processor;
-using Dbot.Utility;
 
-namespace Dbot.Main {
+namespace Dbot.Logic {
   public class TweetObserver : IObserver<StreamingMessage> {
     private readonly MessageProcessor _processor;
     private IDisposable _unsubscriber;
