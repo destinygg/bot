@@ -1,4 +1,9 @@
 ﻿using System;
+using CoreTweet;
+using CoreTweet.Streaming;
+using Dbot.CommonModels;
+using Dbot.Processor;
+using Dbot.Utility;
 
 namespace Dbot.Logic {
   public class TweetObserver : IObserver<StreamingMessage> {

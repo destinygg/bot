@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dbot.Client;
-using Dbot.Main;
+using Dbot.Logic;
 using Dbot.Processor;
 using Dbot.Utility;
 

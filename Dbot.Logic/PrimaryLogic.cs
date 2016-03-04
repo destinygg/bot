@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoreTweet;
+using Dbot.CommonModels;
+using Dbot.Data;
+using Dbot.Processor;
+using Dbot.Utility;
 
 namespace Dbot.Logic {
   public class PrimaryLogic {

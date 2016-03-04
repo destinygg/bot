@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Dbot.Client;
+using Dbot.CommonModels;
+using Dbot.Processor;
+using Dbot.Utility;
 
 namespace Dbot.Logic {
   public class TestLogic {

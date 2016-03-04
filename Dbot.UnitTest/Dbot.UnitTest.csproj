@@ -107,9 +107,9 @@
       <Project>{1E2409C3-C544-4EC2-AA93-9C0F5A4B02EC}</Project>
       <Name>Dbot.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dbot.Main\Dbot.Main.csproj">
-      <Project>{2D7C9BBC-6FE8-4734-B045-A7E4A6C1F2A9}</Project>
-      <Name>Dbot.Main</Name>
+    <ProjectReference Include="..\Dbot.Logic\Dbot.Logic.csproj">
+      <Project>{edc2e12e-39c1-4d58-9f1d-10cd908c6d82}</Project>
+      <Name>Dbot.Logic</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dbot.Processor\Dbot.Processor.csproj">
       <Project>{70D90913-35AE-4502-90E7-8C1316A92CF2}</Project>

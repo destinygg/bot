@@ -94,9 +94,9 @@
       <Project>{65D520B2-5739-4908-90B0-739CB4DAAC4D}</Project>
       <Name>Dbot.CommonModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dbot.Main\Dbot.Main.csproj">
-      <Project>{2D7C9BBC-6FE8-4734-B045-A7E4A6C1F2A9}</Project>
-      <Name>Dbot.Main</Name>
+    <ProjectReference Include="..\Dbot.Logic\Dbot.Logic.csproj">
+      <Project>{EDC2E12E-39C1-4D58-9F1D-10CD908C6D82}</Project>
+      <Name>Dbot.Logic</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dbot.Utility\Dbot.Utility.csproj">
       <Project>{E27FAB2D-880D-4137-B32A-23E7DB585BF3}</Project>
