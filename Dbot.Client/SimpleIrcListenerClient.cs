@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Dbot.CommonModels;
 using Dbot.Utility;
@@ -67,10 +68,24 @@ namespace Dbot.Client {
     public override void Run(IProcessor processor) {
       _processor = processor;
       Connect();
+      var nullCount = 0;
       while (true) {
         var data = _streamReader.ReadLine();
+        if (data == null) {
+          Logger.Write($"> NULL{nullCount}");
+          nullCount++;
+          if (nullCount > 1000) {
+            Logger.Write($">>>CLOSING...<<<");
+            _streamReader.Close();
+            Thread.Sleep(10000);
+            nullCount = 0;
+            Logger.Write($">>>...RECONNECTING<<<");
+            Connect();
+          }
+          continue;
+        };
+
         Logger.Write($"> {data}");
-        if (data == null) continue;
 
         var pingMatch = new Regex(@"^PING (.*)").Match(data);
         if (pingMatch.Success) {
