@@ -25,6 +25,10 @@ namespace Dbot.Mod {
       if (string.IsNullOrWhiteSpace(firstArg)) {
         Console.WriteLine("Select a client:");
         Console.WriteLine("");
+        Console.WriteLine("gg  = destiny.gg");
+        Console.WriteLine("ggl = destiny.gg listening only");
+        Console.WriteLine("t   = twitch.tv");
+        Console.WriteLine("tl  = twitch.tv listening only");
         firstArg = Console.ReadLine();
       }
 
