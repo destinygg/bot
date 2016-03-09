@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Dbot.GG")]
+[assembly: AssemblyTitle("Dbot.Mod")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Dbot.GG")]
+[assembly: AssemblyProduct("Dbot.Mod")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("16492f8c-d56d-4543-82d6-d98e27210cfa")]
+[assembly: Guid("bf0a3190-1f9a-4e63-85a9-18238bdd1dfe")]
 
 // Version information for an assembly consists of the following four values:
 //
