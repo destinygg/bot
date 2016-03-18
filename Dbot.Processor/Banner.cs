@@ -84,8 +84,8 @@ namespace Dbot.Processor {
       if (numberSpam != null) return numberSpam;
       var repeatCharacterSpam = RepeatCharacterSpam();
       if (repeatCharacterSpam != null) return repeatCharacterSpam;
-      var lineSpam = LineSpam();
-      if (lineSpam != null) return lineSpam;
+      //var lineSpam = LineSpam();
+      //if (lineSpam != null) return lineSpam;
 
       foreach (var nuke in _messageProcessor.Nukes.Where(x => x.Predicate(_message.SanitizedText) || x.Predicate(_message.OriginalText))) {
         nuke.VictimList.Add(_message.SenderName);
@@ -191,11 +191,11 @@ namespace Dbot.Processor {
       return match.Success ? new Mute(_message.SenderName, TimeSpan.FromMinutes(10), $"Let go of that poor {match.Groups[1].Value}; 10m") : null;
     }
 
-    private Mute LineSpam() {
-      var shortMessages = _context.TakeLast(Settings.LineSpamLimit).Where(x => x.SenderName == _message.SenderName).ToList();
-      return shortMessages.Count == Settings.LineSpamLimit
-        ? new Mute(_message.SenderName, TimeSpan.FromMinutes(10), "Let someone else talk; 10m")
-        : null;
-    }
+    //private Mute LineSpam() {
+    //  var shortMessages = _context.TakeLast(Settings.LineSpamLimit).Where(x => x.SenderName == _message.SenderName).ToList();
+    //  return shortMessages.Count == Settings.LineSpamLimit
+    //    ? new Mute(_message.SenderName, TimeSpan.FromMinutes(10), "Let someone else talk; 10m")
+    //    : null;
+    //}
   }
 }
