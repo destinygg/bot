@@ -13,8 +13,8 @@ namespace Dbot.Mod {
     //const string channel = "#destinyecho2";
     //const string nick = "destiny_botboop";
     //const string pass = null;
-    const string server = "irc.twitch.tv";
-    const int port = 6667;
+    const string server = "irc.chat.twitch.tv";
+    const int port = 80;
     const string channel = "#destiny";
     const string nick = "destiny_bot";
     const string pass = PrivateConstants.TwitchOauth;
