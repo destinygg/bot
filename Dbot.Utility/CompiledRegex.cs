@@ -15,9 +15,13 @@ namespace Dbot.Utility {
       ModabuseSemi = Tools.CompiledIgnoreCaseRegex(@"^!modabuse semi.*");
       ModabuseOff = Tools.CompiledIgnoreCaseRegex(@"^!modabuse off.*");
       AddMute = GenerateRegex("add|addmute", true, false);
+      ListMute = Tools.CompiledIgnoreCaseRegex(@"^!listmute.*");
       AddBan = GenerateRegex("addban", true, false);
+      ListBan = Tools.CompiledIgnoreCaseRegex(@"^!listban.*");
       AddMuteRegex = GenerateRegex("addregex|addmuteregex", true, false);
+      ListMuteRegex = Tools.CompiledIgnoreCaseRegex(@"^!listmuteregex.*");
       AddBanRegex = GenerateRegex("addbanregex", true, false);
+      ListBanRegex = Tools.CompiledIgnoreCaseRegex(@"^!listbanregex.*");
       DelMute = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?(?:mute)? (.+)");
       DelBan = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?ban (.+)");
       DelMuteRegex = Tools.CompiledIgnoreCaseRegex(@"^!del(?:ete)?(?:mute)?regex (.+)");
@@ -46,9 +50,13 @@ namespace Dbot.Utility {
     public Regex ModabuseSemi { get; private set; }
     public Regex ModabuseOff { get; private set; }
     public Regex AddMute { get; private set; }
+    public Regex ListMute { get; private set; }
     public Regex AddBan { get; private set; }
+    public Regex ListBan { get; private set; }
     public Regex AddMuteRegex { get; private set; }
+    public Regex ListMuteRegex { get; private set; }
     public Regex AddBanRegex { get; private set; }
+    public Regex ListBanRegex { get; private set; }
     public Regex DelMute { get; private set; }
     public Regex DelBan { get; private set; }
     public Regex DelMuteRegex { get; private set; }
