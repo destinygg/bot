@@ -29,6 +29,7 @@ namespace Dbot.Mod {
         Console.WriteLine("ggl = destiny.gg listening only");
         Console.WriteLine("t   = twitch.tv");
         Console.WriteLine("tl  = twitch.tv listening only");
+        Console.WriteLine("s   = sample client");
         firstArg = Console.ReadLine();
       }
 
@@ -46,6 +47,9 @@ namespace Dbot.Mod {
           break;
         case "tl":
           client = new SimpleIrcListenerClient(server, port, channel, nick, pass);
+          break;
+        case "s":
+          client = new SampleClient();
           break;
         default:
           throw new Exception("Invalid input");
