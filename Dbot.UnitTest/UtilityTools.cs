@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Someday you can add tests for this #todo
+// http://stackoverflow.com/questions/5725430/http-test-server-that-accepts-get-post-calls
+// Also you can autogenerate tests with https://msdn.microsoft.com/en-us/library/dn823749.aspx
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dbot.CommonModels;
