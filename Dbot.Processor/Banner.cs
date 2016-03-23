@@ -53,8 +53,8 @@ namespace Dbot.Processor {
       if (unicode.Sum(c => _originalText.Count(ot => ot == c)) >= 1 || controlCharacters.Match(_originalText).Success)
         return MuteAndIncrementHardCoded(userHistory, MagicStrings.Unicode, "unicode idiocy", wait);
 
-      if (Datastore.EmoteRegex.Matches(_message.OriginalText).Count > 7)
-        return MuteAndIncrementHardCoded(userHistory, MagicStrings.Facespam, "face spam", wait);
+      //if (Datastore.EmoteRegex.Matches(_message.OriginalText).Count > 7)
+      //  return MuteAndIncrementHardCoded(userHistory, MagicStrings.Facespam, "face spam", wait);
 
       var mutedWord = Datastore.MutedWords.Select(x => x.Key).FirstOrDefault(x => _originalText.Contains(x) || _text.Contains(x));
       var mute = DeterminesHasVictim(mutedWord, userHistory, MagicStrings.MutedWords, Datastore.MutedWords, new Mute(), wait);
