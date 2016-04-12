@@ -28,7 +28,7 @@ namespace Dbot.Processor {
       { new List<string> { "rules", "unmoddharma" },
         () => "github.com/destinygg/bot" },
       { new List<string> { "refer", "sponsor" },
-        () => "destiny.gg/amazon ☜(ﾟヮﾟ☜) Amazon referral ☜(⌒▽⌒)☞ 25$ off Sprint network (☞ﾟヮﾟ)☞ destiny.gg/ting" },
+        () => "destiny.gg/amazon ☜(ﾟヮﾟ☜) Amazon referral ☜(⌒▽⌒)☞ 25$ off Sprint network (☞ﾟヮﾟ)☞ destiny.gg/ting\r\nGo from this ⑁ to this 💺 destiny.gg/chair Record and share gameplay videos 	🎮 📺 destiny.gg/forge" },
       { new List<string> { "irc" },
         () => "IRC will be implemented Soon™. For now, chat is echoed to Rizon IRC at qchat.rizon.net/?channels=#destinyecho . Forwarding of IRC chat to Destiny.gg Chat is available" },
       { new List<string> { "time" },

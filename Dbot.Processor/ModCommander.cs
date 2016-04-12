@@ -64,14 +64,26 @@ namespace Dbot.Processor {
         { _compiledRegex.AddMute, (g,c) => {
           Add(g, Ms.MutedWords, Datastore.MutedWords, " added to the automute list", " already in the automute list; its duration has been updated to ");
         } },
-        { _compiledRegex.AddBan, (g,c) => { 
+        { _compiledRegex.ListMute, (g,c) => {
+          Logger.Write(String.Join(String.Empty, Datastore.MutedWords.ToArray()));
+        } },
+        { _compiledRegex.AddBan, (g,c) => {
           Add(g, Ms.BannedWords, Datastore.BannedWords, " added to the autoBAN list. It is recommended that you use the autoMUTE list since banned people cannot load chat.", " already in the autoban list; its duration has been updated to ");
         } },
-        { _compiledRegex.AddMuteRegex, (g,c) => { 
+        { _compiledRegex.ListBan, (g,c) => {
+          Logger.Write(String.Join(String.Empty, Datastore.BannedWords.ToArray()));
+        } },
+        { _compiledRegex.AddMuteRegex, (g,c) => {
           Add(g, Ms.MutedRegex, Datastore.MutedRegex, " added to the automute regex list", " already in the automuteregex list; its duration has been updated to ");
+        } },
+        { _compiledRegex.ListMuteRegex, (g,c) => {
+          Logger.Write(String.Join(String.Empty, Datastore.MutedRegex.ToArray()));
         } },
         { _compiledRegex.AddBanRegex, (g,c) => {
           Add(g, Ms.BannedRegex, Datastore.BannedRegex, " added to the autoBANregex list. It is recommended that you use the autoMUTE regex list since banned people cannot load chat.", " already in the autobanregex list; its duration has been updated to ");
+        } },
+        { _compiledRegex.ListBanRegex, (g,c) => {
+          Logger.Write(String.Join(String.Empty, Datastore.BannedRegex.ToArray()));
         } },
         { _compiledRegex.DelMute, (g,c) => {
           Delete(g, Ms.MutedWords, Datastore.MutedWords, "automute");
