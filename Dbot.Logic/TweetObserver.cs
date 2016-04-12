@@ -9,9 +9,12 @@ namespace Dbot.Logic {
   public class TweetObserver : IObserver<StreamingMessage> {
     private readonly MessageProcessor _processor;
     private IDisposable _unsubscriber;
+    private readonly Tokens _tokens;
+    private IDisposable _twitterStream;
 
     public TweetObserver(MessageProcessor processor) {
       _processor = processor;
+      _tokens = Tokens.Create(PrivateConstants.TwitterConsumerKey, PrivateConstants.TwitterConsumerSecret, PrivateConstants.TwitterAccessToken, PrivateConstants.TwitterAccessTokenSecret);
     }
 
     public virtual void Subscribe(IObservable<StreamingMessage> provider) {
@@ -42,6 +45,8 @@ namespace Dbot.Logic {
     public virtual void Unsubscribe() {
       Logger.ErrorLog("Somehow the TweetObserver got \"Unsubscribed\"");
       _unsubscriber.Dispose();
+      _twitterStream.Dispose();
+      _twitterStream = _tokens.Streaming.UserAsObservable().Subscribe(this);
     }
   }
 }
