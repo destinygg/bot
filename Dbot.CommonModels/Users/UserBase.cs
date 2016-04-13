@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace Dbot.CommonModels.Users {
   public abstract class UserBase : IUser {
@@ -7,6 +8,9 @@ namespace Dbot.CommonModels.Users {
       get { return _nick; }
       set { _nick = value.ToLower(); }
     }
+
+    public HashSet<string> Flair { get; } = new HashSet<string>();
+
     private string _nick;
 
     protected UserBase(string nick) {
