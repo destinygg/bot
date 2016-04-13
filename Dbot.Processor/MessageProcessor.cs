@@ -11,11 +11,13 @@ using Dbot.Utility;
 namespace Dbot.Processor {
   public class MessageProcessor : IProcessor {
     public DateTime NextCommandTime = DateTime.MinValue;
+    public DateTime NextFlairCommandTime = DateTime.MinValue;
     public readonly ActionBlock<Message> Banner;
     public readonly ActionBlock<ISendableVisitable> Sender;
     private readonly ActionBlock<Message> _logger;
     private readonly ActionBlock<Message> _commander;
     private readonly ActionBlock<Message> _modCommander;
+    private readonly ActionBlock<Message> _flairCommander;
     public CompiledRegex CompiledRegex;
 
     public readonly List<Nuke> Nukes = new List<Nuke>();
@@ -34,6 +36,7 @@ namespace Dbot.Processor {
       _logger = new ActionBlock<Message>(m => Log(m));
       _commander = new ActionBlock<Message>(m => Command(m));
       _modCommander = new ActionBlock<Message>(m => ModCommand(m));
+      _flairCommander = new ActionBlock<Message>(m => FlairCommand(m));
     }
 
     public void Process(PublicMessage message) {
@@ -56,6 +59,7 @@ namespace Dbot.Processor {
         if (message.SanitizedText[0] == '!') {
           _commander.Post(message);
           _modCommander.Post(message);
+          _flairCommander.Post(message);
         } else {
           DoneWithContext(message);
         }
@@ -91,6 +95,12 @@ namespace Dbot.Processor {
       DoneWithContext(message);
     }
 
+    private void FlairCommand(Message message) {
+      var output = new FlairCommander(message, this).Run();
+      if (output != null)
+        Sender.Post(output);
+    }
+
     private void Send(ISendableVisitable input) {
       input.Accept(_client);
     }
@@ -99,6 +109,8 @@ namespace Dbot.Processor {
       var recentMessages = _contextDictionary.Where(x => x.Key < message.Ordinal && x.Key >= message.Ordinal - Settings.MessageLogSize).Select(x => x.Value).ToList();
       var bantest = new Banner(message, this, recentMessages).BanParser();
       if (bantest == null) {
+        if (message.SanitizedText[0] == '!' && (NextFlairCommandTime <= DateTime.UtcNow))
+          _flairCommander.Post(message);
         if (message.SanitizedText[0] == '!' && (NextCommandTime <= DateTime.UtcNow))
           _commander.Post(message);
       } else {

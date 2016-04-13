@@ -60,6 +60,7 @@
     <Compile Include="AntiNuke.cs" />
     <Compile Include="Banner.cs" />
     <Compile Include="Commander.cs" />
+    <Compile Include="FlairCommander.cs" />
     <Compile Include="MessageProcessor.cs" />
     <Compile Include="ModCommander.cs" />
     <Compile Include="ModCommands.cs" />
