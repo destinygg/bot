@@ -334,23 +334,23 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(!r.Any(x => x.Contains("Muted transparent5")));
     }
 
-    [TestMethod]
-    public async Task EmotesTest() {
-      var r = await new TestLogic().Run(new List<PublicMessage>() {
-        new PublicMessage("UserX","Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa"),
-        new PublicMessage("UserX","OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle"),
-        new PublicMessage("UserX","LUL LUL LUL LUL LUL LUL LUL LUL"),
-        new PublicMessage("UserY","LUL LUL LUL LUL LUL LUL LULLUL"),
-      });
-      await Task.Delay(1000);
+    //[TestMethod]
+    //public async Task EmotesTest() {
+    //  var r = await new TestLogic().Run(new List<PublicMessage>() {
+    //    new PublicMessage("UserX","Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa Kappa"),
+    //    new PublicMessage("UserX","OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle OverRustle"),
+    //    new PublicMessage("UserX","LUL LUL LUL LUL LUL LUL LUL LUL"),
+    //    new PublicMessage("UserY","LUL LUL LUL LUL LUL LUL LULLUL"),
+    //  });
+    //  await Task.Delay(1000);
 
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("10m for face spam")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("your time has doubled. Future sanctions will not be explicitly justified")) == 1);
-      Assert.IsTrue(r.Count(x => x.Contains("Muted usery for 10m")) == 0);
-    }
+    //  Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 10m")) == 1);
+    //  Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 20m")) == 1);
+    //  Assert.IsTrue(r.Count(x => x.Contains("Muted userx for 40m")) == 1);
+    //  Assert.IsTrue(r.Count(x => x.Contains("10m for face spam")) == 1);
+    //  Assert.IsTrue(r.Count(x => x.Contains("your time has doubled. Future sanctions will not be explicitly justified")) == 1);
+    //  Assert.IsTrue(r.Count(x => x.Contains("Muted usery for 10m")) == 0);
+    //}
 
     [TestMethod]
     public async Task LongSpam() {
@@ -597,23 +597,23 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("Unique Message A")) == 1);
     }
 
-    [TestMethod]
-    public async Task ThirdPartyEmoteTest() {
-      var r = await new TestLogic().Run(new List<PublicMessage> {
-        new ModPublicMessage("!addEMOTE FaceA"),
-        new ModPublicMessage("!ADDemote MyEmoteB"),
-        new ModPublicMessage("!listemote"),
-        new PublicMessage("1Spam", $"FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA{Tools.RandomString(20)}"),
-        new PublicMessage("User1", $"facea facea facea facea facea facea facea facea facea facea{Tools.RandomString(20)}"),
-        new ModPublicMessage("!delemote FaceA"),
-        new PublicMessage("User2", $"FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA{Tools.RandomString(20)}"),
-        new PublicMessage("2Spam", $"MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB {Tools.RandomString(20)}"),
-      });
-      await Task.Delay(400);
+    //[TestMethod]
+    //public async Task ThirdPartyEmoteTest() {
+    //  var r = await new TestLogic().Run(new List<PublicMessage> {
+    //    new ModPublicMessage("!addEMOTE FaceA"),
+    //    new ModPublicMessage("!ADDemote MyEmoteB"),
+    //    new ModPublicMessage("!listemote"),
+    //    new PublicMessage("1Spam", $"FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA{Tools.RandomString(20)}"),
+    //    new PublicMessage("User1", $"facea facea facea facea facea facea facea facea facea facea{Tools.RandomString(20)}"),
+    //    new ModPublicMessage("!delemote FaceA"),
+    //    new PublicMessage("User2", $"FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA FaceA{Tools.RandomString(20)}"),
+    //    new PublicMessage("2Spam", $"MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB MyEmoteB {Tools.RandomString(20)}"),
+    //  });
+    //  await Task.Delay(400);
 
-      Assert.IsTrue(r.Count(x => x.Contains("FaceA, MyEmoteB")) == 1);
-      SpamAndUserAssert(r, 2);
-    }
+    //  Assert.IsTrue(r.Count(x => x.Contains("FaceA, MyEmoteB")) == 1);
+    //  SpamAndUserAssert(r, 2);
+    //}
 
     private static void SpamAndUserAssert(IList<string> returns, int spamMax) {
       foreach (var i in Enumerable.Range(1, spamMax)) {
@@ -858,18 +858,18 @@ namespace Dbot.UnitTest {
       Assert.IsTrue(r.Count(x => x.Contains("Muted spamc for 10m")) == 1);
     }
 
-    [TestMethod]
-    public async Task LineSpamTest() {
-      var r = await new TestLogic().Run(new List<PublicMessage> {
-        new PublicMessage("SpamA", Tools.RandomString(20)),
-        new PublicMessage("SpamA", Tools.RandomString(20)),
-        new PublicMessage("SpamA", Tools.RandomString(20)),
-        new PublicMessage("SpamA", Tools.RandomString(20)),
-        new PublicMessage("SpamA", Tools.RandomString(20)),
-      });
+    //[TestMethod]
+    //public async Task LineSpamTest() {
+    //  var r = await new TestLogic().Run(new List<PublicMessage> {
+    //    new PublicMessage("SpamA", Tools.RandomString(20)),
+    //    new PublicMessage("SpamA", Tools.RandomString(20)),
+    //    new PublicMessage("SpamA", Tools.RandomString(20)),
+    //    new PublicMessage("SpamA", Tools.RandomString(20)),
+    //    new PublicMessage("SpamA", Tools.RandomString(20)),
+    //  });
 
-      Assert.IsTrue(r.Count(x => x.Contains("Muted spama for 10m")) == 1); // todo make these use Assert.IsEqual or NUnit
-    }
+    //  Assert.IsTrue(r.Count(x => x.Contains("Muted spama for 10m")) == 1); // todo make these use Assert.IsEqual or NUnit
+    //}
 
     [TestMethod]
     public async Task RandomAslanTest() {
