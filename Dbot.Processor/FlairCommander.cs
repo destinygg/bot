@@ -29,14 +29,14 @@ namespace Dbot.Processor {
     }
 
     private string Splitter() {
-      if (_message.SanitizedText.StartsWith("!death") && _canDeathCount.Any(flair => _message.Sender.Flair.Contains(flair))) {
-        if (new Regex(@"^!deaths?(?:count)?\+\+.*").IsMatch(_message.SanitizedText)) {
+      if (_canDeathCount.Any(flair => _message.Sender.Flair.Contains(flair))) {
+        if (new Regex(@"^!(?:(?:inc(?:rement)?deaths?.*)|(?:hediedlol))").IsMatch(_message.SanitizedText)) {
           return IncrementDeathCount();
         }
-        if (new Regex(@"^!deaths?(?:count)?\-\-.*").IsMatch(_message.SanitizedText)) {
+        if (new Regex(@"^!dec(?:rement)?deaths?.*").IsMatch(_message.SanitizedText)) {
           return DecrementDeathCount();
         }
-        var setDeathRegex = new Regex(@"^!deaths?(?:count)?\s*=\s*(\d+).*");
+        var setDeathRegex = new Regex(@"^!setdeaths?\s*(\d+).*");
         if (setDeathRegex.IsMatch(_message.SanitizedText)) {
           var stringCount = setDeathRegex.Match(_message.SanitizedText).Groups[1];
           var count = int.Parse(stringCount.Value);
