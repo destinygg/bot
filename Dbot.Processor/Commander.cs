@@ -55,6 +55,8 @@ namespace Dbot.Processor {
         () => Tools.FallibleCode(RandomAslan) },
       { new List<string> { "aslan" },
         () => Twitter("AslanVondran") },
+      { new List<string> { "death" },
+        () => Death() },
       };
     }
 
@@ -189,6 +191,11 @@ namespace Dbot.Processor {
       var imageCount = (int) dyn.data.images_count - 1;
       var link = dyn.data.images[Tools.RandomInclusiveInt(0, imageCount)].link;
       return $"ASLAN ! {link}";
+    }
+
+    private string Death() {
+      var deathCount = Datastore.GetStateVariable("DeathCount");
+      return $"Death count is {deathCount}";
     }
   }
 }
