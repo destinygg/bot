@@ -192,7 +192,10 @@ namespace Dbot.UnitTest {
     [TestMethod]
     public void UserEquality() {
       var u1 = new User("Nick");
+      u1.Flair.Add("bork");
       var u2 = new User("Nick");
+      Assert.IsFalse(u1.Equals(u2));
+      u2.Flair.Add("bork");
       Assert.IsTrue(u1.Equals(u2));
     }
 

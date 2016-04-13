@@ -4,19 +4,20 @@ using System.Diagnostics.Contracts;
 namespace Dbot.CommonModels.Users {
   public abstract class UserBase : IUser {
 
-    public string Nick {
-      get { return _nick; }
-      set { _nick = value.ToLower(); }
-    }
+    public string Nick { get; set; }
 
     public bool IsMod => Flair.Contains("mod");
 
     public HashSet<string> Flair { get; } = new HashSet<string>();
 
-    private string _nick;
-
     protected UserBase(string nick) {
       this.Nick = nick;
+    }
+
+    public bool Equals(IUser other) {
+      return
+        this.Nick == other.Nick &&
+        this.Flair.SetEquals(other.Flair);
     }
 
     [ContractInvariantMethod]
