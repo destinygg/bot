@@ -5,9 +5,11 @@ using System.Threading;
 using Dbot.CommonModels;
 using Dbot.Utility;
 using Dbot.WebSocketModels;
+using IrcDotNet.Collections;
 using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
+using User = Dbot.CommonModels.User;
 
 namespace Dbot.Client {
   public class WebSocketListenerClient : ConsolePrintClient {
@@ -56,12 +58,11 @@ namespace Dbot.Client {
           break;
         case "MSG": {
             var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
+            var user = new User(msg.Nick);
+            user.Flair.AddRange(msg.Features);
             var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
             if (isMod && !_modList.Contains(msg.Nick)) _modList.Add(msg.Nick);
-            if (isMod)
-              _processor.Process(new ModPublicMessage(msg.Nick, msg.Data));
-            else
-              _processor.Process(new PublicMessage(msg.Nick, msg.Data));
+            _processor.Process(new PublicMessage(user, msg.Data));
           }
           break;
         case "PRIVMSG": {
