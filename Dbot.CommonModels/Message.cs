@@ -10,9 +10,14 @@ namespace Dbot.CommonModels {
       OriginalText = originalText;
     }
 
+    protected Message(IUser user, string originalText) {
+      Sender = user;
+      OriginalText = originalText;
+    }
+
     public abstract void Accept(IClientVisitor visitor);
 
-    public User Sender { get; set; }
+    public IUser Sender { get; set; }
 
     public string SenderName => Sender.Nick;
 

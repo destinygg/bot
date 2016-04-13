@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Dbot.CommonModels {
   public class ModPrivateMessage : PrivateMessage {
     public ModPrivateMessage(string nick, string data) : base(nick, data) {
-      Sender.IsMod = true;
+      Sender.Flair.Add("mod");
     }
   }
 }

@@ -1,4 +1,5 @@
-﻿using Dbot.WebSocketModels;
+﻿using Dbot.CommonModels.Users;
+using Dbot.WebSocketModels;
 using Newtonsoft.Json;
 
 namespace Dbot.CommonModels {
@@ -9,7 +10,7 @@ namespace Dbot.CommonModels {
 
     public string Beneficiary { get; set; }
 
-    public User Sender { get; set; }
+    public IUser Sender { get; set; }
 
     public string SenderName => Sender.Nick;
 

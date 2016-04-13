@@ -9,6 +9,8 @@ namespace Dbot.CommonModels.Users {
       set { _nick = value.ToLower(); }
     }
 
+    public bool IsMod => Flair.Contains("mod");
+
     public HashSet<string> Flair { get; } = new HashSet<string>();
 
     private string _nick;
