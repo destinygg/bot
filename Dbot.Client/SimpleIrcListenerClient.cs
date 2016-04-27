@@ -110,7 +110,11 @@ namespace Dbot.Client {
             msg = $"/me {meMatch.Groups[1]}";
           }
 
-          processor.Process(new PublicMessage(nick, msg) { Sender = { IsMod = isMod } });
+          var user = new User(nick);
+          if (isMod) {
+            user.Flair.Add("mod");
+          }
+          processor.Process(new PublicMessage(user, msg));
         }
 
       }

@@ -1,4 +1,6 @@
-﻿namespace Dbot.CommonModels {
+﻿using Dbot.CommonModels.Users;
+
+namespace Dbot.CommonModels {
   public class PublicMessage : Message {
 
     public PublicMessage(string text)
@@ -6,6 +8,9 @@
 
     public PublicMessage(string senderName, string originalText)
       : base(senderName, originalText) { }
+
+    public PublicMessage(IUser user, string originalText)
+      : base(user, originalText) { }
 
     public override void Accept(IClientVisitor visitor) {
       foreach (var submessage in OriginalText.Split('\n')) {

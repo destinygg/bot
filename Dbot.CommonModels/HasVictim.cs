@@ -1,9 +1,10 @@
 ﻿using System;
+using Dbot.CommonModels.Users;
 
 namespace Dbot.CommonModels {
   public abstract class HasVictim : ISendable, ISendableVisitable {
 
-    public User Sender { get; set; }
+    public IUser Sender { get; set; }
 
     public string SenderName => Sender.Nick;
 

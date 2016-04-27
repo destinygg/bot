@@ -5,21 +5,23 @@ using System.Threading;
 using Dbot.CommonModels;
 using Dbot.Utility;
 using Dbot.WebSocketModels;
+using IrcDotNet.Collections;
 using Newtonsoft.Json;
 using SuperSocket.ClientEngine;
 using WebSocket4Net;
+using User = Dbot.CommonModels.User;
 
 namespace Dbot.Client {
   public class WebSocketListenerClient : ConsolePrintClient {
 
     protected readonly WebSocket _websocket;
     private IProcessor _processor;
-    private readonly List<string> _modList;
+    private readonly HashSet<string> _modList;
     protected PublicMessage LatestPublicMessage;
     private int _retryCount = 0;
 
     public WebSocketListenerClient(string websocketAuth) {
-      _modList = new List<string>();
+      _modList = new HashSet<string>();
       var header = new List<KeyValuePair<string, string>> {
         new KeyValuePair<string, string>("Cookie", $"authtoken={websocketAuth}")
       };
@@ -56,12 +58,14 @@ namespace Dbot.Client {
           break;
         case "MSG": {
             var msg = JsonConvert.DeserializeObject<MessageReceiver>(jsonMessage);
+            var user = new User(msg.Nick);
+            user.Flair.AddRange(msg.Features);
             var isMod = msg.Features.Any(s => s == "bot" || s == "admin" || s == "moderator");
-            if (isMod && !_modList.Contains(msg.Nick)) _modList.Add(msg.Nick);
-            if (isMod)
-              _processor.Process(new ModPublicMessage(msg.Nick, msg.Data));
-            else
-              _processor.Process(new PublicMessage(msg.Nick, msg.Data));
+            if (isMod) {
+              _modList.Add(msg.Nick);
+              user.Flair.Add("mod");
+            }
+            _processor.Process(new PublicMessage(user, msg.Data));
           }
           break;
         case "PRIVMSG": {

@@ -1,6 +1,8 @@
 ﻿
+using Dbot.CommonModels.Users;
+
 namespace Dbot.CommonModels {
   public interface ISendable {
-    User Sender { get; set; }
+    IUser Sender { get; set; }
   }
 }
