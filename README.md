@@ -9,8 +9,6 @@ Source code for Bot of [Destiny.gg chat](http://www.destiny.gg/embed/chat)
 * Say words on the mute or ban word list
 * Say something that is very similar to what someone else previously said
 * Say something that is very similar to what you said previously
-* Say more than 5 consecutive numbers in chat
-* Use more than 7 emotes in a line
 
 ### Commands
 Commands                                     | Result
@@ -27,6 +25,13 @@ Commands                                     | Result
 !twitter                                     | Outputs Destiny's latest tweet
 !youtube                                     | Outputs a link to Destiny's latest YouTube upload
 !blog                                        | Outputs a link to Destiny's latest blog post
+
+### Trusted/Contributor Only Commands
+Commands                                     | Result
+---------------------------------------------|---
+!incrementdeaths                             | Increments the death count
+!decrementdeaths                             | Decrements the death count
+!setdeaths 13                                | Sets the deathcount to 13
 
 ### Moderator Only Commands
 Mute/Ban Commands                            | Result
