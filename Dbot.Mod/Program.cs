@@ -55,6 +55,7 @@ namespace Dbot.Mod {
           throw new Exception("Invalid input");
       }
 
+      Settings.ClientType = firstArg;
       new PrimaryLogic(client).Run();
     }
   }

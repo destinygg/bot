@@ -30,5 +30,7 @@ namespace Dbot.Utility {
 
     public static bool IsMono;
     public static string Timezone;
+
+    public static string ClientType;
   }
 }
