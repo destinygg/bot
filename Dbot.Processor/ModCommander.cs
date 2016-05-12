@@ -119,7 +119,8 @@ namespace Dbot.Processor {
           Send(string.Join(", ", Datastore.GetStateString_StringList(MagicStrings.ThirdPartyEmotes)));
         } },
         { _compiledRegex.Stalk, (g,c) => {
-          Send(Tools.Stalk(g[1].Value));
+          var user = g[1].Value;
+          Send(Stalk(user));
         } },
         { _compiledRegex.Ban, (g,c) => {
           var number = g[1].Value;
@@ -256,6 +257,27 @@ namespace Dbot.Processor {
       }
       Logger.Write($"Somehow an invalid time passed the regex. StringInt:{stringInt}, s:{s}, ip:{ip}", ConsoleColor.Red);
       return TimeSpan.FromMinutes(10);
+    }
+
+    private string Stalk(string user) {
+      var output = "";
+      if (Settings.ClientType.Contains("gg")) {
+        output = $"dgg.overrustlelogs.net/{user}";
+        var logs = Tools.DownloadData($"http://dgg.overrustlelogs.net/Destinygg%20chatlog/current/{user}.txt").Result;
+        if (logs.Contains("The remote server returned an error: (404) Not Found")) //todo jfc fix this already
+          return $"{user} not found";
+        var lines = Regex.Split(logs, "\n");
+        var lastlines = lines.TakeLast(4).Take(3);
+        foreach (var line in lastlines) {
+          var r = new Regex(@"\[([\d- :]+)UTC] (?:.*: )(.*)").Match(line);
+          var stringTime = r.Groups[1].Value;
+          var msg = r.Groups[2].Value;
+          var delta = DateTime.UtcNow - DateTime.Parse(stringTime);
+          var stringDelta = Tools.PrettyDeltaTime(delta);
+          output = $"{output}\r\n{stringDelta} ago: {msg}";
+        }
+      }
+      return output;
     }
 
     public void Run() {
