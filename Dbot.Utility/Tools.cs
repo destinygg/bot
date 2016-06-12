@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml;
 using CoreTweet;
 using Dbot.Data;
 using Dbot.JsonModels;
@@ -215,12 +216,18 @@ namespace Dbot.Utility {
     }
 
     public static string LatestYoutube() {
-      var rootObject = Tools.JsonDeserializer<Youtube.RootObject>($"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=UU554eY5jNUfDq3yDOJYirOQ&key={PrivateConstants.Youtube}");
-      var videoDictionary = rootObject.items.ToDictionary(i => i.snippet.publishedAt, item => item);
-      var latestTime = videoDictionary.Keys.Max(x => x);
-      var latestVideo = videoDictionary[latestTime].snippet;
-      var delta = Tools.PrettyDeltaTime(DateTime.UtcNow - latestTime);
-      return $"\"{latestVideo.title}\" posted {delta} ago youtu.be/{latestVideo.resourceId.videoId}";
+      var r = Tools.DownloadData("https://www.youtube.com/feeds/videos.xml?user=destiny").Result;
+        using (var reader = XmlReader.Create(new StringReader(r))) { 
+        reader.ReadToFollowing("entry");
+        reader.ReadToFollowing("yt:videoId");
+        var id = reader.ReadElementContentAsString();
+        reader.ReadToFollowing("title");
+        var title = reader.ReadElementContentAsString();
+        reader.ReadToFollowing("published");
+        var pubdateString = reader.ReadElementContentAsString();
+        var pubdate = Convert.ToDateTime(pubdateString).ToUniversalTime();
+        return $"\"{title}\" posted {Tools.PrettyDeltaTime(DateTime.UtcNow - pubdate)} ago youtu.be/{id}";
+      }
     }
 
     public static string ScStanding() {
