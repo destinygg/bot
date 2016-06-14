@@ -245,9 +245,8 @@ namespace Dbot.Utility {
     }
     public static string Schedule() {
       var xmlTime = XmlConvert.ToString(DateTime.UtcNow, XmlDateTimeSerializationMode.Utc);
-      var key = $"&key={PrivateConstants.GoogleKey}";
-      var url = WebUtility.HtmlEncode($"https://www.googleapis.com/calendar/v3/calendars/i54j4cu9pl4270asok3mqgdrhk%40group.calendar.google.com/events?timeMin={xmlTime}");
-      var rootObject = Tools.JsonDeserializer<GoogleCalendar.RootObject>($"{url}{key}");
+      var time = WebUtility.HtmlEncode(xmlTime);
+      var rootObject = Tools.JsonDeserializer<GoogleCalendar.RootObject>($"https://www.googleapis.com/calendar/v3/calendars/i54j4cu9pl4270asok3mqgdrhk%40group.calendar.google.com/events?orderBy=startTime&singleEvents=true&timeMin={time}&key={PrivateConstants.GoogleKey}");
 
       DateTime? daylong = null;
       var localtime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Settings.Timezone);
