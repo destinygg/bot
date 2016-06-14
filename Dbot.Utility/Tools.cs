@@ -217,7 +217,7 @@ namespace Dbot.Utility {
 
     public static string LatestYoutube() {
       var r = Tools.DownloadData("https://www.youtube.com/feeds/videos.xml?user=destiny").Result;
-        using (var reader = XmlReader.Create(new StringReader(r))) { 
+      using (var reader = XmlReader.Create(new StringReader(r))) {
         reader.ReadToFollowing("entry");
         reader.ReadToFollowing("yt:videoId");
         var id = reader.ReadElementContentAsString();
@@ -242,6 +242,35 @@ namespace Dbot.Utility {
         }
       }
       return "missing a LotV solo rank";
+    }
+    public static string Schedule() {
+      var xmlTime = XmlConvert.ToString(DateTime.UtcNow, XmlDateTimeSerializationMode.Utc);
+      var key = $"&key={PrivateConstants.GoogleKey}";
+      var url = WebUtility.HtmlEncode($"https://www.googleapis.com/calendar/v3/calendars/i54j4cu9pl4270asok3mqgdrhk%40group.calendar.google.com/events?timeMin={xmlTime}");
+      var rootObject = Tools.JsonDeserializer<GoogleCalendar.RootObject>($"{url}{key}");
+
+      DateTime? daylong = null;
+      var localtime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Settings.Timezone);
+      var r = "Nothing has been scheduled destiny.gg/schedule";
+      if (rootObject.items != null && rootObject.items.Count > 0) {
+        foreach (var eventItem in rootObject.items) {
+          if (!string.IsNullOrEmpty(eventItem.start.dateTime)) {
+            var whentime = DateTime.Parse(eventItem.start.dateTime).ToUniversalTime();
+            var deltatime = whentime - DateTime.UtcNow;
+            if (deltatime > TimeSpan.Zero) {
+              if (daylong != null && whentime.Date != daylong) return r;
+              var delta = Tools.PrettyDeltaTime(deltatime);
+              return $"\"{eventItem.summary}\" scheduled to begin in {delta} destiny.gg/schedule";
+            }
+          }
+
+          if (eventItem.start.dateTime == null && daylong == null) {
+            daylong = DateTime.Parse(eventItem.start.date);
+            r = $"\"{eventItem.summary}\" scheduled for the entire day destiny.gg/schedule";
+          }
+        }
+      }
+      return r;
     }
   }
 }

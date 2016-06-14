@@ -229,5 +229,13 @@ namespace Dbot.UnitTest {
       var reply = Tools.ScStanding();
       Assert.IsTrue(reply.Contains("rank"));
     }
+
+    [TestMethod]
+    public void ScheduleReturns()
+    {
+      Settings.Timezone = "Central Standard Time";
+      var reply = Tools.Schedule();
+      Assert.IsTrue(!string.IsNullOrEmpty(reply));
+    }
   }
 }
