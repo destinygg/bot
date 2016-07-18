@@ -184,6 +184,8 @@ namespace Dbot.Utility {
       return r;
     }
 
+    //https://dev.twitter.com/oauth/tools/signature-generator/4213260?nid=731
+    //http://stackoverflow.com/questions/17067996/authenticate-and-request-a-users-timeline-with-twitter-api-1-1-oauth
     public static string TweetPrettier(Status tweet) {
       var text = HttpUtility.HtmlDecode(tweet.Text);
       if (tweet.Entities.Media != null) {
@@ -249,7 +251,6 @@ namespace Dbot.Utility {
       var rootObject = Tools.JsonDeserializer<GoogleCalendar.RootObject>($"https://www.googleapis.com/calendar/v3/calendars/i54j4cu9pl4270asok3mqgdrhk%40group.calendar.google.com/events?orderBy=startTime&singleEvents=true&timeMin={time}&key={PrivateConstants.GoogleKey}");
 
       DateTime? daylong = null;
-      var localtime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Settings.Timezone);
       var r = "Nothing has been scheduled destiny.gg/schedule";
       if (rootObject.items != null && rootObject.items.Count > 0) {
         foreach (var eventItem in rootObject.items) {
