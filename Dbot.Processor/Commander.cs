@@ -39,6 +39,8 @@ namespace Dbot.Processor {
         () => Tools.LiveStatus() },
       { new List<string> { "blog", "blag" },
         () => Tools.FallibleCode(Blog) },
+      { new List<string> { "sch", "calen" },
+        Tools.Schedule },
       { new List<string> { "starcraft", "sc" },
         () => Tools.FallibleCode(Starcraft) },
       { new List<string> { "song" },
