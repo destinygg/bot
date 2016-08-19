@@ -59,7 +59,7 @@ namespace Dbot.Utility {
     }
 
     public static bool GetLiveApi() {
-      var answer = DownloadData("https://api.twitch.tv/kraken/streams/destiny").Result;
+      var answer = DownloadData("https://api.twitch.tv/kraken/streams/destiny", PrivateConstants.TwitchClientId).Result;
       dynamic dyn = JsonConvert.DeserializeObject(answer);
       var streamState = (JObject) dyn.stream;
       if (streamState != null) {
