@@ -264,9 +264,11 @@ namespace Dbot.Utility {
             }
           }
 
-          if (eventItem.start.dateTime == null && daylong == null) {
-            daylong = DateTime.Parse(eventItem.start.date);
-            r = $"\"{eventItem.summary}\" scheduled for the entire day destiny.gg/schedule";
+          if (eventItem.start.dateTime == null) {
+            var localStart = DateTime.Parse($"{eventItem.start.date}"); // I assume it is local, who the fuck knows?
+            var localNow = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, Settings.Timezone);
+            var delta = Tools.PrettyDeltaTime(localStart - localNow);
+            return $"\"{eventItem.summary}\" scheduled for the entire day, beginning in {delta} destiny.gg/schedule";
           }
         }
       }
