@@ -11,7 +11,7 @@ namespace Dbot.Logic {
     private readonly IClientVisitor _client;
     private readonly MessageProcessor _messageProcessor;
     private IDisposable _twitterStream;
-    private static int i = 0;
+    private static int i = -1;
 
     public PrimaryLogic(IClientVisitor client) {
       _client = client;
@@ -61,11 +61,18 @@ namespace Dbot.Logic {
 
     public static string GetPeriodicMessage() {
       var messages = new List<string> {
-        "Destiny has a new Twitter! twitter.com/OmniDestiny",
-        "Robot Lady will read your message for $5 or more donations twitchalerts.com/donate/destiny",
-        "Remember to use Destiny's Amazon referral link! destiny.gg/amazon",
-        $"Destiny updates YouTube regularly now! {Tools.LatestYoutube()}",
+        "Follow Destiny! twitter.com/OmniDestiny",
+        "Use Destiny's Amazon referral link! destiny.gg/amazon",
+        "Buy video games with Destiny's GreenManGaming referral link! destiny.gg/gmg",
+        $"Destiny updates YouTube regularly! {Tools.LatestYoutube()}",
       };
+
+      if (Tools.GetLiveApi()) {
+        messages.InsertRange(0, new List<string> {
+          "Support the stream by donating a message for FREE at loots.com/destiny",
+          "Robot Lady will read your message for $5 or more donations twitchalerts.com/donate/destiny",
+        });
+      }
 
       if (i + 1 < messages.Count)
         i++;
