@@ -75,9 +75,9 @@ namespace Dbot.Processor {
         if (!_message.IsMod)
           _messageProcessor.NextCommandTime = DateTime.UtcNow + Settings.UserCommandInterval;
         var returnMessage = command.Invoke();
-        var newLineCount = returnMessage.Count(x => x == '\n');
-        if (newLineCount >= 3) {
-          _messageProcessor.NextCommandTime = DateTime.UtcNow + Settings.UserCommandInterval.Multiply(newLineCount - 1);
+        var lineCount = returnMessage.Count(x => x == '\n') + 1;
+        if (lineCount >= 3) {
+          _messageProcessor.NextCommandTime = DateTime.UtcNow + Settings.UserCommandInterval.Multiply(lineCount - 1);
         }
         return new ModPublicMessage(returnMessage);
       }
